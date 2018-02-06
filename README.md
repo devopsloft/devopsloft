@@ -1,33 +1,20 @@
 # DevOpsLoft
-DevOps Loft
+It is a web application which manages the operations of a unique program.
+The goal of the program is to address the lack of exprianced DevOps engineers to fulfil the increasing demanad.
 
-Driving DevOps knowledge transfer in a study group which develops a real webapp (www.depy.io)
+# How?
+Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io).
+And, matching you with potentials organizations who seeks DevOps engineers with your skillset (technical and personal).
 
-## Services
-* GitHub
-* BitBucket
-* AWS
+We will study together DevOps, once a week, two hours session frontally using Skype or suchlike.
+The rest of the work is done on your own.
 
-## Culture
-* Agile
-* Lean software
+Recommended skills:
+A degree in Computer Science/Software Development/Industrial Engineering/related technical discipline or equivalent experience (DEV/IT/OPS)
+Ability to understand and write code.
 
-## Technologies
-* source control - git
-* documentation - Markdown
+What to bring:
+* yourself
+* your laptop
 
-## Tools
-* editor - Atom
-
-We meet f2f once a week and all the rest of the communication is executed via repo issues.
-
-# Agile Scrum
-Each iteration/sprint/milestone - 2 weeks long
-# Gitflow Workflow
-The master branch stores the official release history, and the develop branch serves as an integration branch for features
-
-Go To Action:
-
-1. Fork GitHub repo: depy-io/depy.io.git
-
-2. Open an issue for each DevOps technology/service/tool/culture you are interested in.
+We will be working with services like: GitHub, AWS and others. Some of those services require payments. Those costs are on your own expense.
