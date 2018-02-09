@@ -28,7 +28,7 @@ We will be working with services like: GitHub, AWS and others. Some of those ser
 
 # Costs
 
-Participating is free of charge
+Participation is free of charge
 
 # Weekly Shared Lesson
 
