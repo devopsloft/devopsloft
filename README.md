@@ -1,4 +1,6 @@
-# DevOpsLoft
+# DevOps Loft
+## Drive your Career Path into DevOps
+
 It is a web application which manages the operations of a unique program.
 The goal of the program is to address the lack of exprianced DevOps engineers to fulfil the increasing demanad.
 
@@ -6,7 +8,7 @@ The goal of the program is to address the lack of exprianced DevOps engineers to
 Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io).
 And, matching you with potentials organizations who seek DevOps engineers with your skillset (technical and personal).
 
-We will study together DevOps, once a week, two hours session frontally using Skype or suchlike.
+We will study together DevOps, once a week, two hours session frontally using Skype or suchlike (shared lesson).
 The rest of the work is done on your own. You will work on issues assigned to you.
 One can order personal coaching/training.
 
@@ -26,4 +28,8 @@ We will be working with services like: GitHub, AWS and others. Some of those ser
 
 # Costs
 
-NIS 100 + VAT for each hours of personal coaching/training. All the rest of the work is free of charge.
+Participating is free of charge
+
+# Weekly Shared Lesson
+
+Every Tuesday 10AM Israel Time via Skype (my Skype user - lioramilbaum)
