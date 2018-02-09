@@ -32,11 +32,9 @@ Participation is free of charge
 
 # Weekly Shared Lesson
 
-Every Tuesday 10AM Israel Time via Skype
+Every Tuesday 10AM Israel Time via Skype  
 
-
-
-If you'd like to add a featare or correct a defect, please open a
+If you'd like to add a feature or correct a defect, please open a
 [pull request](https://github.com/DevOpsLoft/DevOpsLoft/pulls).
 If you have questions or suggestions, please open an
 [issue](https://github.com/DevOpsLoft/DevOpsLoft/issues).
