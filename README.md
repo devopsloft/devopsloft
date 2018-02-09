@@ -40,7 +40,6 @@ If you'd like to add a feature or correct a defect, please open a
 If you have questions or suggestions, please open an
 [issue](https://github.com/DevOpsLoft/DevOpsLoft/issues).
 
-And be sure to follow us on [Twitter](https://twitter.com/devopsloft)
-and [Facebook](https://facebook.com/devopsloft).
+And be sure to follow us on [Twitter](https://twitter.com/devopsloft), [Facebook](https://facebook.com/devopsloft) and [LinkedIn](https://www.linkedin.com/company/devopsloft).
 
 And ... join our [Facebook Group](https://www.facebook.com/groups/512664539127088).
