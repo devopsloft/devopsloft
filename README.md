@@ -32,4 +32,14 @@ Participation is free of charge
 
 # Weekly Shared Lesson
 
-Every Tuesday 10AM Israel Time via Skype (my Skype user - lioramilbaum)
+Every Tuesday 10AM Israel Time via Skype
+
+If you'd like to add to the show, or to correct a mistake, please open a
+[pull request](https://github.com/DevOpsLoft/DevOpsLoft/pulls).
+If you have questions or suggestions, please open an
+[issue](https://github.com/DevOpsLoft/DevOpsLoft/issues).
+
+And be sure to follow us on [Twitter](https://twitter.com/devopsloft)
+and [Facebook](https://facebook.com/devopsloft).
+
+And ... join our [Facebook Group](https://www.facebook.com/groups/512664539127088).
