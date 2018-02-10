@@ -43,4 +43,4 @@ If you have questions or suggestions, please open an
 
 And be sure to follow us on [Facebook](https://facebook.com/devopsloft) and [LinkedIn](https://www.linkedin.com/company/devopsloft).
 
-And ... join our [Facebook Group](https://www.facebook.com/groups/512664539127088).
+And ... join our [Facebook Group](https://www.facebook.com/groups/512664539127088) and our [MeetUp Group](https://www.meetup.com/DevOps-Tel-Aviv/).
