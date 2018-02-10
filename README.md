@@ -5,6 +5,7 @@ It is a web application which manages the operations of a unique program.
 The goal of the program is to address the lack of exprianced DevOps engineers to fulfil the increasing demanad.
 
 # How?
+
 Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io).
 And, matching you with potentials organizations who seek DevOps engineers with your skillset (technical and personal).
 
