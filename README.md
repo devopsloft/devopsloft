@@ -1,8 +1,13 @@
 # DevOps Loft
-## Drive your Career Path into DevOps
+## Drive our Career Path into DevOps
 
-It is a web application which manages the operations of a unique program.
-The goal of the program is to address the lack of exprianced DevOps engineers to fulfil the increasing demanad.
+A community which drives our career path into DevOps.
+
+# What does than mean?
+
+The community mission is transfering DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.
+
+The goal of the community is addressing the lack of exprianced DevOps specialists to fulfil the increasing demand.
 
 # How?
 
@@ -29,7 +34,7 @@ We will be working with services like: GitHub, AWS and others. Some of those ser
 
 # Costs
 
-Participation is free of charge
+Participation is free of charge and commitment
 
 # Weekly Shared Lesson
 
