@@ -5,9 +5,9 @@ A community which drives our career path into DevOps.
 
 # What does than mean?
 
-The community mission is transfering DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.
+The community mission is transferring DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.
 
-The goal of the community is addressing the lack of exprianced DevOps specialists to fulfil the increasing demand.
+The goal of the community is addressing the lack of experienced DevOps specialists to fulfil the increasing demand.
 
 # How?
 
@@ -49,3 +49,9 @@ If you have questions or suggestions, please open an
 And be sure to follow us on [Facebook](https://facebook.com/devopsloft) and [LinkedIn](https://www.linkedin.com/company/devopsloft).
 
 And ... join our [Facebook Group](https://www.facebook.com/groups/512664539127088) and our [Meetup Group](https://www.meetup.com/DevOps-Tel-Aviv/).
+
+# Installation
+
+virtualenv .venv && source .venv/bin/activate
+pip install .
+devopsloft-server
