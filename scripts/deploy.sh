@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 cd ../www
-eb deploy devopsloft-env
+eb deploy devopsloft-prod
