@@ -11,19 +11,16 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+from flask import Flask
 from flask import render_template
-from flask import Blueprint
 
-import logging
-
-
-LOG = logging.getLogger(__name__)
-
-home = Blueprint('home', __name__)
+application = Flask(__name__)
 
 
-@home.route('/')
-def index():
-    """Home page."""
-
+@application.route('/')
+def welcome():
     return render_template('home.html')
+
+
+if __name__ == "__main__":
+    application.run()

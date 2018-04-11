@@ -50,8 +50,6 @@ And be sure to follow us on [Facebook](https://facebook.com/devopsloft) and [Lin
 
 And ... join our [Facebook Group](https://www.facebook.com/groups/512664539127088) and our [Meetup Group](https://www.meetup.com/DevOps-Tel-Aviv/).
 
-# Installation
+# Run the application
 
-virtualenv .venv && source .venv/bin/activate
-pip install .
-devopsloft-server
+python application.py
