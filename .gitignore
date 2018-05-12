@@ -12,7 +12,7 @@
 .test
 .testrepository
 .tox
-.venv
+venv
 AUTHORS
 build/*
 ChangeLog
