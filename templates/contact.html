@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+  {% block stylesheets %}
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  {% endblock %}
+
+<html>
+<head>
+
+<!-- your webpage info goes here -->
+
+  <title>DevOps Loft Contact US</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="your name" />
+	<meta name="description" content="" />
+
+<!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+
+</head>
+<body>
+
+<!-- webpage content goes here in the body -->
+  <header>
+    <div id="logo">DevOps Loft</div>
+    <nav id="menu">
+      <a class="itm" href="{{ url_for('home') }}">Home</a>
+      <a class="itm" href="#/about.html">About</a>
+      <a class="itm" href="{{ url_for('contact') }}">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Contact Us</h2>
+    <h3><a href="https://www.facebook.com/groups/devopsloft/">Visit our facebook</a></h3>
+    <div>
+      <p><a href="{{ url_for('home') }}">Visit our homepage</a></p>
+    </div>
+  </main>
+  <footer>
+  </footer>
+</body>
+</html>
