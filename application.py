@@ -32,5 +32,14 @@ def contact():
     return render_template('contact.html')
 
 
+@application.route('/register')
+def register():
+    return render_template('register.html')
+
+
+@application.route('/header.html')
+def header():
+    return render_template('header.html')
+
 if __name__ == "__main__":
     application.run()
