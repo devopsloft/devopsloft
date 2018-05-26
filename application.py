@@ -41,5 +41,6 @@ def register():
 def header():
     return render_template('header.html')
 
+
 if __name__ == "__main__":
     application.run()
