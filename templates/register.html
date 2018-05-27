@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+  {% block stylesheets %}
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  {% endblock %}
+
+<html>
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<head>
+
+<!-- your webpage info goes here -->
+
+  <title>DevOps Loft Contact US</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="your name" />
+	<meta name="description" content="" />
+
+<!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
+	<link rel="stylesheet" href="static/css/style.css" type="text/css" />
+
+</head>
+<body>
+
+<!-- webpage content goes here in the body -->
+<div w3-include-html="header.html">My HTML include will go here.</div>
+<script>
+w3.includeHTML();
+</script>
+
+  <main>
+    <h2>Registration</h2>
+  <div>
+    {% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.name) }}
+    {{ render_field(form.surename) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.ismaster) }}
+  </dl>
+  <p><input type=submit value=Register>
+</form>
+  </div>
+  </main>
+  <footer>
+  </footer>
+</body>
+</html>
