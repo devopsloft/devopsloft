@@ -1,6 +1,5 @@
-from flask_wtf import Form
 from wtforms import Form, BooleanField, StringField, validators
-#from flask import request
+# from flask import request
 
 
 class RegistrationForm(Form):

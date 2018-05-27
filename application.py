@@ -13,9 +13,9 @@
 #    under the License.
 from flask import Flask
 from flask import render_template
-from flask import request,redirect,url_for
+from flask import request, redirect, url_for
 from register import RegistrationForm
-import gc
+#import gc
 
 application = Flask(__name__)
 
@@ -39,9 +39,9 @@ def contact():
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
-#        user = User(form.name.data,form.surename.data, form.email.data,
-#                    form.ismaster.data)
-#        db_session.add(user)
+       # user = User(form.name.data,form.surename.data, form.email.data,
+                    # form.ismaster.data)
+        # db_session.add(user)
         # c, conn = connection()
         # x = c.execute("SELECT * FROM users WHERE email = (%s)",
         #                   (thwart(email)))
