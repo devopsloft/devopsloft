@@ -5,6 +5,7 @@
   {% endblock %}
 
 <html>
+<script src="https://www.w3schools.com/lib/w3.js"></script>
 <head>
 
 <!-- your webpage info goes here -->
@@ -15,20 +16,17 @@
 	<meta name="description" content="" />
 
 <!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
-	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="static/css/style.css" type="text/css" />
 
 </head>
 <body>
 
 <!-- webpage content goes here inbody -->
-  <header>
-    <div id="logo">DevOps Loft</div>
-    <nav id="menu">
-      <a class="itm" href="{{ url_for('home') }}">Home</a>
-      <a class="itm" href="#/about.html">About</a>
-      <a class="itm" href="{{ url_for('contact') }}">Contact</a>
-    </nav>
-  </header>
+<div w3-include-html="header.html">My HTML include will go here.</div>
+<script>
+w3.includeHTML();
+</script>
+
   <main>
     <h2>Home</h2>
     <h3>Drive our Career Path into DevOps</h3>

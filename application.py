@@ -13,6 +13,9 @@
 #    under the License.
 from flask import Flask
 from flask import render_template
+from flask import request, redirect, url_for
+from register import RegistrationForm
+# import gc
 
 application = Flask(__name__)
 
@@ -30,6 +33,42 @@ def home():
 @application.route('/contact')
 def contact():
     return render_template('contact.html')
+
+
+@application.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        # user = User(form.name.data,form.surename.data, form.email.data,
+        #                  form.ismaster.data)
+        # db_session.add(user)
+        # c, conn = connection()
+        # x = c.execute("SELECT * FROM users WHERE email = (%s)",
+        #                  (thwart(email)))
+        # if int(x) > 0:
+        #     flash("That email is already taken, please choose another")
+        #     return render_template('register.html', form=form)
+        # else:
+        #     c.execute("INSERT INTO users (name, surename, email, ismaster)
+        #                   VALUES (%s, %s, %s, %s)",
+        #                   (thwart(name), thwart(surename), thwart(email),
+        #                   thwart("/introduction-to-python-programming/")))
+        #     conn.commit()
+        #     flash("Thanks for registering!")
+        #     c.close()
+        #     conn.close()
+        #     gc.collect()
+        #
+        #     session['logged_in'] = True
+        #     session['name'] = name
+        #     flash('Thanks for registering')
+        return redirect(url_for('home'))
+    return render_template("register.html", form=form)
+
+
+@application.route('/header.html')
+def header():
+    return render_template('header.html')
 
 
 if __name__ == "__main__":

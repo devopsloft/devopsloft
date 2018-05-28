@@ -26,12 +26,21 @@
 <script>
 w3.includeHTML();
 </script>
+
   <main>
-    <h2>Contact Us</h2>
-    <h3><a href="https://www.facebook.com/groups/devopsloft/">Visit our facebook</a></h3>
-    <div>
-      <p><a href="{{ url_for('home') }}">Visit our homepage</a></p>
-    </div>
+    <h2>Registration</h2>
+  <div>
+    {% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.name) }}
+    {{ render_field(form.surename) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.ismaster) }}
+  </dl>
+  <p><input type=submit value=Register>
+</form>
+  </div>
   </main>
   <footer>
   </footer>
