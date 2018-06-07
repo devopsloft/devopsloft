@@ -1,4 +1,5 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from wtforms import Form, StringField, validators
+
 
 class SubscribeForm(Form):
     firstName = StringField('First Name', [validators.Length(min=4, max=25)])

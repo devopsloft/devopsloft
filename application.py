@@ -17,7 +17,7 @@ from flask import request, redirect, url_for
 from register import RegistrationForm
 # import gc
 
-# reader and writer modules 
+# reader and writer modules
 import csv
 
 # form for subscrition to mailing list
@@ -26,19 +26,23 @@ from forms import SubscribeForm
 application = Flask(__name__)
 application.secret_key = 'devops'
 
+
 @application.route('/')
 def welcome():
     return render_template('home.html')
+
 
 @application.route('/home')
 def home():
     return render_template('home.html')
 
+
 @application.route('/contact')
 def contact():
     return render_template('contact.html')
 
-@application.route('/subscribe', methods = ['POST', 'GET'])
+
+@application.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
     form = SubscribeForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -54,7 +58,8 @@ def subscribe():
 
         flash('Thanks for registering')
         return redirect(url_for('home'))
-    return render_template('subscribe.html', form=form) 
+    return render_template('subscribe.html', form=form)
+
 
 @application.route('/register', methods=['GET', 'POST'])
 def register():
@@ -86,9 +91,11 @@ def register():
         return redirect(url_for('home'))
     return render_template("register.html", form=form)
 
+
 @application.route('/header.html')
 def header():
     return render_template('header.html')
+
 
 if __name__ == "__main__":
     application.run()
