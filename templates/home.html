@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 
-  {% block stylesheets %}
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-  {% endblock %}
-
 <html>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
 <head>
@@ -14,9 +10,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="author" content="your name" />
 	<meta name="description" content="" />
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
 <!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
-	<link rel="stylesheet" href="static/css/style.css" type="text/css" />
+
+{% block stylesheets %}
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+<!-- For autodismissing confirmation alert after subscription-->
+<script>
+setTimeout(function() {
+  document.querySelector('.alert').remove();
+}, 2000);
+</script>
 
 </head>
 <body>
@@ -24,8 +31,19 @@
 <!-- webpage content goes here inbody -->
 <div w3-include-html="header.html">My HTML include will go here.</div>
 <script>
-w3.includeHTML();
+  w3.includeHTML();
 </script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+  </div>
+  {% endfor %}
+{% endif %}
+{% endwith %}
 
   <main>
     <h2>Home</h2>
@@ -55,6 +73,8 @@ w3.includeHTML();
       <div>And ... join our Facebook Group and our Meetup Group.</div>
     </div>
   </main>
+
+ 
   <footer>
   </footer>
 </body>

@@ -1,0 +1,11 @@
+{% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.firstName) }}
+    {{ render_field(form.lastName) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.expertise) }}
+  </dl>
+  <p><input type=submit value=Subscribe>
+</form>
+

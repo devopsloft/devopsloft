@@ -11,13 +11,20 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask
+from flask import Flask, flash
 from flask import render_template
 from flask import request, redirect, url_for
 from register import RegistrationForm
 # import gc
 
+# reader and writer modules
+import csv
+
+# form for subscrition to mailing list
+from forms import SubscribeForm
+
 application = Flask(__name__)
+application.secret_key = 'devops'
 
 
 @application.route('/')
@@ -33,6 +40,30 @@ def home():
 @application.route('/contact')
 def contact():
     return render_template('contact.html')
+
+
+@application.route('/subscribe', methods=['POST', 'GET'])
+def subscribe():
+    form = SubscribeForm(request.form)
+    if request.method == 'POST' and form.validate():
+        firstName = request.form['firstName']
+        lastName = request.form['lastName']
+        email = request.form['email']
+        expertise = request.form['expertise']
+
+        fieldNames = ['firstName', 'lastName', 'email', 'expertise']
+        with open('data/mailingList.csv', 'a+') as inFile:
+            writer = csv.DictWriter(inFile, fieldnames=fieldNames)
+            writer.writerow({
+                'firstName': firstName,
+                'lastName': lastName,
+                'email': email,
+                'expertise': expertise
+                })
+
+        flash('Thanks for registering')
+        return redirect(url_for('home'))
+    return render_template('subscribe.html', form=form)
 
 
 @application.route('/register', methods=['GET', 'POST'])
