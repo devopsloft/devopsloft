@@ -53,8 +53,13 @@ def subscribe():
 
         fieldNames = ['firstName', 'lastName', 'email', 'expertise']
         with open('data/mailingList.csv', 'a+') as inFile:
-            writer = csv.DictWriter(inFile, fieldnames = fieldNames)
-            writer.writerow({'firstName': firstName, 'lastName': lastName, 'email': email, 'expertise': expertise})
+            writer = csv.DictWriter(inFile, fieldnames=fieldNames)
+            writer.writerow({
+                'firstName': firstName, 
+                'lastName': lastName, 
+                'email': email, 
+                'expertise': expertise
+                })
 
         flash('Thanks for registering')
         return redirect(url_for('home'))
