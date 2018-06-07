@@ -55,9 +55,9 @@ def subscribe():
         with open('data/mailingList.csv', 'a+') as inFile:
             writer = csv.DictWriter(inFile, fieldnames=fieldNames)
             writer.writerow({
-                'firstName': firstName, 
-                'lastName': lastName, 
-                'email': email, 
+                'firstName': firstName,
+                'lastName': lastName,
+                'email': email,
                 'expertise': expertise
                 })
 
