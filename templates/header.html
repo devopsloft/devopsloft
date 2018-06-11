@@ -1,9 +1,11 @@
-<header>
-  <div id="logo">DevOps Loft</div>
-  <nav id="menu">
-    <a class="itm" href="{{ url_for('home') }}">Home</a>
-    <a class="itm" href="#/about.html">About</a>
-    <a class="itm" href="{{ url_for('contact') }}">Contact</a>
-    <a class="itm" href="{{ url_for('subscribe') }}">Subscribe</a>
-  </nav>
-</header>
+ <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <div class="page-header">
+    <div><img src="https://image.ibb.co/gdb53T/devopsloft.jpg" style="width:75px;height:75px;"></div>
+    <nav id="menu">
+      <a class="itm" href="{{ url_for('home') }}">Home</a>
+      <a class="itm" href="#/about.html">About</a>
+      <a class="itm" href="{{ url_for('contact') }}">Contact</a>
+      <a class="itm" href="{{ url_for('subscribe') }}">Subscribe</a>
+    </nav>
+  </div>
+

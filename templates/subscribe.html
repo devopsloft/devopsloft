@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Subscribe</h2>
+  <div>
 {% from "_formhelpers.html" import render_field %}
 <form method=post>
   <dl>
@@ -8,4 +13,7 @@
   </dl>
   <p><input type=submit value=Subscribe>
 </form>
+  </div>
+{% endblock %}
+
 
