@@ -36,9 +36,9 @@ We will be working with services like: GitHub, AWS and others. Some of those ser
 
 Participation is free of charge and commitment
 
-# Weekly Shared Lesson
+# Weekly Sessions (online or offline)
 
-Every Tuesday 10AM Israel Time via Skype
+Every Wednesday 6:00pm-9:00pm IDT
 </br>
 </br>
 If you'd like to add a feature or correct a defect, please open a
