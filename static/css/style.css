@@ -29,3 +29,9 @@ header{
         margin-right:0.5rem;
     }
 }
+
+.alert{
+    position: fixed;
+   
+    width: 96%;
+}

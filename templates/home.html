@@ -15,6 +15,7 @@
 <!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
 
 {% block stylesheets %}
+
 <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 {% endblock %}
 
@@ -41,11 +42,13 @@ setTimeout(function() {
   <div class="alert alert-success alert-dismissible fade show" role="alert">
       {{ message }}
   </div>
+  
   {% endfor %}
 {% endif %}
 {% endwith %}
 
   <main>
+    <br><br>
     <h2>Home</h2>
     <h3>Drive our Career Path into DevOps</h3>
     <div>

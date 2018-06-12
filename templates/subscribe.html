@@ -1,11 +1,37 @@
-{% from "_formhelpers.html" import render_field %}
-<form method=post>
-  <dl>
-    {{ render_field(form.firstName) }}
-    {{ render_field(form.lastName) }}
-    {{ render_field(form.email) }}
-    {{ render_field(form.expertise) }}
-  </dl>
-  <p><input type=submit value=Subscribe>
-</form>
+{% extends "bootstrap/base.html" %}
 
+{% block title %}
+Subscribe
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
+{% endblock %}
+
+<!-- For autodismissing confirmation alert after subscription-->
+
+
+{% block content %}
+
+    <div class="container">
+      <form class="form-group" method="POST" action="/subscribe">
+        <h2 class="form-signin-heading">Subscription to mailing list</h2>
+
+        {{ subscribe_form.hidden_tag() }}
+        <br><br>
+
+        <label for="first_name" >First Name</label>
+        {{subscribe_form.first_name(class_="form-control")}}
+        <label for="last_name" >Last Name</label>
+        {{subscribe_form.last_name(class_="form-control")}}
+        <label for="email" >Email</label>
+        {{subscribe_form.email(class_="form-control")}}
+        <label for="expertise" >Expertise</label>
+        {{subscribe_form.expertise(class_="form-control")}}
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Subscribe</button>
+      </form>
+    </div> 
+{% endblock %}
