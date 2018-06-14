@@ -12,63 +12,55 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 # reader and writer modules
+
+
 import csv
 
-from flask import Flask, flash, render_template, request, redirect, url_for
-from flask_bootstrap import Bootstrap
+# import system paths
+import config  # noqa: F401
+import models
+
+from flask import Flask, flash, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, \
+    logout_user, current_user
 
-from config import *
 from forms import SubscribeForm, LoginForm, SignupForm
-import models
-
-
 
 application = Flask(__name__)
-# application.config['SECRET_KEY'] = secret_key
-# application.config['SQLALCHEMY_DATABASE_URI'] = database_file
 application.config.from_object('config.BaseConfig')
 
 login_manager = LoginManager()
 login_manager.init_app(application)
 login_manager.login_view = 'login'
 
-bootstrap = Bootstrap(application)
 db = SQLAlchemy(application)
-# class User(UserMixin, db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(15), unique=True)
-#     email = db.Column(db.String(50), unique=True)
-#     password = db.Column(db.String(80))
 
 
+# Reload the user object from the user id stored in the session
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.get(int(user_id))
 
+
 @application.route('/')
-def welcome():
-    return render_template('home.html')
-
-
 @application.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', name=current_user)
 
 
 @application.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html', name=current_user)
 
 
 @application.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
     subscribe_form = SubscribeForm()
 
-    # if request.method == 'POST' and form.validate():
+    # Checks if the form has been submited
     if subscribe_form.validate_on_submit():
         first_name = subscribe_form.first_name.data
         last_name = subscribe_form.last_name.data
@@ -83,33 +75,49 @@ def subscribe():
                 'last_name': last_name,
                 'email': email,
                 'expertise': expertise
-                })
-        flash('Thanks for Subscribing!')
+            })
+        flash('Thanks for Subscribing!', 'success')
         return redirect(url_for('home'))
 
-    return render_template('subscribe.html', subscribe_form=subscribe_form)
+    return render_template(
+        'subscribe.html',
+        subscribe_form=subscribe_form,
+        name=current_user
+        )
 
-    
+
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
     signupForm = SignupForm()
 
+    # Checks if the form has been submited
     if signupForm.validate_on_submit():
         try:
-            hashed_password = generate_password_hash(signupForm.password.data, method='sha256')
-            new_user = models.User(username=signupForm.username.data, email=signupForm.email.data, password=hashed_password)
+            hashed_password = generate_password_hash(
+                signupForm.password.data,
+                method='sha256'
+                )
+            new_user = models.User(
+                username=signupForm.username.data,
+                email=signupForm.email.data,
+                password=hashed_password
+                )
             db.session.add(new_user)
             db.session.commit()
 
-            return '<h1>New user has been created!</h1>' 
+            flash('You are now subscribed!', 'success')
+            return redirect(url_for('home'))
         except exc.IntegrityError as e:
             print(e)
             db.session().rollback()
-            return '<h1>The email or username is already in use!</h1>' 
-            
-        return '<h1>' + signupForm.username.data + ' ' + signupForm.password.data + '</h1>'
+            flash('The email or username is already in use!', 'danger')
+            return redirect(url_for('signup'))
 
-    return render_template('signup.html', signupForm=signupForm)
+    return render_template(
+        'auth/signup.html',
+        signupForm=signupForm,
+        name=current_user
+        )
 
 
 @application.route('/login', methods=['POST', 'GET'])
@@ -117,29 +125,28 @@ def login():
     loginForm = LoginForm()
 
     if loginForm.validate_on_submit():
-        user = models.User.query.filter_by(username=loginForm.username.data).first()
+        # Looks for user in database
+        user = models.User.query.filter_by(
+            username=loginForm.username.data).first()
         if user:
             if check_password_hash(user.password, loginForm.password.data):
                 login_user(user, remember=loginForm.remember.data)
-
                 return redirect(url_for('home'))
-                
-                # return '<h1>Login successfully</h1>' + loginForm.username.data
         return '<h1>Invalid username or password</h1>'
-        # return '<h1>' + loginForm.username.data + ' ' + loginForm.password.data + '</h1>'
+    return render_template(
+        'auth/login.html',
+        loginForm=loginForm,
+        name=current_user
+        )
 
-    return render_template('login.html', loginForm=loginForm)
 
-
-@application.route('/header.html')
-def header():
-    return render_template('header.html', name=current_user)
-
+# Visible only if logged in
 @application.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
     application.run(debug=True)

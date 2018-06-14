@@ -1,84 +1,52 @@
-<!DOCTYPE html>
+{% extends 'layout.html' %}
 
-<html>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
-<head>
+{% block body %}
+{% from "includes/_formhelpers.html" import render_field %}
 
-<!-- your webpage info goes here -->
-
-  <title>DevOps Loft</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="author" content="your name" />
-	<meta name="description" content="" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  
-<!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
-
-{% block stylesheets %}
-
-<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <h2 class="pb-3 mb-4 border-bottom text-center">
+        Drive our Career Path into DevOps
+    </h2>
+      
+    <div>
+        <h3>What does than mean?</h3>
+        The community mission is transfering DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.
+        <br>
+        The goal of the community is addressing the lack of exprianced DevOps specialists to fulfil the increasing demand.
+    
+        <h3>How?</h3>
+          Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io). And, matching you with potentials organizations who seek DevOps engineers with your skillset (technical and personal).
+          <br>
+          We will study together DevOps, once a week, two hours session frontally using Skype or suchlike (shared lesson). The rest of the work is done on your own. You will work on issues assigned to you. One can order personal coaching/training.
+          
+          You are welcomed to attend the program as long as you feel it is valuable for you.
+        
+        <h3>What to bring</h3>
+        <ul>
+          <li>Yourself</li>
+          <li>Your laptop</li>
+        </ul>
+    
+        We will be working with services like: GitHub, AWS and others. Some of those services require payments. Those costs are on your own expense.
+    
+        <h3>Costs</h3>
+        Participation is free of charge and commitment
+    
+        <h3>Weekly Shared Lesson</h3>
+        <p></p>Every Tuesday 10AM Israel Time via Skype</p>
+    
+        <p>If you'd like to add a feature or correct a defect, please open a pull request.</p>
+    
+        <p>If you have questions or suggestions, please open an issue.</p>
+    
+        <h4>Recommended skills</h4>
+        <p>A degree in Computer Science/Software Development/Industrial Engineering/related technical discipline or equivalent experience (DEV/IT/OPS) Ability to understand and write code.</p>
+    </div>
+ 
+ 
+    
 {% endblock %}
 
-<!-- For autodismissing confirmation alert after subscription-->
-<script>
-setTimeout(function() {
-  document.querySelector('.alert').remove();
-}, 2000);
-</script>
-
-</head>
-<body>
-
-<!-- webpage content goes here inbody -->
-<div w3-include-html="header.html">My HTML include will go here.</div>
-<script>
-  w3.includeHTML();
-</script>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-
-{% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-      {{ message }}
-  </div>
   
-  {% endfor %}
-{% endif %}
-{% endwith %}
-
-  <main>
-    <br><br>
-    <h2>Home</h2>
-    <h3>Drive our Career Path into DevOps</h3>
-    <div>
-      <div class="marginBottom1">A community which drives our career path into DevOps.</div>
-      <div>What does than mean?</div>
-      <div class="marginBottom1">The community mission is transfering DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.</div>
-      <div class="marginBottom1">The goal of the community is addressing the lack of exprianced DevOps specialists to fulfil the increasing demand.</div>
-      <div>How?</div>
-      <div class="marginBottom1">Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io). And, matching you with potentials organizations who seek DevOps engineers with your skillset (technical and personal).</div>
-      <div class="marginBottom1">We will study together DevOps, once a week, two hours session frontally using Skype or suchlike (shared lesson). The rest of the work is done on your own. You will work on issues assigned to you. One can order personal coaching/training.</div>
-      <div class="marginBottom1">You are welcomed to attend the program as long as you feel it is valuable for you.</div>
-      <div class="marginBottom1">According to your pace, we will set you interviews with potentials organizations.</div>
-      <div class="marginBottom1">Recommended skills: A degree in Computer Science/Software Development/Industrial Engineering/related technical discipline or equivalent experience (DEV/IT/OPS) Ability to understand and write code.</div>
-      <div class="marginBottom1">What to bring:</div>
-      <div>yourself</div>
-      <div>your laptop</div>
-      <div class="marginBottom1">We will be working with services like: GitHub, AWS and others. Some of those services require payments. Those costs are on your own expense.</div>
-      <div>Costs</div>
-      <div class="marginBottom1">Participation is free of charge and commitment</div>
-      <div>Weekly Shared Lesson</div>
-      <div class="marginBottom1">Every Tuesday 10AM Israel Time via Skype</div>
-      <div>If you'd like to add a feature or correct a defect, please open a pull request.</div>
-      <div class="marginBottom1">If you have questions or suggestions, please open an issue.</div>
-      <div class="marginBottom1">And be sure to follow us on Facebook and LinkedIn.</div>
-      <div>And ... join our Facebook Group and our Meetup Group.</div>
-    </div>
-  </main>
 
  
-  <footer>
-  </footer>
-</body>
-</html>
+
