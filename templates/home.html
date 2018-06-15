@@ -1,81 +1,51 @@
 <!DOCTYPE html>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-<html>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
-<head>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-<!-- your webpage info goes here -->
+    {% block stylesheets %}
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    {% endblock %}
 
-  <title>DevOps Loft</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="author" content="your name" />
-	<meta name="description" content="" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  
-<!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
+{% extends 'base.html' %}
+{% block content %}
 
-{% block stylesheets %}
-<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+      <div class="jumbotron">
+          <h1></h1><img src="https://image.ibb.co/ccYj7y/devopsloftlogo.jpg" style="width:80%;height:80%;">
+        <p class="lead">Drive our Career Path into DevOps.</p>
+        <p><a class="btn btn-lg btn-success" href="{{ url_for('subscribe') }}" role="button">Subscribe</a></p>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>What does than mean?</h4>
+            <p>The community mission is transfering DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.</p>
+            <p>The goal of the community is addressing the lack of exprianced DevOps specialists to fulfil the increasing demand.</p>
+
+          <h4>How?</h4>
+            <p>Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io). And, matching you with potentials organizations who seek DevOps engineers with your skillset (technical and personal).</p>
+            <p>We will study together DevOps, once a week, for three hours. The rest of the work is done on your own. You will work on issues assigned to you. One can order personal coaching/training.</p>
+            <p>You are welcomed to attend the program as long as you feel it is valuable for you.</p>
+            <p>According to your pace, we will set you interviews with potentials organizations.</p>
+       </div>
+
+        <div class="col-lg-6">
+          <h4>Recommended skills</h4>
+            <p>A degree in Computer Science/Software Development/Industrial Engineering/related technical discipline or equivalent experience (DEV/IT/OPS) Ability to understand and write code.</p>
+
+          <h4>What to bring</h4>
+            <p>Yourself</p>
+            <p>Your laptop</p>
+            <p>We will be working with services like: GitHub, AWS and others. Some of those services require payments. Those costs are on your own expense.</p>
+
+          <h4>Costs</h4>
+            <p>Participation is free of charge and commitment.</p>
+
+          <h4>Weekly Shared Lesson</h4>
+            <p>Every Wednesday from 18:00-21:00, each time on a different location. Please check our <a href="https://www.facebook.com/groups/devopsloft/">Facebook group</a> for more details. </p>
+        </div>
+      </div> <!--END of row marketing-->
+
 {% endblock %}
-
-<!-- For autodismissing confirmation alert after subscription-->
-<script>
-setTimeout(function() {
-  document.querySelector('.alert').remove();
-}, 2000);
-</script>
-
-</head>
-<body>
-
-<!-- webpage content goes here inbody -->
-<div w3-include-html="header.html">My HTML include will go here.</div>
-<script>
-  w3.includeHTML();
-</script>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-
-{% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-      {{ message }}
-  </div>
-  {% endfor %}
-{% endif %}
-{% endwith %}
-
-  <main>
-    <h2>Home</h2>
-    <h3>Drive our Career Path into DevOps</h3>
-    <div>
-      <div class="marginBottom1">A community which drives our career path into DevOps.</div>
-      <div>What does than mean?</div>
-      <div class="marginBottom1">The community mission is transfering DevOps knowledge by practice. We are implementing an open source web app (www.devopsloft.io), while picking up DevOps technologies, like: git (GitHub), AWS, Linux, scripting, Jenkins, Chef/Ansible.</div>
-      <div class="marginBottom1">The goal of the community is addressing the lack of exprianced DevOps specialists to fulfil the increasing demand.</div>
-      <div>How?</div>
-      <div class="marginBottom1">Assisting you building a career path in the DevOps domain by driving DevOps knowledge transfer in a study group which develops a real webapp (www.devopsloft.io). And, matching you with potentials organizations who seek DevOps engineers with your skillset (technical and personal).</div>
-      <div class="marginBottom1">We will study together DevOps, once a week, two hours session frontally using Skype or suchlike (shared lesson). The rest of the work is done on your own. You will work on issues assigned to you. One can order personal coaching/training.</div>
-      <div class="marginBottom1">You are welcomed to attend the program as long as you feel it is valuable for you.</div>
-      <div class="marginBottom1">According to your pace, we will set you interviews with potentials organizations.</div>
-      <div class="marginBottom1">Recommended skills: A degree in Computer Science/Software Development/Industrial Engineering/related technical discipline or equivalent experience (DEV/IT/OPS) Ability to understand and write code.</div>
-      <div class="marginBottom1">What to bring:</div>
-      <div>yourself</div>
-      <div>your laptop</div>
-      <div class="marginBottom1">We will be working with services like: GitHub, AWS and others. Some of those services require payments. Those costs are on your own expense.</div>
-      <div>Costs</div>
-      <div class="marginBottom1">Participation is free of charge and commitment</div>
-      <div>Weekly Shared Lesson</div>
-      <div class="marginBottom1">Every Tuesday 10AM Israel Time via Skype</div>
-      <div>If you'd like to add a feature or correct a defect, please open a pull request.</div>
-      <div class="marginBottom1">If you have questions or suggestions, please open an issue.</div>
-      <div class="marginBottom1">And be sure to follow us on Facebook and LinkedIn.</div>
-      <div>And ... join our Facebook Group and our Meetup Group.</div>
-    </div>
-  </main>
-
- 
-  <footer>
-  </footer>
-</body>
-</html>
