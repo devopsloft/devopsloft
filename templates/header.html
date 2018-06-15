@@ -1,9 +1,13 @@
-<header>
-  <div id="logo">DevOps Loft</div>
-  <nav id="menu">
-    <a class="itm" href="{{ url_for('home') }}">Home</a>
-    <a class="itm" href="#/about.html">About</a>
-    <a class="itm" href="{{ url_for('contact') }}">Contact</a>
-    <a class="itm" href="{{ url_for('subscribe') }}">Subscribe</a>
-  </nav>
-</header>
+ <link href="{{ url_for('static', filename='css/newstyle.css') }}" rel="stylesheet">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="{{ url_for('home') }}">Home</a></li>
+            <li role="presentation"><a href="#/about.html">About</a></li>
+            <li role="presentation"><a href="{{ url_for('contact') }}">Contact</a></li>
+            <li role="presentation"><a href="{{ url_for('subscribe') }}">Subscribe</a></li>
+          </ul>
+        </nav>
+        <!--<h3 class="text-muted">Project name</h3>-->
+        <img src="https://image.ibb.co/ccYj7y/devopsloftlogo.jpg" style="width:100px;height:75px;">
+      </div>
