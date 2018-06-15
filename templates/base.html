@@ -11,8 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
     {% block stylesheets %}
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     {% endblock %}
 
     <!-- For autodismissing confirmation alert after subscription-->
@@ -24,6 +27,7 @@
 
 </head>
 <body>
+    <div class="container">
 
 <!-- webpage content goes here inbody -->
 <div w3-include-html="header.html">My HTML include will go here.</div>
@@ -42,14 +46,13 @@
 {% endif %}
 {% endwith %}
 
-<main>
-    <div class="mainclass">
+    <main>
         {% block content %}
         {% endblock %}
-    </div>
-</main>
-
+    </main>
   <footer>
+      <p>&copy; DevOps Loft</p>
   </footer>
+    </div>
 </body>
 </html>

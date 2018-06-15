@@ -1,8 +1,19 @@
 <!DOCTYPE html>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    {% block stylesheets %}
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    {% endblock %}
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Contact Us</h2>
-    <h3><a href="https://www.facebook.com/groups/devopsloft/">Visit our facebook</a></h3>
+
+<h2>Contact Us</h2>
+    <h3><a href="https://www.facebook.com/groups/devopsloft/">Facebook Group</a></h3>
+    <h3><a href="https://github.com/DevOpsLoft/">DevOps Loft GitHub</a></h3>
     <div>
       <p><a href="{{ url_for('home') }}">Visit our homepage</a></p>
     </div>
