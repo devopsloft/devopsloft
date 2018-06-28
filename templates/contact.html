@@ -1,39 +1,8 @@
-<!DOCTYPE html>
+{% extends 'layout.html' %}
 
-  {% block stylesheets %}
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-  {% endblock %}
-
-<html>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
-<head>
-
-<!-- your webpage info goes here -->
-
-  <title>DevOps Loft Contact US</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="author" content="your name" />
-	<meta name="description" content="" />
-
-<!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->
-	<link rel="stylesheet" href="static/css/style.css" type="text/css" />
-
-</head>
-<body>
-
-<!-- webpage content goes here in the body -->
-<div w3-include-html="header.html"></div>
-<script>
-w3.includeHTML();
-</script>
-  <main>
-    <h2>Contact Us</h2>
-    <h3><a href="https://www.facebook.com/groups/devopsloft/">Visit our facebook</a></h3>
-    <div>
-      <p><a href="{{ url_for('home') }}">Visit our homepage</a></p>
-    </div>
-  </main>
-  <footer>
-  </footer>
-</body>
-</html>
+{% block body %}
+    <h2 class="pb-3 mb-4 border-bottom text-center">Contact Us</h2>
+    <p><a href="https://www.facebook.com/groups/devopsloft/">Visit our facebook</a></p>
+    <p><a href="{{ url_for('home') }}">Visit our homepage</a></p>
+    
+{% endblock %}

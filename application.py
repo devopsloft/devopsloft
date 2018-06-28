@@ -11,96 +11,142 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask, flash
-from flask import render_template
-from flask import request, redirect, url_for
-from register import RegistrationForm
-# import gc
-
 # reader and writer modules
+
+
 import csv
 
-# form for subscrition to mailing list
-from forms import SubscribeForm
+# import system paths
+import config  # noqa: F401
+import models
+
+from flask import Flask, flash, render_template, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import exc
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, login_required, \
+    logout_user, current_user
+
+from forms import SubscribeForm, LoginForm, SignupForm
 
 application = Flask(__name__)
-application.secret_key = 'devops'
+application.config.from_object('config.BaseConfig')
+
+login_manager = LoginManager()
+login_manager.init_app(application)
+login_manager.login_view = 'login'
+
+db = SQLAlchemy(application)
+
+
+# Reload the user object from the user id stored in the session
+@login_manager.user_loader
+def load_user(user_id):
+    return models.User.query.get(int(user_id))
 
 
 @application.route('/')
-def welcome():
-    return render_template('home.html')
-
-
 @application.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', name=current_user)
 
 
 @application.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html', name=current_user)
 
 
 @application.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
-    form = SubscribeForm(request.form)
-    if request.method == 'POST' and form.validate():
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
-        email = request.form['email']
-        expertise = request.form['expertise']
+    subscribe_form = SubscribeForm()
 
-        fieldNames = ['firstName', 'lastName', 'email', 'expertise']
+    # Checks if the form has been submited
+    if subscribe_form.validate_on_submit():
+        first_name = subscribe_form.first_name.data
+        last_name = subscribe_form.last_name.data
+        email = subscribe_form.email.data
+        expertise = subscribe_form.expertise.data
+
+        fieldnames = ['first_name', 'last_name', 'email', 'expertise']
         with open('data/mailingList.csv', 'a+') as inFile:
-            writer = csv.DictWriter(inFile, fieldnames=fieldNames)
+            writer = csv.DictWriter(inFile, fieldnames=fieldnames)
             writer.writerow({
-                'firstName': firstName,
-                'lastName': lastName,
+                'first_name': first_name,
+                'last_name': last_name,
                 'email': email,
                 'expertise': expertise
-                })
-
-        flash('Thanks for registering')
+            })
+        flash('Thanks for Subscribing!', 'success')
         return redirect(url_for('home'))
-    return render_template('subscribe.html', form=form)
+
+    return render_template(
+        'subscribe.html',
+        subscribe_form=subscribe_form,
+        name=current_user
+        )
 
 
-@application.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm(request.form)
-    if request.method == 'POST' and form.validate():
-        # user = User(form.name.data,form.surename.data, form.email.data,
-        #                  form.ismaster.data)
-        # db_session.add(user)
-        # c, conn = connection()
-        # x = c.execute("SELECT * FROM users WHERE email = (%s)",
-        #                  (thwart(email)))
-        # if int(x) > 0:
-        #     flash("That email is already taken, please choose another")
-        #     return render_template('register.html', form=form)
-        # else:
-        #     c.execute("INSERT INTO users (name, surename, email, ismaster)
-        #                   VALUES (%s, %s, %s, %s)",
-        #                   (thwart(name), thwart(surename), thwart(email),
-        #                   thwart("/introduction-to-python-programming/")))
-        #     conn.commit()
-        #     flash("Thanks for registering!")
-        #     c.close()
-        #     conn.close()
-        #     gc.collect()
-        #
-        #     session['logged_in'] = True
-        #     session['name'] = name
-        #     flash('Thanks for registering')
-        return redirect(url_for('home'))
-    return render_template("register.html", form=form)
+@application.route('/signup', methods=['POST', 'GET'])
+def signup():
+    signupForm = SignupForm()
+
+    # Checks if the form has been submited
+    if signupForm.validate_on_submit():
+        try:
+            hashed_password = generate_password_hash(
+                signupForm.password.data,
+                method='sha256'
+                )
+            new_user = models.User(
+                username=signupForm.username.data,
+                email=signupForm.email.data,
+                password=hashed_password
+                )
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash('You are now subscribed!', 'success')
+            return redirect(url_for('home'))
+        except exc.IntegrityError as e:
+            print(e)
+            db.session().rollback()
+            flash('The email or username is already in use!', 'danger')
+            return redirect(url_for('signup'))
+
+    return render_template(
+        'auth/signup.html',
+        signupForm=signupForm,
+        name=current_user
+        )
 
 
-@application.route('/header.html')
-def header():
-    return render_template('header.html')
+@application.route('/login', methods=['POST', 'GET'])
+def login():
+    loginForm = LoginForm()
+
+    if loginForm.validate_on_submit():
+        # Looks for user in database
+        user = models.User.query.filter_by(
+            username=loginForm.username.data).first()
+        if user:
+            if check_password_hash(user.password, loginForm.password.data):
+                login_user(user, remember=loginForm.remember.data)
+                return redirect(url_for('home'))
+        return '<h1>Invalid username or password</h1>'
+    return render_template(
+        'auth/login.html',
+        loginForm=loginForm,
+        name=current_user
+        )
 
 
-if __name__ == "__main__":
-    application.run()
+# Visible only if logged in
+@application.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+    application.run(debug=True)

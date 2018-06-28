@@ -19,6 +19,10 @@ ChangeLog
 doc/build/*
 dist/
 
+# Data Files
+*.csv
+*.db
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
