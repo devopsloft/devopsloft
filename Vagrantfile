@@ -2,12 +2,44 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/bionic64"
-  config.vm.provision "shell",path: "bootstrap.sh"
-  config.vm.network "forwarded_port", guest: 5000, host: 5000
-  config.vm.provider "virtualbox" do|v|
-	v.name = "devopsloft_dev"
-	v.memory = 1024
-	v.cpus = 2
-  end
+
+	config.vm.define "dev" do |dev|
+	
+		dev.vm.provider :virtualbox do |virtualbox,override|
+		
+			dev.vm.box = "ubuntu/bionic64"
+			dev.vm.provision "shell",path: "bootstrap.sh"
+			dev.vm.network "forwarded_port", guest: 5000, host: 5000
+
+			virtualbox.name = "devopsloft_dev"
+			virtualbox.memory = 1024
+			virtualbox.cpus = 2
+		end
+	end
+	
+	config.vm.define "stage" do |stage|
+	
+		stage.vm.provider :aws do |aws,override|
+		
+			stage.vm.synced_folder ".", "/vagrant", disabled: true
+			stage.vm.box = "dummy"
+			stage.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
+			stage.vm.provision "shell",path: "bootstrap.sh"
+			stage.vm.network "forwarded_port", guest: 5000, host: 5000
+
+			aws.keypair_name = "balex_IRL_rsa"
+			aws.ami = "ami-d2414e38"
+			aws.instance_type = "t2.micro"
+			aws.region = "eu-west-1"
+			aws.subnet_id = "subnet-d35c9789"
+			aws.security_groups = ["sg-07780a80474a73bab"]
+			aws.associate_public_ip = true
+
+			override.ssh.username = "ubuntu"
+			override.ssh.private_key_path = "C:\\Users\\balex\\.ssh\\balex_IRL_rsa.pem"
+		
+		end
+		
+	end
+	
 end
