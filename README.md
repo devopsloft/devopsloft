@@ -64,10 +64,10 @@ And ... join our [Facebook Group](https://www.facebook.com/groups/51266453912708
 
 ## Prerequisites 
 
-* Vagrant should be installed in order to run the application.
-* AWS account is needed in order to run the application as `stage environment`. (see mor details in Stage Environment section)
+* Vagrant should be installed in order to launch an environment of the application.
+* AWS account is required in order to run the application in STAGE environment. (see more details in STAGE Environment section)
 
-## Dev environment
+## DEV environment
 
 * The application will be deployed as local VM using VirtualBox
 * Create the environment
@@ -80,9 +80,8 @@ vagrant up dev
 ```
 localhost:5000
 ```
-(handle the vagrant environment with `dev` suffix)
 
-## Stage environment
+## STAGE environment
 
 !!! Don't share your private Access Key and don't push it to GitHub
 
@@ -91,8 +90,8 @@ localhost:5000
   * AMI ID
   * Subnet ID
   * Security Group with inbound ports for SSH and TCP port 5000
-* Adjust `Vagrantfile` with your personal IDs
-* Create the environment
+* Adjust `Vagrantfile` with your configuration
+* Launch the environment
 ```
 vagrant up stage
 ```
