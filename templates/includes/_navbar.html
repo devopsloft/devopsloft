@@ -4,12 +4,12 @@
         <div class="mr-auto">
             <a class="mr-md-auto font-weight-normal" href="{{ url_for('home') }}">
                 <img src="/static/logo.png" width="80" height="80" class="d-inline-block align-top" alt="">
-                
+
             </a>
         </div>
         <div class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="{{ url_for('home') }}">Home</a>
-            <a class="p-2 text-muted inactiveLink" href="#" >About</a>
+            <a class="p-2 text-dark" href="{{ url_for('about') }}">About</a>
             <a class="p-2 text-dark" href="{{ url_for('contact') }}">Contact</a>
             <a class="p-2 text-dark" href="{{ url_for('subscribe') }}">Subscribe</a>
         </div>
@@ -25,14 +25,12 @@
           </div>
         </div>
     {% else %}
-    
+
       <a class="btn btn-outline-success mr-1 " href="{{ url_for('login') }}">Login</a>
       <a class="btn btn-outline-primary ml-1 " href="{{ url_for('signup') }}">Sign up</a>
 
     {% endif %}
       </div>
 </div>
-    
+
 </nav>
-
-
