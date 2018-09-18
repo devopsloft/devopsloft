@@ -38,23 +38,23 @@ login_manager.login_view = 'login'
 
 db = SQLAlchemy(application)
 
-
 # Reload the user object from the user id stored in the session
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.get(int(user_id))
-
 
 @application.route('/')
 @application.route('/home')
 def home():
     return render_template('home.html', name=current_user)
 
+@application.route('/about')
+def about():
+    return render_template('about.html', name=current_user)
 
 @application.route('/contact')
 def contact():
     return render_template('contact.html', name=current_user)
-
 
 @application.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
@@ -84,7 +84,6 @@ def subscribe():
         subscribe_form=subscribe_form,
         name=current_user
         )
-
 
 @application.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -119,7 +118,6 @@ def signup():
         name=current_user
         )
 
-
 @application.route('/login', methods=['POST', 'GET'])
 def login():
     loginForm = LoginForm()
@@ -139,14 +137,12 @@ def login():
         name=current_user
         )
 
-
 # Visible only if logged in
 @application.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
 
 if __name__ == '__main__':
     application.run(debug=True, host='0.0.0.0', port=5000)
