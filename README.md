@@ -45,7 +45,7 @@ We will be working with services like: GitHub, AWS and others. Some of those ser
 
 Participation is free of charge and commitment
 
-# Weekly Sessions 
+# Weekly Sessions
 (online or offline)
 
 Every Wednesday 6:00pm-9:00pm IDT
@@ -62,7 +62,7 @@ And ... join our [Facebook Group](https://www.facebook.com/groups/51266453912708
 
 # Running the application
 
-## Prerequisites 
+## Prerequisites
 
 * Vagrant should be installed in order to launch an environment of the application.
 * AWS account is required in order to run the application in STAGE environment. (see more details in STAGE Environment section)
@@ -76,7 +76,7 @@ And ... join our [Facebook Group](https://www.facebook.com/groups/51266453912708
 vagrant up dev
 ```
 
-* Access the application through internet browser 
+* Access the application through internet browser
 ```
 localhost:5000
 ```
@@ -90,13 +90,13 @@ localhost:5000
   * AMI ID
   * Subnet ID
   * Security Group with inbound ports for SSH and TCP port 5000
-* Adjust `Vagrantfile` with your configuration
+* Adjust `Vagrantfile.local` with your configuration (see the Vagrantfile.local.example file for reference)
 * Launch the environment
 ```
 vagrant up stage
 ```
 * Access the application using Public DNS/IP of the created instance + port 5000
-* !!! Don't forget to destroy the instance when you done to avoid unnecessary charging
+* !!! Don't forget to destroy the instance when you done to avoid unnecessary charges
 ```
-vagrant destroy stage
+vagrant destroy --force stage
 ```
