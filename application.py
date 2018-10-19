@@ -51,9 +51,9 @@ def home():
     return render_template('home.html', name=current_user)
 
 
-@application.route('/about')
-def about():
-    return render_template('about.html', name=current_user)
+@application.route('/resources')
+def resources():
+    return render_template('resources.html', name=current_user)
 
 
 @application.route('/contact')
