@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 echo "Getting updates..."
 apt-get update
 
@@ -23,7 +25,7 @@ uname -r | grep aws
 if [ $? -eq 0 ]; then
 	echo 'aws'
 	cd devopsloft
-else 
+else
 	echo 'not aws'
 	cd /vagrant
 fi
@@ -33,5 +35,4 @@ pip install -r requirements.txt
 
 nohup python3 application.py > /dev/null 2>&1 &
 
-
-echo "Vagrant UP script completed!"
+echo "application boostrap script completed!"
