@@ -6,32 +6,27 @@ config = {
     'host': 'localhost',
     'database': 'devopsloft',
     'raise_on_warnings': True
-} 
+}
 
-def is_email_exists (  email):
+
+def is_email_exists(email):
     cnx = mysql.connector.connect(**config)
-    
+
     cursor = cnx.cursor()
-
     query = "SELECT count(*) AS count_users FROM users WHERE email ='" + email + "'"
-
     cursor.execute(query)
-    
-    myresult = cursor.fetchall()
 
-    cursor.close()
-
-    isExistsEmail = False
-
-    # loop should run once
-
-    for (count_users) in myresult:
-        isExistsEmail = count_users[0] != 0
-
-    print(isExistsEmail)
-
+    query_result = cursor.fetchall()
     cursor.close()
     cnx.close()
+
+    is_exists_email = False
+
+    # loop should run once.
+    for (count_users) in query_result:
+        is_exists_email = count_users[0] != 0
+
+    return is_exists_email
 
     # better way but didn't work
 
@@ -39,5 +34,6 @@ def is_email_exists (  email):
     #      "WHERE first_name ='%s'")
     # cursor.execute(query, (first_name))
 
-is_email_exists('email@aaa.com')
 
+# test functionality
+print(is_email_exists('myemail@gmail.com'))
