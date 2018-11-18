@@ -13,7 +13,8 @@ def is_email_exists(email):
     cnx = mysql.connector.connect(**config)
 
     cursor = cnx.cursor()
-    query = "SELECT count(*) AS count_users FROM users WHERE email ='" + email + "'"
+    query = "SELECT count(*) AS count_users FROM users WHERE email ='" +\
+            email + "'"
     cursor.execute(query)
 
     query_result = cursor.fetchall()
