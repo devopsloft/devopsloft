@@ -20,7 +20,18 @@ spawn mysql_config_editor set --login-path=local --host=localhost --user=root --
 expect -nocase \"Enter password:\" {send \"12345\r\"; interact}"
 
 echo "Create application database and users table"
-mysql --login-path=local -e "CREATE DATABASE devopsloft;"
-mysql --login-path=local -e "CREATE TABLE devopsloft.users (first_name varchar(100) NOT NULL,last_name varchar(100) NOT NULL,email VARCHAR(320) NOT NULL);"
+#mysql --login-path=local -e "CREATE DATABASE devopsloft;"
+#mysql --login-path=local -e "CREATE TABLE devopsloft.users (first_name varchar(100) NOT NULL,last_name varchar(100) NOT NULL,email VARCHAR(320) NOT NULL);"
+
+echo "script creating database"
+
+uname -r | grep aws
+if [ $? -eq 0 ]; then
+	echo 'aws'
+    mysql -uroot -p12345 < ./devopsloft/create_db.sql
+else
+	echo 'not aws'
+    mysql -uroot -p12345 < /vagrant/create_db.sql
+fi
 
 echo "db boostrap script completed!"
