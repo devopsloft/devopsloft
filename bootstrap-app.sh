@@ -14,6 +14,9 @@ apt-get install -y python3-pip
 echo "Upgrading pip..."
 pip3 install --upgrade pip
 
+# echo "Installing mysql-connector-python..."
+# pip3 install mysql-connector-python
+
 echo "Installing virtualenv..."
 pip install virtualenv
 
