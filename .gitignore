@@ -18,6 +18,7 @@ build/*
 ChangeLog
 doc/build/*
 dist/
+.idea/
 
 # Data Files
 *.csv
