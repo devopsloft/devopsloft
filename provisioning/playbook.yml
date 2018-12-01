@@ -1,0 +1,17 @@
+---
+- name: Install the latest git package
+  # hosts: localhost
+  hosts: all
+  connection: local
+  user: root
+  become: yes
+
+
+  tasks:
+  - name:  Install Python3 package
+    package:  
+      name=python3
+      state=latest
+    
+
+

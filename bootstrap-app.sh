@@ -5,8 +5,8 @@ export DEBIAN_FRONTEND=noninteractive
 echo "Getting updates..."
 apt-get update
 
-echo "Installing Python3..."
-apt-get install -y python3
+# echo "Installing Python3..."
+# apt-get install -y python3
 
 echo "Installing pip..."
 apt-get install -y python3-pip
