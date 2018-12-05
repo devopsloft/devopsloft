@@ -8,3 +8,7 @@ install:
     - pip install coveralls
 script:
     - flake8 .
+
+language: shell
+script:
+  - bash -c 'shopt -s globstar; shellcheck **/*.{sh,ksh,bash}'
