@@ -30,4 +30,4 @@ dist/
 
 .vagrant/
 Vagrantfile.local
-.secrets
+.secrets.json
