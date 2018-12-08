@@ -7,7 +7,7 @@ from slackclient import SlackClient
 
 def getSecret(service, dirPath=os.curdir):
     fname = '.secrets.json'
-    if not os.path.isfile(os.path.join(dirPath,fname)):
+    if not os.path.isfile(os.path.join(dirPath, fname)):
         exit
     with open(fname) as data:
         data_json = json.loads(data.read())
@@ -18,13 +18,13 @@ def getSecret(service, dirPath=os.curdir):
 
 
 def getEvents(status):
-    events = client.GetEvents({'group_urlname': 'DevOps-Loft',
-                               'status': status})
+    events = meetup.api.client.GetEvents({'group_urlname': 'DevOps-Loft',
+                                          'status': status})
     events = json.dumps(events.__dict__)
     events = json.loads(events)
     for event in events['results']:
         print(event['name'])
-    client = meetup.api.Client(getSecret(service='Meetup'))
+    meetup.api.Client(getSecret(service='Meetup'))
     getEvents(status='past')
 
 
@@ -42,7 +42,8 @@ def putPost(service='Slack', channel='sandbox', message='Hello World'):
         if response['ok']:
             print('success')
         else:
-            print("Failed publishing to slack. Error: {0}".format(response['error']))
+            print("Failed publishing to slack. Error: {0}"
+                  .format(response['error']))
 
     except Exception as e:
         print(e)

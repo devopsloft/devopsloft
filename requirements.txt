@@ -1,3 +1,5 @@
+slackclient
+django-meetup
 click==6.7
 configparser==3.5.0
 dominate==2.3.1
