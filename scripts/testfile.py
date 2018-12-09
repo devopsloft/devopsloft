@@ -1,5 +1,5 @@
 #!/usr/bin/python
 
-# In Python 2.7 syntax.
+# In Python 3.6 syntax.
 
-print ("Hello World!")
+print("Hello World!")
