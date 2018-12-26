@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
+		dev.vm.provision "shell",path: "bootstrap-infra.sh"
 		dev.vm.provision "shell",path: "bootstrap-db.sh"
 		dev.vm.provision "shell",path: "bootstrap-app.sh"
 		dev.vm.network "forwarded_port", guest: 5000, host: 5000
@@ -23,6 +24,7 @@ Vagrant.configure("2") do |config|
 		stage.vm.box = "dummy"
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 		stage.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
+		stage.vm.provision "shell",path: "bootstrap-infra.sh"
 		stage.vm.provision "shell",path: "bootstrap-db.sh"
 		stage.vm.provision "shell",path: "bootstrap-app.sh"
 		stage.vm.network "forwarded_port", guest: 5000, host: 5000
