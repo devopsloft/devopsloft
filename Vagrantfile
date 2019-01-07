@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
 		dev.vm.box = "ubuntu/bionic64"
 		dev.vm.provision "shell",path: "bootstrap-db.sh"
 		dev.vm.provision "shell",path: "bootstrap-app.sh"
-		dev.vm.network "forwarded_port", guest: 5000, host: 5000
+		dev.vm.network "forwarded_port", guest: 80, host: 5000
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "devopsloft_dev"
@@ -25,13 +25,25 @@ Vagrant.configure("2") do |config|
 		stage.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
 		stage.vm.provision "shell",path: "bootstrap-db.sh"
 		stage.vm.provision "shell",path: "bootstrap-app.sh"
-		stage.vm.network "forwarded_port", guest: 5000, host: 5000
 
 		stage.vm.provider :aws do |aws,override|
 		end
 
 	end
 
+	config.vm.define "prod" do |prod|
+
+		prod.vm.synced_folder ".", "/vagrant", disabled: true
+		prod.vm.box = "dummy"
+		prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+		prod.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
+		prod.vm.provision "shell",path: "bootstrap-db.sh"
+		prod.vm.provision "shell",path: "bootstrap-app.sh"
+
+		prod.vm.provider :aws do |aws,override|
+		end
+
+	end
 end
 
 eval IO.read("Vagrantfile.local") if File.file?("Vagrantfile.local")

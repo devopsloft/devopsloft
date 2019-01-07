@@ -26,4 +26,20 @@ Vagrant.configure("2") do |config|
 		end
 	end
 
+	config.vm.define "prod" do |prod|
+
+		stage.vm.provider :aws do |aws,override|
+			aws.keypair_name = "aws_rsa"
+			aws.ami = "ami-d2414e38"
+			aws.instance_type = "t2.micro"
+			aws.elastic_ip = "52.209.230.146"
+			aws.region = "eu-west-1"
+			aws.subnet_id = "subnet-2c67fe64"
+			aws.security_groups = ["sg-7b78fe07"]
+			aws.associate_public_ip = true
+
+			override.ssh.username = "ubuntu"
+			override.ssh.private_key_path = "~/.ssh/aws_rsa.pem"
+		end
+	end
 end
