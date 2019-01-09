@@ -51,12 +51,12 @@ if [[ "${CICD}" == "true" ]]; then
     echo "TODO: http://flask.pocoo.org/docs/1.0/testing/"
 
     echo -e "\n**********"
-    echo -e "** Release **"
+    echo -e "** Deploy **"
     echo -e "**********\n"
     sudo docker build -t devopsloft/app .
 
     echo -e "\n**********"
-    echo -e "** Deploy **"
+    echo -e "** Release **"
     echo -e "**********\n"
     sudo docker run  -itd --name app --user root -p 5000:80 devopsloft/app
     echo -e "\nTesting webserver"
