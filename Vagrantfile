@@ -17,6 +17,20 @@ Vagrant.configure("2") do |config|
 		end
 	end
 
+	config.vm.define "cicd" do |cicd|
+
+		cicd.vm.box = "ubuntu/bionic64"
+		cicd.vm.provision "shell",path: "bootstrap-db.sh"
+		cicd.vm.provision "shell",path: "bootstrap-app.sh"
+		cicd.vm.network "forwarded_port", guest: 5000, host: 5000
+
+		cicd.vm.provider :virtualbox do |virtualbox,override|
+			virtualbox.name = "devopsloft_dev"
+			virtualbox.memory = 1024
+			virtualbox.cpus = 2
+		end
+	end
+
 	config.vm.define "stage" do |stage|
 
 		stage.vm.synced_folder ".", "/vagrant", disabled: true
