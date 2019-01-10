@@ -4,7 +4,7 @@ declare -i error_counter=0
 
 for f in $(find . -type f)
 do
-    if [[ ! "${f}" =~  (png|db|.git|__pycache__) ]]
+    if [[ ! "${f}" =~  (png|db|.git|__pycache__|csv) ]]
     then    
         grep -c -m 1 $'\r$' $f 2>&1 > /dev/null
         if [ $? -eq 0 ]
