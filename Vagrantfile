@@ -6,6 +6,9 @@ Vagrant.configure("2") do |config|
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
+		config.vm.provision :ansible do |ansible|
+			ansible.playbook = "playbooks/bootstrap-infra.yml"
+		end
 		dev.vm.provision "shell",path: "bootstrap-db.sh"
 		dev.vm.provision "shell",path: "bootstrap-app.sh"
 		dev.vm.network "forwarded_port", guest: 80, host: 5000

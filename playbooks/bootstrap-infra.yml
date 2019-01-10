@@ -1,0 +1,24 @@
+---
+- hosts: all
+  gather_facts: no # because no python2 on target guest
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson
+    - setup: # aka gather_facts
+  remote_user: vagrant
+  become: true
+  become_method: sudo
+  become_user: root
+  tasks:
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+    - name: Install docker
+      apt:
+        name: 'docker-ce'
+        state: present
+        update_cache: yes

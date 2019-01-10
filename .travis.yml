@@ -8,3 +8,4 @@ install:
     - pip install coveralls
 script:
     - flake8 .
+    - ./check_dos_format.sh # check if files has ^M (windows format)
