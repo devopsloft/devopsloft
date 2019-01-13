@@ -58,7 +58,7 @@ if [[ "${CICD}" == "true" ]]; then
     echo -e "\n**********"
     echo -e "** Release **"
     echo -e "**********\n"
-    sudo docker run  -itd --name app --user root -p 5000:80 devopsloft/app
+    sudo docker run  -itd --name app --user root -p 5000:5000 devopsloft/app
     echo -e "\nTesting webserver"
 
 
