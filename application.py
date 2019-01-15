@@ -19,6 +19,7 @@ import csv
 # import system paths
 import config  # noqa: F401
 import models
+import os
 
 from flask import Flask, flash, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -30,6 +31,17 @@ from flask_login import LoginManager, login_user, login_required, \
 from forms import SubscribeForm, LoginForm, SignupForm
 
 application = Flask(__name__)
+
+db_host_name = os.environ.get("DB_HOST_NAME")
+db_user_name = os.environ.get("DB_USER_NAME")
+db_password = os.environ.get("DB_PASSWORD")
+db_instance = os.environ.get("DB_INSTANCE")
+
+connection_string = \
+    "mysql+mysqlconnector://{}:{}@{}/{}".format(
+        db_user_name, db_password, db_host_name, db_instance)
+
+
 application.config.from_object('config.BaseConfig')
 
 login_manager = LoginManager()
@@ -93,7 +105,7 @@ def subscribe():
         'subscribe.html',
         subscribe_form=subscribe_form,
         name=current_user
-        )
+    )
 
 
 @application.route('/signup', methods=['POST', 'GET'])
@@ -106,12 +118,12 @@ def signup():
             hashed_password = generate_password_hash(
                 signupForm.password.data,
                 method='sha256'
-                )
+            )
             new_user = models.User(
                 username=signupForm.username.data,
                 email=signupForm.email.data,
                 password=hashed_password
-                )
+            )
             db.session.add(new_user)
             db.session.commit()
 
@@ -127,7 +139,7 @@ def signup():
         'auth/signup.html',
         signupForm=signupForm,
         name=current_user
-        )
+    )
 
 
 @application.route('/login', methods=['POST', 'GET'])
@@ -147,7 +159,7 @@ def login():
         'auth/login.html',
         loginForm=loginForm,
         name=current_user
-        )
+    )
 
 
 # Visible only if logged in
@@ -159,4 +171,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    application.run(debug=True, host='0.0.0.0', port=80)
+    application.run(debug=True, host='0.0.0.0', port=5000)
