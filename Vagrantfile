@@ -23,6 +23,9 @@ Vagrant.configure("2") do |config|
 	config.vm.define "cicd" do |cicd|
 
 		cicd.vm.box = "ubuntu/bionic64"
+		cicd.vm.provision :ansible do |ansible|
+			ansible.playbook = "playbooks/bootstrap-infra.yml"
+		end
 		cicd.vm.provision "shell",path: "bootstrap-db.sh"
 		cicd.vm.provision "shell",path: "bootstrap-app.sh"
 		cicd.vm.network "forwarded_port", guest: 5000, host: 5000
@@ -40,6 +43,9 @@ Vagrant.configure("2") do |config|
 		stage.vm.box = "dummy"
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 		stage.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
+		stage.vm.provision :ansible do |ansible|
+			ansible.playbook = "playbooks/bootstrap-infra.yml"
+		end
 		stage.vm.provision "shell",path: "bootstrap-db.sh"
 		stage.vm.provision "shell",path: "bootstrap-app.sh"
 
@@ -53,6 +59,9 @@ Vagrant.configure("2") do |config|
 		prod.vm.synced_folder ".", "/vagrant", disabled: true
 		prod.vm.box = "dummy"
 		prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+		prod.vm.provision :ansible do |ansible|
+			ansible.playbook = "playbooks/bootstrap-infra.yml"
+		end
 		prod.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
 		prod.vm.provision "shell",path: "bootstrap-db.sh"
 		prod.vm.provision "shell",path: "bootstrap-app.sh"
