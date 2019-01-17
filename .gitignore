@@ -31,3 +31,6 @@ dist/
 
 .vagrant/
 Vagrantfile.local
+
+# Intellij metadata
+*.iml

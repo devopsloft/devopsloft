@@ -1,0 +1,56 @@
+---
+version: '3'
+
+services:
+  python-app:
+    build:
+      context: '.'
+      dockerfile: Dockerfile
+    ports:
+      - 80:5000
+      - 443:443
+
+  prometheus:
+    build:
+      context: docker/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus-data:/prometheus
+
+  grafana:
+    build:
+      context: docker/grafana
+    ports:
+      - 3000:3000
+
+#  container-exporter:
+#    image: prom/container-exporter
+#    volumes:
+#      - /sys/fs/cgroup:/cgroup
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    command: ["-labels=com.docker.compose.service,com.docker.compose.project"]
+
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+
+  cadvisor:
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+volumes:
+  mysql-data:
+  prometheus-data:
