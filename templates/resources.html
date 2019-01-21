@@ -2,15 +2,26 @@
 
 {% block body %}
 {% from "includes/_formhelpers.html" import render_field %}
+<script>
+  function removeLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('resources').style.display = 'block';
+  }
+</script>
 
 <h2 class="pb-3 mb-4 border-bottom text-center">Resources</h2>
+
+<div id="loader">
+  {% include 'utils/loader.html' %}
+</div>
+
 <div class="embed-responsive embed-responsive-16by9">
 
-  <iframe class="embed-responsive-item"
-          src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYRaIvGcdyqWzxkwDlkWkbKiXteu8pOnJdZVhKPL1_mEzj_8YVSXlN_KuqznRCRagw0HxT8ornLEV8/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"
-          height=100%
-          width=100%
-          allowfullscreen>
+  <iframe id="resources" style="display:none" onload="removeLoader()" class="embed-responsive-item" 
+    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYRaIvGcdyqWzxkwDlkWkbKiXteu8pOnJdZVhKPL1_mEzj_8YVSXlN_KuqznRCRagw0HxT8ornLEV8/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"
+    height=100%
+    width=100%
+    allowfullscreen>
   </iframe>
 </div>
 
