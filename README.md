@@ -5,6 +5,7 @@
 
 A community which drives our career path into DevOps.
 
+
 ## Table of Contents
 
 * [What does that mean?](#what-does-that-mean)
