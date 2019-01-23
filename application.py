@@ -56,6 +56,11 @@ def resources():
     return render_template('resources.html', name=current_user)
 
 
+@application.route('/docslist')
+def docslist():
+    return render_template('docslist.html', name=current_user)
+
+
 @application.route('/contact')
 def contact():
     return render_template('contact.html', name=current_user)
