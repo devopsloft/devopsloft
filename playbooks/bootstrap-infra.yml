@@ -1,8 +1,8 @@
 ---
 - hosts: all
-  gather_facts: no # because no python2 on target guest
+  gather_facts: no # workaround for docker installation when no python (2 or 3) yet installed. 
   pre_tasks:
-    - name: 'install python2'
+    - name: 'install python-simplejson'
       raw: sudo apt-get -y install python-simplejson
     - setup: # aka gather_facts
   remote_user: vagrant
