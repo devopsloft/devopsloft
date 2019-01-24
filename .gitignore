@@ -32,3 +32,5 @@ playbooks/*.retry
 
 .vagrant/
 Vagrantfile.local
+devopsloft_workspace.code-workspace
+aws_ubuntu.pem

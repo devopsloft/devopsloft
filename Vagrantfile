@@ -1,7 +1,21 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require './Utility'
+
 Vagrant.configure("2") do |config|
+
+	config.trigger.before :up do |trigger|
+    	trigger.name = "Before starting"
+		trigger.info = "running before vagrant up"
+		ansible_exists = Utility.which 'ansible'
+		if ansible_exists.nil?
+			puts "\nAnsible does not exists on this host, aborting..."
+			abort
+		else
+		    puts "Ansible exists, continuing..."
+		end
+	end
 
 	config.vm.define "dev" do |dev|
 
