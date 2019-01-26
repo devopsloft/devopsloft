@@ -91,6 +91,10 @@ localhost:5000
   * Subnet ID
   * Security Group with inbound ports for SSH and TCP port 5000
 * Adjust `Vagrantfile.local` with your configuration (see the Vagrantfile.local.example file for reference)
+* Install Vagrant AWS plugin
+```
+vagrant plugin install vagrant-aws
+```
 * Launch the environment
 ```
 vagrant up stage

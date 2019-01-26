@@ -56,6 +56,11 @@ def resources():
     return render_template('resources.html', name=current_user)
 
 
+@application.route('/docslist')
+def docslist():
+    return render_template('docslist.html', name=current_user)
+
+
 @application.route('/contact')
 def contact():
     return render_template('contact.html', name=current_user)
@@ -154,4 +159,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    application.run(debug=True, host='0.0.0.0', port=5000)
+    application.run(debug=True, host='0.0.0.0', port=80)
