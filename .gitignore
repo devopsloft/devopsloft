@@ -19,6 +19,7 @@ ChangeLog
 doc/build/*
 dist/
 .idea/
+playbooks/*.retry
 
 # Data Files
 *.csv
@@ -31,3 +32,5 @@ dist/
 
 .vagrant/
 Vagrantfile.local
+devopsloft_workspace.code-workspace
+aws_ubuntu.pem
