@@ -1,26 +1,11 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require './Utility'
-
 Vagrant.configure("2") do |config|
-
-	config.trigger.before :up do |trigger|
-    	trigger.name = "Before starting"
-		trigger.info = "running before vagrant up"
-		ansible_exists = Utility.which 'ansible'
-		if ansible_exists.nil?
-			puts "\nAnsible does not exists on this host, aborting..."
-			abort
-		else
-		    puts "Ansible exists, continuing..."
-		end
-	end
-
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
-		config.vm.provision :ansible do |ansible|
+		config.vm.provision :ansible_local do |ansible|
 			ansible.playbook = "playbooks/bootstrap-infra.yml"
 		end
 		dev.vm.provision "shell",path: "bootstrap-db.sh"
@@ -37,7 +22,7 @@ Vagrant.configure("2") do |config|
 	config.vm.define "cicd" do |cicd|
 
 		cicd.vm.box = "ubuntu/bionic64"
-		cicd.vm.provision :ansible do |ansible|
+		cicd.vm.provision :ansible_local do |ansible|
 			ansible.playbook = "playbooks/bootstrap-infra.yml"
 		end
 		cicd.vm.provision "shell",path: "bootstrap-db.sh"
@@ -57,7 +42,8 @@ Vagrant.configure("2") do |config|
 		stage.vm.box = "dummy"
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 		stage.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
-		stage.vm.provision :ansible do |ansible|
+		stage.vm.provision :ansible_local do |ansible|
+			ansible.provisioning_path = "/home/ubuntu/devopsloft"
 			ansible.playbook = "playbooks/bootstrap-infra.yml"
 		end
 		stage.vm.provision "shell",path: "bootstrap-db.sh"
@@ -73,10 +59,11 @@ Vagrant.configure("2") do |config|
 		prod.vm.synced_folder ".", "/vagrant", disabled: true
 		prod.vm.box = "dummy"
 		prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-		prod.vm.provision :ansible do |ansible|
+		prod.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
+		prod.vm.provision :ansible_local do |ansible|
+			ansible.provisioning_path = "/home/ubuntu/devopsloft"
 			ansible.playbook = "playbooks/bootstrap-infra.yml"
 		end
-		prod.vm.provision "file", source: ".", destination: "$HOME/devopsloft"
 		prod.vm.provision "shell",path: "bootstrap-db.sh"
 		prod.vm.provision "shell",path: "bootstrap-app.sh"
 
