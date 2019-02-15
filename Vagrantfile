@@ -2,6 +2,9 @@
 # vi: set ft=ruby :
 
 require './lib/vagrant.rb'
+require 'yaml'
+AWS = YAML.load_file 'aws.yml'
+
 include OS
 
 puts ""
@@ -71,16 +74,16 @@ Vagrant.configure("2") do |config|
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
 		stage.vm.provider :aws do |aws,override|
-			aws.keypair_name = "osx_rsa"
-			aws.ami = "ami-d2414e38"
-			aws.instance_type = "t2.micro"
-			aws.region = "eu-west-1"
-			aws.subnet_id = "subnet-2c67fe64"
-			aws.security_groups = ["sg-7b78fe07"]
-			aws.associate_public_ip = true
-
-			override.ssh.username = "ubuntu"
-			override.ssh.private_key_path = "~/.ssh/osx_rsa.pem"
+			aws.keypair_name = AWS['stage_keypair_name']
+			aws.ami = AWS['stage_ami']
+			aws.instance_type = AWS['stage_instance_type']
+			aws.region = AWS['stage_region']
+			aws.subnet_id = AWS['stage_subnet_id']
+			aws.security_groups = AWS['stage_security_groups']
+            aws.associate_public_ip = AWS['stage_associate_public_ip']
+            
+			override.ssh.username = AWS['stage_ssh_username']
+			override.ssh.private_key_path = AWS['stage_ssh_private_key_path']
 		end
 
 	end
@@ -92,17 +95,17 @@ Vagrant.configure("2") do |config|
 
 
 		prod.vm.provider :aws do |aws,override|
-			aws.keypair_name = "osx_rsa"
-			aws.ami = "ami-d2414e38"
-			aws.instance_type = "t2.micro"
-			aws.elastic_ip = "52.209.230.146"
-			aws.region = "eu-west-1"
-			aws.subnet_id = "subnet-2c67fe64"
-			aws.security_groups = ["sg-7b78fe07"]
-			aws.associate_public_ip = true
+			aws.keypair_name = AWS['prod_keypair_name']
+			aws.ami = AWS['prod_ami']
+			aws.instance_type = AWS['prod_instance_type']
+			aws.elastic_ip = AWS['prod_elastic_ip']
+			aws.region = AWS['prod_region']
+			aws.subnet_id = AWS['prod_subnet_id']
+			aws.security_groups = AWS['prod_security_groups']
+            aws.associate_public_ip = AWS['prod_associate_public_ip']
 
-			override.ssh.username = "ubuntu"
-			override.ssh.private_key_path = "~/.ssh/osx_rsa.pem"
+			override.ssh.username = AWS['prod_ssh_username']
+			override.ssh.private_key_path = AWS['prod_ssh_private_key_path']
 		end
 
 	end
