@@ -80,9 +80,9 @@ Vagrant.configure("2") do |config|
 			aws.region = AWS['stage_region']
 			aws.subnet_id = AWS['stage_subnet_id']
 			aws.security_groups = AWS['stage_security_groups']
-            aws.associate_public_ip = AWS['stage_associate_public_ip']
-            
-			override.ssh.username = AWS['stage_ssh_username']
+			aws.associate_public_ip = true
+
+			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = AWS['stage_ssh_private_key_path']
 		end
 
@@ -102,9 +102,9 @@ Vagrant.configure("2") do |config|
 			aws.region = AWS['prod_region']
 			aws.subnet_id = AWS['prod_subnet_id']
 			aws.security_groups = AWS['prod_security_groups']
-            aws.associate_public_ip = AWS['prod_associate_public_ip']
+			aws.associate_public_ip = true
 
-			override.ssh.username = AWS['prod_ssh_username']
+			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = AWS['prod_ssh_private_key_path']
 		end
 
