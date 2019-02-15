@@ -1,21 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require './lib/vagrant.rb'
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
 
-include OS
-
 puts ""
 
-if OS.windows?
+if Vagrant::Util::Platform.windows?
     puts "Vagrant was launched from Windows."
-elsif OS.mac?
+elsif Vagrant::Util::Platform.mac?
     puts "Vagrant was launched from Mac."
-elsif OS.unix?
+elsif Vagrant::Util::Platform.unix?
     puts "Vagrant was launched from Unix."
-elsif OS.linux?
+elsif Vagrant::Util::Platform.linux?
     puts "Vagrant was launched from Linux."
 else
     puts "Vagrant was launched from unknown platform."
@@ -23,7 +20,7 @@ end
 
 Vagrant.configure("2") do |config|
 
-    if OS.windows?
+    if Vagrant::Util::Platform.windows?
         # needed for windows as prerequisite for vagrant-aws but will work from vagrant next release 2.2.4
         if Vagrant::VERSION >= '2.2.4'
             required_plugins = [
