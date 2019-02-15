@@ -1,7 +1,49 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require './lib/vagrant.rb'
+include OS
+
+puts ""
+
+if OS.windows?
+    puts "Vagrant was launched from Windows."
+elsif OS.mac?
+    puts "Vagrant was launched from Mac."
+elsif OS.unix?
+    puts "Vagrant was launched from Unix."
+elsif OS.linux?
+    puts "Vagrant was launched from Linux."
+else
+    puts "Vagrant was launched from unknown platform."
+end
+
 Vagrant.configure("2") do |config|
+
+    if OS.windows?
+        # needed for windows as prerequisite for vagrant-aws but will work from vagrant next release 2.2.4
+        if Vagrant::VERSION >= '2.2.4'
+            required_plugins = [
+            {"fog-ovirt" => {"version" => "1.0.1"}},
+            "vagrant-aws"
+            ]
+            config.vagrant.plugins = required_plugins
+        else
+            unless Vagrant.has_plugin?("vagrant-aws")
+                puts ""
+                puts "Since you are using Windows with vagrant version " + Vagrant::VERSION + ","
+                puts "You must install the following plugins manually:"
+                puts "1. vagrant plugin install --plugin-version 1.0.1 fog-ovirt"
+                puts "2. vagrant plugin install vagrant-aws"
+                exit
+            end
+        end
+    else
+        required_plugins = [
+            "vagrant-aws"
+        ]
+        config.vagrant.plugins = required_plugins
+    end
 
 	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
 	config.vm.provision :ansible_local do |ansible|
