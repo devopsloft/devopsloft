@@ -6,18 +6,6 @@ AWS = YAML.load_file 'aws.yml'
 
 puts ""
 
-if Vagrant::Util::Platform.windows?
-    puts "Vagrant was launched from Windows."
-elsif Vagrant::Util::Platform.mac?
-    puts "Vagrant was launched from Mac."
-elsif Vagrant::Util::Platform.unix?
-    puts "Vagrant was launched from Unix."
-elsif Vagrant::Util::Platform.linux?
-    puts "Vagrant was launched from Linux."
-else
-    puts "Vagrant was launched from unknown platform."
-end
-
 Vagrant.configure("2") do |config|
 
     if Vagrant::Util::Platform.windows?
