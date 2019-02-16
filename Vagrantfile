@@ -4,8 +4,6 @@
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
 
-puts ""
-
 Vagrant.configure("2") do |config|
 
     if Vagrant::Util::Platform.windows?
