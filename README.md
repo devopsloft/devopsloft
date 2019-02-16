@@ -104,3 +104,23 @@ vagrant up stage
 ```
 vagrant destroy --force stage
 ```
+
+## Monitoring
+
+* Prometheus
+```
+# Dashboard
+localhost:9090
+# Prometheus server metrics endpoint
+localhost:9090
+# Node exporter
+localhost:9100 endpoint
+```
+* Grafana
+```
+# Dashboard
+localhost:3000
+# Login with admin admin
+# Watch Application Dashboard
+http://localhost:3000/dashboards
+```

@@ -9,12 +9,18 @@ Vagrant.configure("2") do |config|
 	end
 	config.vm.provision "shell",path: "bootstrap-db.sh"
 	config.vm.provision "shell",path: "bootstrap-app.sh"
-
+	config.vm.provision "shell",path: "bootstrap-monitoring.sh"
+	
 
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
 		dev.vm.network "forwarded_port", guest: 80, host: 5000
+		# Monitoring
+		dev.vm.network "forwarded_port", guest: 9090, host: 9090
+		dev.vm.network "forwarded_port", guest: 9100, host: 9100
+		dev.vm.network "forwarded_port", guest: 3000, host: 3000
+
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "devopsloft_dev"
