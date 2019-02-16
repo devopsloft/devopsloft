@@ -107,20 +107,23 @@ vagrant destroy --force stage
 
 ## Monitoring
 
+### Dev 
 * Prometheus
 ```
 # Dashboard
-localhost:9090
+http://localhost:9090/graph
 # Prometheus server metrics endpoint
-localhost:9090
-# Node exporter
-localhost:9100 endpoint
+http://localhost:9090/metrics
+# Node exporter endpoint
+http://localhost:9100/metrics
 ```
 * Grafana
 ```
 # Dashboard
-localhost:3000
+http://localhost:3000
 # Login with admin admin
-# Watch Application Dashboard
+# Go to DevOpsLoft dashboard
 http://localhost:3000/dashboards
 ```
+### Stage
+* Make sure to open the relvent ports. [Reference](https://www.google.com/url?q=https://docs.google.com/document/d/1xusuzv7LKBl30YU_ruy8jp9GZ9dqTHBqDo0Xw19UA6U/edit?usp%3Dsharing&sa=D&ust=1550336531303000&usg=AFQjCNGf-94uvFmrNUDXk4NLf9qtI-u1iw)
