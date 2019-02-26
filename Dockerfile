@@ -1,24 +1,20 @@
-FROM ubuntu:18.04
+FROM python:3-alpine3.9
 
 EXPOSE 5000
 
-RUN apt-get update -y && \
-    apt-get install -y python3 && \
-    apt-get install -y python3-pip && \
-    pip3 install --upgrade pip && \
-    useradd -ms /bin/bash devopsloft && \ 
-    pip install virtualenv && \
-    virtualenv -p python3 venv && \
-    . venv/bin/activate
-
-COPY ./requirements.txt /app/requirements.txt 
-
 WORKDIR /app
 
-RUN pip install -r requirements.txt 
-  
+COPY ./requirements.txt /app/requirements.txt
+
+RUN apk update && \
+    apk upgrade && \
+    pip install --no-cache-dir -r requirements.txt && \
+    addgroup -S devopsloft && \
+    adduser -S devopsloft -G devopsloft && \
+    rm -rf /var/cache/apk/*
+
 USER devopsloft
 
-COPY . /app
+COPY . .
 
-CMD ["python3", "application.py"]
+CMD ["python", "application.py"]

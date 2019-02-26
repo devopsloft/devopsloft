@@ -1,6 +1,12 @@
+import os
 import sqlalchemy as db
 
-connection_string = 'mysql+mysqlconnector://root:12345@localhost/devopsloft'
+connection_string = "mysql+mysqlconnector://{}:{}@{}/devopsloft" \
+    .format(
+            os.getenv('MYSQL_USER', 'application'),
+            os.getenv('MYSQL_PASSWORD', 'application'),
+            os.getenv('MYSQL_HOST', 'mysql')
+    )
 
 
 class Member:

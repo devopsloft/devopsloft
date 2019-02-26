@@ -3,9 +3,10 @@ version: '3'
 
 services:
   python-app:
+    env_file:
+      - '.env'
     build:
       context: '.'
-      dockerfile: Dockerfile
     ports:
       - 80:5000
       - 443:443
@@ -40,7 +41,7 @@ services:
     command:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
-      - --collector.filesystem.ignored-mount-points
+      - '--collector.filesystem.ignored-mount-points'
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
 
   cadvisor:
@@ -50,6 +51,24 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    env_file:
+      - '.env'
+    environment:
+      - 'DATA_SOURCE_NAME=exporter:${MYSQL_EXPORTER_PASSWORD:-exporter}@(mysql:3306)/'
+
+  mysql:
+    image: mysql:8.0
+    env_file:
+      - '.env'
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+    environment:
+      - "MYSQL_DATABASE=devopsloft"
+      - "MYSQL_USER=application"
 
 volumes:
   mysql-data:

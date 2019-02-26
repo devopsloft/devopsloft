@@ -67,18 +67,65 @@ And ... join our [Facebook Group](https://www.facebook.com/groups/51266453912708
 * Vagrant should be installed in order to launch an environment of the application.
 * AWS account is required in order to run the application in STAGE environment. (see more details in STAGE Environment section)
 
+### Docker secrets and configurations
+The following settings are advised to be set in `.env` file:
+* MYSQL_ROOT_PASSWORD - Default: root
+* MYSQL_EXPORTER_PASSWORD - Default: exporter
+* MYSQL_APPLICATION_PASSWORD - Default: application
+
 ## DEV environment
 
-* The application will be deployed as local VM using VirtualBox
+* The application will be deployed via docker-compose
 * Create the environment
 
 ```
-vagrant up dev
+docker-compose up -d
 ```
 
 * Access the application through internet browser
 ```
 localhost:5000
+```
+
+If a change is made to a container, it needs to be rebuilt.
+Use the following: (`python-app` is just an example here)
+```
+docker-compose build python-app
+docker-compose up -d --force-recreate python-app
+```
+
+### MySQL data
+in the folder `database` we can add `.sql` and `.sh` files that will be executed upon MySQL
+container startsup.
+
+**important**
+* The commands must be idempotent
+* The commands only run once if the DB files are not present, this is not a migration tool, it's a seeding tool
+* Until there is a DB migrations tool, for clarity, changes should be set in a manner that follow "migrations" patterns, for example:
+Adding a column to an existing table:
+```sql
+CREATE TABLE IF NOT EXISTS devopsloft.users
+(id integer NOT NULL AUTO_INCREMENT, 
+ first_name varchar(100) NOT NULL)
+ALTER TABLE devopsloft.users ADD example integer;
+```
+Creating a user:
+```sql
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
+ALTER USER 'user'@'%' IDENTIFIED BY 'password';
+```
+Preferably, place the creation of the user in `.sh` to be able to access environment variables.
+The files are processed in lexicographic order
+
+##### Purging all MySQL data #####
+```bash
+docker-compose stop mysql
+docker-compose rm -f mysql
+docker volumde rm devopsloft_mysql-data
+```
+Then you will need to start up the container again
+```bash
+docker-compose up -d mysql
 ```
 
 ## STAGE environment

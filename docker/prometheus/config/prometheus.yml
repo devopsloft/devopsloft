@@ -33,8 +33,17 @@ scrape_configs:
     static_configs:
       # Node exporter, for the host
       - targets: ['node-exporter:9100']
+        labels:
+          instance: 'app_db'
 
   - job_name: 'docker-containers'
     static_configs:
       # Metrics for the docker containers
       - targets: ['container-exporter:9104']
+
+  - job_name: 'mysql_metrics'
+    static_configs:
+      # Metrics for the docker containers
+      - targets: ['mysql-exporter:9104']
+        labels:
+          instance: 'app_db'

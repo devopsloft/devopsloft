@@ -10,8 +10,6 @@ sys.path.insert(0, project_dir + '/data/')
 
 
 class BaseConfig(object):
-    # must be changed at deployment
-    SECRET_KEY = "devops"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///{}"\
-        .format(os.path.join(project_dir, "data/usersdatabase.db"))
+    SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/devopsloft" \
+        .format(os.getenv('MYSQL_USER', 'application'), os.getenv('MYSQL_PASSWORD', 'application'), os.getenv('MYSQL_HOST', 'mysql'))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
