@@ -25,13 +25,6 @@ echo "Create application database and users table"
 
 echo "script creating database"
 
-uname -r | grep aws
-if [ $? -eq 0 ]; then
-	echo 'aws'
-    mysql -uroot -p12345 < ./devopsloft/create_db.sql
-else
-	echo 'not aws'
-    mysql -uroot -p12345 < /vagrant/create_db.sql
-fi
+mysql -uroot -p12345 < /vagrant/create_db.sql
 
 echo "db boostrap script completed!"

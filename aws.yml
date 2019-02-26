@@ -1,0 +1,17 @@
+---
+stage_keypair_name: "osx_rsa"
+stage_ami: "ami-d2414e38"
+stage_instance_type: "t2.micro"
+stage_region: "eu-west-1"
+stage_subnet_id: "subnet-2c67fe64"
+stage_security_groups: ["sg-7b78fe07"]
+stage_ssh_private_key_path: "~/.ssh/osx_rsa.pem"
+
+prod_keypair_name: "osx_rsa"
+prod_ami: "ami-d2414e38"
+prod_instance_type: "t2.micro"
+prod_elastic_ip: "52.209.230.146"
+prod_region: "eu-west-1"
+prod_subnet_id: "subnet-2c67fe64"
+prod_security_groups: ["sg-7b78fe07"]
+prod_ssh_private_key_path: "~/.ssh/osx_rsa.pem"

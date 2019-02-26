@@ -24,14 +24,7 @@ echo "Setting virtual environment..."
 virtualenv -p python3 venv
 source venv/bin/activate
 
-uname -r | grep aws
-if [ $? -eq 0 ]; then
-	echo 'aws'
-	cd devopsloft
-else
-	echo 'not aws'
-	cd /vagrant
-fi
+cd /vagrant
 
 echo "Installing additional pips from requirements.txt..."
 pip install -r requirements.txt

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/devopsloft/devopsloft.svg?branch=master)](https://travis-ci.org/devopsloft/devopsloft)
+
 # DevOps Loft
 
 ## Drive our Career Path into DevOps
