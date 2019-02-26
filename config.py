@@ -11,5 +11,9 @@ sys.path.insert(0, project_dir + '/data/')
 
 class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{}:{}@{}/devopsloft" \
-        .format(os.getenv('MYSQL_USER', 'application'), os.getenv('MYSQL_PASSWORD', 'application'), os.getenv('MYSQL_HOST', 'mysql'))
+        .format(
+            os.getenv('MYSQL_USER', 'application'),
+            os.getenv('MYSQL_PASSWORD', 'application'),
+            os.getenv('MYSQL_HOST', 'mysql')
+        )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
