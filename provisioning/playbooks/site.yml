@@ -6,6 +6,7 @@
   roles:
     - role: geerlingguy.docker
     - role: geerlingguy.mysql
+    - role: realsalmon.mysql-client
   tasks:
     - name: creating database
       shell: mysql -uroot -p{{ mysql_root_password }} < /vagrant/create_db.sql
@@ -38,4 +39,6 @@
         state: file
         mode: 0655
     - name: start application in background
-      shell: /vagrant/startup.sh
+      shell: >
+        /vagrant/startup.sh {{ mysql_bind_address }} {{ mysql_root_username }} \
+          {{ mysql_root_password }}
