@@ -33,5 +33,9 @@
         virtualenv: /vagrant/venv
         virtualenv_command: virtualenv
     - meta: flush_handlers
+    - file:
+        path: /vagrant/startup.sh
+        state: file
+        mode: 0655
     - name: start application in background
       shell: /vagrant/startup.sh
