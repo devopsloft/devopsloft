@@ -55,21 +55,26 @@ def signup():
         username = form.username.data
         password = sha256_crypt.encrypt(str(form.password.data))
 
-        # Create cursor
-        cur = mysql.connection.cursor()
+        try:
+            # Create cursor
+            cur = mysql.connection.cursor()
 
-        cur.execute("INSERT INTO users(name, email, username, password) \
-            VALUES(%s, %s, %s, %s)", (name, email, username, password))
+            cur.execute("INSERT INTO users(name, email, username, password) \
+                VALUES(%s, %s, %s, %s)", (name, email, username, password))
 
-        # Commit to DB
-        mysql.connection.commit()
+            # Commit to DB
+            mysql.connection.commit()
 
-        # Close connection
-        cur.close()
+            # Close connection
+            cur.close()
 
-        flash('You are now signed up', 'success')
+            flash('You are now signed up', 'success')
+
+        except Exception as e:
+            flash("{}".format(e.args[1]), category='warning')
 
         return(redirect(url_for('home')))
+
     return render_template('signup.html', form=form)
 
 
