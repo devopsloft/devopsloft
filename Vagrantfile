@@ -4,31 +4,27 @@
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
 
+if Vagrant::VERSION < '2.2.4'
+    puts "Vagrant version '" + Vagrant::VERSION.to_s + "' is not supported. Please upgrade to version 2.2.4 or higher"
+    exit
+end
+
 Vagrant.configure("2") do |config|
 
-    if Vagrant::Util::Platform.windows?
-        # needed for windows as prerequisite for vagrant-aws but will work from vagrant next release 2.2.4
-        if Vagrant::VERSION >= '2.2.4'
+    if ARGV[1] != 'dev' # aws plugin is needed only for non dev environment
+        if Vagrant::Util::Platform.windows?
+            # needed for windows as prerequisite for vagrant-aws
             required_plugins = [
             {"fog-ovirt" => {"version" => "1.0.1"}},
             "vagrant-aws"
             ]
             config.vagrant.plugins = required_plugins
         else
-            unless Vagrant.has_plugin?("vagrant-aws")
-                puts ""
-                puts "Since you are using Windows with vagrant version " + Vagrant::VERSION + ","
-                puts "You must install the following plugins manually:"
-                puts "1. vagrant plugin install --plugin-version 1.0.1 fog-ovirt"
-                puts "2. vagrant plugin install vagrant-aws"
-                exit
-            end
+            required_plugins = [
+                "vagrant-aws"
+            ]
+            config.vagrant.plugins = required_plugins
         end
-    else
-        required_plugins = [
-            "vagrant-aws"
-        ]
-        config.vagrant.plugins = required_plugins
     end
 
 	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
@@ -55,7 +51,7 @@ Vagrant.configure("2") do |config|
 		end
 	end
 
-	config.vm.define "stage" do |stage|
+    config.vm.define "stage" do |stage|
 
 		stage.vm.box = "dummy"
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
