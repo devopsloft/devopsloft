@@ -4,6 +4,11 @@
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
 
+if File.exist?('aws.yml.local')
+    private_settings = YAML::load_file('aws.yml.local')
+    AWS.merge!(private_settings)
+end
+
 Vagrant.require_version ">= 2.2.4"
 
 Vagrant.configure("2") do |config|
