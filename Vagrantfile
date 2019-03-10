@@ -1,6 +1,36 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# -------------------------------------------------------------
+# Exit if no environment name specified.
+# -------------------------------------------------------------
+
+environments = [
+    "dev",
+    "stage",
+    "prod"
+]
+commandsToCheck = [
+    "destroy",
+    "halt",
+    "provision",
+    "reload",
+    "resume",
+    "suspend",
+    "up"
+  ]
+  enteredCommand = ARGV[0]
+
+  # Is this one of the problem commands?
+  if commandsToCheck.include?(enteredCommand)
+    # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
+    if not environments.include?ARGV[1]
+      puts "You must use 'vagrant #{ARGV[0]} " + environments.join("/") + "....'"
+      puts "Run 'vagrant status' to view VM names."
+      exit 1
+    end
+  end
+
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
 
