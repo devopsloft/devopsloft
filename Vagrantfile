@@ -31,7 +31,7 @@ Vagrant.configure("2") do |config|
         config.vagrant.plugins = required_plugins
     end
 
-	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
+  config.vm.provision :shell, inline: "echo COMPOSE_PROJECT_NAME=devopsloft > /etc/profile.d/compose-project.sh", run: "always"
 
 	config.vm.provision :ansible_local, run: 'always', type: :ansible_local do |ansible|
 		ansible.compatibility_mode = "2.0"
@@ -48,6 +48,8 @@ Vagrant.configure("2") do |config|
 		dev.vm.box = "ubuntu/bionic64"
 		dev.vm.network "forwarded_port", guest: 80, host: 5000
 
+		config.vm.synced_folder ".", "/vagrant"
+
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "devopsloft_dev"
 			virtualbox.memory = 1024
@@ -56,6 +58,16 @@ Vagrant.configure("2") do |config|
 	end
 
 	config.vm.define "stage" do |stage|
+
+		config.vm.synced_folder ".", "/vagrant",
+														disabled: false,
+														type: 'rsync',
+														rsync__verbose: true,
+														rsync__args: %w(
+                              -a
+                              --no-owner
+															--no-group
+                          	)
 
 		stage.vm.box = "dummy"
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
@@ -77,9 +89,18 @@ Vagrant.configure("2") do |config|
 
 	config.vm.define "prod" do |prod|
 
+		config.vm.synced_folder ".", "/vagrant",
+														disabled: false,
+														type: 'rsync',
+														rsync__verbose: true,
+														rsync__args: %w(
+                              -a
+                              --no-owner
+															--no-group
+                          	)
+
 		prod.vm.box = "dummy"
 		prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-
 
 		prod.vm.provider :aws do |aws,override|
 			aws.keypair_name = AWS['prod_keypair_name']
