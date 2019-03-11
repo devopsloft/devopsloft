@@ -5,37 +5,9 @@
   become: yes
   roles:
     - role: geerlingguy.docker
-    - role: geerlingguy.mysql
   tasks:
-    - name: creating database
-      shell: mysql -uroot -p{{ mysql_root_password }} < /vagrant/create_db.sql
     - name: Update APT package manager repositories cache
       apt:
         update_cache: yes
-    - name: install "{{ packages }}"
-      package:
-        name: "{{ packages }}"
-        state: present
-      vars:
-        packages:
-          - python3
-          - python3-pip
-    - name: install and upgrade via pip
-      pip:
-        name:
-          - pip
-          - virtualenv
-        extra_args: --upgrade
-        executable: pip3
-    - name: Install requirments into virtualenv
-      pip:
-        requirements: /vagrant/requirements.txt
-        virtualenv: /vagrant/venv
-        virtualenv_command: virtualenv
-    - meta: flush_handlers
-    - file:
-        path: /vagrant/startup.sh
-        state: file
-        mode: 0655
     - name: start application in background
       shell: /vagrant/startup.sh
