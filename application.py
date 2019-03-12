@@ -34,9 +34,22 @@ def docslist():
 
 
 class SignupForm(Form):
-    name = StringField('Name', [validators.Length(min=1, max=50)])
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email', [validators.Length(min=6, max=50)])
+    name = StringField('Name', [
+        validators.Regexp(r'[A-Za-z\s]+',
+                          message="Name may only contain alphanumeric \
+                          characters and spaces"),
+        validators.Length(min=1, max=50)
+    ])
+    email = StringField('Email', [
+        validators.Email(),
+        validators.Length(min=6, max=50)
+    ])
+    username = StringField('Username', [
+        validators.Regexp(r'[A-Za-z0-9_]+',
+                          message="Name may only contain alphanumeric \
+                          characters"),
+        validators.Length(min=4, max=25)
+    ])
     password = PasswordField('Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords do not match'),
@@ -55,21 +68,26 @@ def signup():
         username = form.username.data
         password = sha256_crypt.encrypt(str(form.password.data))
 
-        # Create cursor
-        cur = mysql.connection.cursor()
+        try:
+            # Create cursor
+            cur = mysql.connection.cursor()
 
-        cur.execute("INSERT INTO users(name, email, username, password) \
-            VALUES(%s, %s, %s, %s)", (name, email, username, password))
+            cur.execute("INSERT INTO users(name, email, username, password) \
+                VALUES(%s, %s, %s, %s)", (name, email, username, password))
 
-        # Commit to DB
-        mysql.connection.commit()
+            # Commit to DB
+            mysql.connection.commit()
 
-        # Close connection
-        cur.close()
+            # Close connection
+            cur.close()
 
-        flash('You are now signed up', 'success')
+            flash('You are now signed up', 'success')
+
+        except Exception as e:
+            flash("{}".format(e.args[1]), category='warning')
 
         return(redirect(url_for('home')))
+
     return render_template('signup.html', form=form)
 
 
