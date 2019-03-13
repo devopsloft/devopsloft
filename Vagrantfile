@@ -24,7 +24,7 @@ commandsToCheck = [
   # Is this one of the problem commands?
   if commandsToCheck.include?(enteredCommand)
     # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
-    if not environments.include?ARGV[1]
+    if not (environments.include?ARGV[1] or environments.include?ARGV[2])
       puts "You must use 'vagrant #{ARGV[0]} " + environments.join("/") + "....'"
       puts "Run 'vagrant status' to view VM names."
       exit 1
