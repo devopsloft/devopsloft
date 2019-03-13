@@ -1,3 +1,4 @@
 ---
 - src: geerlingguy.mysql
 - src: geerlingguy.docker
+- src: realsalmon.mysql-client
