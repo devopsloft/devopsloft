@@ -10,4 +10,4 @@
       apt:
         update_cache: yes
     - name: start application in background
-      shell: /vagrant/startup.sh
+      shell: docker-compose up -d
