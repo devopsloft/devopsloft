@@ -6,14 +6,19 @@ language: python
 python:
   - "3.6"
 
-before_install:
+services:
+  - docker
+
+install:
   - pip install -r test-requirements.txt
+  - docker build -t devopsloft/devopsloft --build-arg REQUIREMENTS=requirements-dev.txt docker/.
 
 before_script:
-  - ansible-galaxy install -r provisioning/playbooks/requirements.yml -p provisioning/playbooks/roles
-  - ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars "homedir=$TRAVIS_BUILD_DIR" provisioning/playbooks/site.yml
+  - docker run -d -p 80:80 --name web devopsloft/devopsloft
+  - docker cp tests web:/tests/
+  - docker exec -it web bash -c 'pip install pyyaml'
 
 script:
     - flake8 --exclude venv .
-    - python3 tests/is_table_empty.py
-    - python3 tests/basic_http_get_test.py
+    - docker exec -it web bash -c 'python3 /tests/is_table_empty.py'
+    - docker exec -it web bash -c 'python3 /tests/basic_http_get_test.py'

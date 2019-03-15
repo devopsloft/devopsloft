@@ -60,15 +60,12 @@ Vagrant.configure("2") do |config|
 
 	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
 
-	config.vm.provision :ansible_local, run: 'always', type: :ansible_local do |ansible|
-		ansible.compatibility_mode = "2.0"
-		ansible.galaxy_role_file = 'playbooks/requirements.yml'
-		ansible.galaxy_roles_path = '/vagrant/provisioning/playbooks/roles'
-		ansible.galaxy_command = 'ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path}'
-		ansible.provisioning_path = '/vagrant/provisioning'
-		ansible.inventory_path = 'hosts'
-		ansible.playbook = 'playbooks/site.yml'
-	end
+  config.vm.provision "docker" do |d|
+    d.build_image "/vagrant/docker",
+      args: "-t devopsloft/devopsloft"
+    d.run "devopsloft/devopsloft",
+      args: "-p 80:80"
+  end
 
 	config.vm.define "dev" do |dev|
 
