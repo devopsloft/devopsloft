@@ -10,6 +10,8 @@ services:
     ports:
       - 80:5000
       - 443:443
+    volumes:
+      - .:/app
 
   prometheus:
     build:
