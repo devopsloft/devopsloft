@@ -1,4 +1,5 @@
-import sys
+import os
+import yaml
 
 from flask import Flask, flash, render_template, redirect, url_for, request
 from flask_mysqldb import MySQL
@@ -7,10 +8,22 @@ from passlib.hash import sha256_crypt
 
 application = Flask(__name__)
 
+
+def load_config(config_file):
+    with open(config_file, 'r') as stream:
+        try:
+            return yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+
+homedir = os.path.dirname(os.path.realpath(__file__))
+cfg = load_config(f'{homedir}/provisioning/playbooks/group_vars/all.yml')
+
 # Config MySQL
-application.config['MYSQL_HOST'] = sys.argv[1]
-application.config['MYSQL_USER'] = sys.argv[2]
-application.config['MYSQL_PASSWORD'] = sys.argv[3]
+application.config['MYSQL_HOST'] = cfg['mysql_bind_address']
+application.config['MYSQL_USER'] = cfg['mysql_root_username']
+application.config['MYSQL_PASSWORD'] = cfg['mysql_root_password']
 application.config['MYSQL_DB'] = 'devopsloft'
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Init MySQL

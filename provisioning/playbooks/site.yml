@@ -50,6 +50,4 @@
       shell: |
         cd {{ homedir }}
         . venv/bin/activate
-        python3 application.py {{ mysql_bind_address }} \
-          {{ mysql_root_username }} {{ mysql_root_password }} \
-           </dev/null >/dev/null 2>&1 &
+        python3 application.py </dev/null >/dev/null 2>&1 &

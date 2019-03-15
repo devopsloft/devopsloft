@@ -15,3 +15,4 @@ WTForms==2.2
 mysql-connector-python==8.0.13
 flask-mysqldb==0.2.0
 passlib==1.7.1
+PyYAML==5.1
