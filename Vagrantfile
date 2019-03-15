@@ -4,30 +4,22 @@
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
 
+Vagrant.require_version ">= 2.2.4"
+
 Vagrant.configure("2") do |config|
 
-    if Vagrant::Util::Platform.windows?
-        # needed for windows as prerequisite for vagrant-aws but will work from vagrant next release 2.2.4
-        if Vagrant::VERSION >= '2.2.4'
+    if ARGV[1] != 'dev' # aws plugin is needed only for non dev environment
+        if Vagrant::Util::Platform.windows?
+            # needed for windows as prerequisite for vagrant-aws
             required_plugins = [
             {"fog-ovirt" => {"version" => "1.0.1"}},
             "vagrant-aws"
             ]
-            config.vagrant.plugins = required_plugins
         else
-            unless Vagrant.has_plugin?("vagrant-aws")
-                puts ""
-                puts "Since you are using Windows with vagrant version " + Vagrant::VERSION + ","
-                puts "You must install the following plugins manually:"
-                puts "1. vagrant plugin install --plugin-version 1.0.1 fog-ovirt"
-                puts "2. vagrant plugin install vagrant-aws"
-                exit
-            end
+            required_plugins = [
+                "vagrant-aws"
+            ]
         end
-    else
-        required_plugins = [
-            "vagrant-aws"
-        ]
         config.vagrant.plugins = required_plugins
     end
 
@@ -46,7 +38,7 @@ Vagrant.configure("2") do |config|
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
-		dev.vm.network "forwarded_port", guest: 80, host: 5000
+		dev.vm.network "forwarded_port", guest: 80, host: 80
 
 		config.vm.synced_folder ".", "/vagrant"
 
