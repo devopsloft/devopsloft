@@ -8,6 +8,10 @@ COPY ./requirements.txt /app/requirements.txt
 
 RUN apk update && \
     apk upgrade && \
+    apk add build-base \
+        py-mysqldb \
+        gcc \
+        mariadb-dev && \
     pip install --no-cache-dir -r requirements.txt && \
     addgroup -S devopsloft && \
     adduser -S devopsloft -G devopsloft && \
