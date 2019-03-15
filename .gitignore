@@ -40,3 +40,4 @@ aws_ubuntu.pem
 
 # Intellij metadata
 *.iml
+.env
