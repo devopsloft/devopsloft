@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import mysql.connector
 import yaml
-
+import os
 
 def load_config(config_file):
     with open(config_file, 'r') as stream:
@@ -14,9 +14,9 @@ def load_config(config_file):
 cfg = load_config('provisioning/playbooks/group_vars/all.yml')
 
 config = {
-    'user': cfg['mysql_root_username'],
-    'password': cfg['mysql_root_password'],
-    'host': cfg['mysql_bind_address'],
+    'user': os.getenv('MYSQL_USER', 'application'),
+    'password': os.getenv('MYSQL_PASSWORD', 'application'),
+    'host': os.getenv('MYSQL_HOST', 'mysql'),
     'database': 'devopsloft',
     'raise_on_warnings': True
 }
