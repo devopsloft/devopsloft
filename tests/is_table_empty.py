@@ -3,6 +3,7 @@ import mysql.connector
 import yaml
 import os
 
+
 def load_config(config_file):
     with open(config_file, 'r') as stream:
         try:
