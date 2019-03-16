@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: '2.4'
 
 services:
   python-app:
@@ -12,6 +12,14 @@ services:
       - 443:443
     volumes:
       - .:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://localhost:5000"]
+      interval: '10s'
+      timeout: '10s'
+      retries: 5
 
   prometheus:
     build:
@@ -26,6 +34,11 @@ services:
       context: docker/grafana
     ports:
       - 3000:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: '30s'
+      timeout: '10s'
+      retries: 3
 
 #  container-exporter:
 #    image: prom/container-exporter
@@ -71,6 +84,11 @@ services:
     environment:
       - "MYSQL_DATABASE=devopsloft"
       - "MYSQL_USER=application"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-u$${MYSQL_USER}", "-p$${MYSQL_PASSWORD}"]
+      interval: '30s'
+      timeout: '10s'
+      retries: 3
 
 volumes:
   mysql-data:
