@@ -1,4 +1,3 @@
-import sys
 import os
 
 from flask import Flask, flash, render_template, redirect, url_for, request
@@ -9,9 +8,18 @@ from passlib.hash import sha256_crypt
 application = Flask(__name__)
 
 # Config MySQL
-application.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST', 'mysql')
-application.config['MYSQL_USER'] = os.getenv('MYSQL_USER', 'application')
-application.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', 'application')
+application.config['MYSQL_HOST'] = os.getenv(
+        'MYSQL_HOST',
+        'mysql'
+    )
+application.config['MYSQL_USER'] = os.getenv(
+        'MYSQL_USER',
+        'application'
+    )
+application.config['MYSQL_PASSWORD'] = os.getenv(
+        'MYSQL_PASSWORD',
+        'application'
+    )
 application.config['MYSQL_DB'] = 'devopsloft'
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Init MySQL
