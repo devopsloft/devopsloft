@@ -1,10 +1,18 @@
-language: "python"
+---
+dist: xenial
+
+language: python
+
 python:
-    - "2.7"
-    - "3.5"
-install:
-    - pip install flake8
-    - pip install Flask-WTF
-    - pip install coveralls
+  - "3.6"
+
+before_install:
+  - pip install -r test-requirements.txt
+
+before_script:
+  - ansible-galaxy install -r provisioning/playbooks/requirements.yml -p provisioning/playbooks/roles
+  - ansible-playbook --connection=local --inventory 127.0.0.1, --extra-vars "homedir=$TRAVIS_BUILD_DIR" provisioning/playbooks/site.yml
+
 script:
-    - flake8 .
+    - flake8 --exclude venv .
+    - python3 tests/is_table_empty.py

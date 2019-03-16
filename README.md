@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/devopsloft/devopsloft.svg?branch=master)](https://travis-ci.org/devopsloft/devopsloft)
+
 # DevOps Loft
 
 ## Drive our Career Path into DevOps
@@ -90,7 +92,9 @@ localhost:5000
   * AMI ID
   * Subnet ID
   * Security Group with inbound ports for SSH and TCP port 5000
-* Adjust `Vagrantfile.local` with your configuration (see the Vagrantfile.local.example file for reference)
+* Copy the file `aws.yml` to `aws.yml.local`
+* Adjust `aws.yml.local` with **your** configuration
+* Vagrant AWS plugin or any dependencies are done automatic on the **first run**
 * Launch the environment
 ```
 vagrant up stage

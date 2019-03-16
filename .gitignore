@@ -20,6 +20,8 @@ build/*
 ChangeLog
 doc/build/*
 dist/
+.idea/
+playbooks/*.retry
 
 # Data Files
 *.csv
@@ -33,3 +35,8 @@ dist/
 .vagrant/
 Vagrantfile.local
 .secrets.json
+aws.yml.local
+devopsloft_workspace.code-workspace
+aws_ubuntu.pem
+*~
+.vscode/
