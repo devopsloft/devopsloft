@@ -22,22 +22,22 @@ def test(domain, urls, allowed_failures, sleep_between_failures):
     response = requests.get(domain + '/')
     page_expected_content = '<title>DevOps Loft</title>'
     if response.text.find(page_expected_content) < 0:
-        print(f'Failed to find page expected content: "{page_expected_content}", in url: "{domain}/"!')
+        found_output = 'Failed to find page expected content: '
         test_succeeded = False
     else:
-        print(f'Found page expected content: "{page_expected_content}", in url: "{domain}/"!')
+        found_output = 'Found page expected content: '
+    print(found_output + f'"{page_expected_content}", in url: "{domain}/"!')
 
     return test_succeeded
 
 
 if __name__ == '__main__':
+    urls = ('/', '/home', '/resources', '/docslist', '/contact', '/signup')
     test_config = {
         'domain': 'http://localhost:80',
-        'urls': ('/', '/home', '/resources', '/docslist', '/contact', '/signup'),
+        'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,
     }
     if not test(**test_config):
         exit(1)
-
-
