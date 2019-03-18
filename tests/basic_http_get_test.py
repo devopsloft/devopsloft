@@ -2,26 +2,36 @@ import requests
 from time import sleep
 
 
+def http_get(uri):
+    try:
+        return requests.get(uri, timeout=3)
+    except BaseException:
+        pass
+    return None
+
+
 def test(domain, urls, allowed_failures, sleep_between_failures):
     test_succeeded = True
     for url in urls:
-        response = requests.get(domain + url)
-        if response.ok:
-            print(f'{domain}{url} is online!')
-        else:
-            while (not response.ok) and (allowed_failures > 0):
+        response = http_get(domain + url)
+        if not response or not response.ok:
+            while (not response or not response.ok) and (allowed_failures > 0):
                 print(f'{domain}{url} is not available! trying again...')
                 sleep(sleep_between_failures)
                 allowed_failures -= 1
-                response = requests.get(domain + url)
-            if not response.ok:
+                response = http_get(domain + url)
+            if not response or not response.ok:
                 print(f'{domain}{url} is not available!')
                 test_succeeded = False
+            else:
+                print(f'{domain}{url} is online!')
+        else:
+            print(f'{domain}{url} is online!')
 
     # Test homepage content
-    response = requests.get(domain + '/')
+    response = http_get(domain + '/')
     page_expected_content = '<title>DevOps Loft</title>'
-    if response.text.find(page_expected_content) < 0:
+    if not response or response.text.find(page_expected_content) < 0:
         found_output = 'Failed to find page expected content: '
         test_succeeded = False
     else:
