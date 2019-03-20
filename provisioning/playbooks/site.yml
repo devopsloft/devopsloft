@@ -43,6 +43,7 @@
         requirements: "{{ homedir }}/requirements.txt"
         virtualenv: "{{ homedir }}/venv"
         virtualenv_command: virtualenv
+        virtualenv_python: python3
 
     - meta: flush_handlers
 

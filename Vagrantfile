@@ -1,8 +1,43 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# -------------------------------------------------------------
+# Exit if no environment name specified.
+# -------------------------------------------------------------
+
+environments = [
+    "dev",
+    "stage",
+    "prod"
+]
+commandsToCheck = [
+    "destroy",
+    "halt",
+    "provision",
+    "reload",
+    "resume",
+    "suspend",
+    "up"
+  ]
+  enteredCommand = ARGV[0]
+
+  # Is this one of the problem commands?
+  if commandsToCheck.include?(enteredCommand)
+    # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
+    if not (environments.include?ARGV[1] or environments.include?ARGV[2])
+      puts "You must use 'vagrant #{ARGV[0]} " + environments.join("/") + "....'"
+      puts "Run 'vagrant status' to view VM names."
+      exit 1
+    end
+  end
+
 require 'yaml'
 AWS = YAML.load_file 'aws.yml'
+
+if File.exist?('aws.yml.local')
+    private_settings = YAML::load_file('aws.yml.local')
+    AWS.merge!(private_settings)
+end
 
 Vagrant.require_version ">= 2.2.4"
 
@@ -25,15 +60,12 @@ Vagrant.configure("2") do |config|
 
 	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
 
-	config.vm.provision :ansible_local, run: 'always', type: :ansible_local do |ansible|
-		ansible.compatibility_mode = "2.0"
-		ansible.galaxy_role_file = 'playbooks/requirements.yml'
-		ansible.galaxy_roles_path = '/vagrant/provisioning/playbooks/roles'
-		ansible.galaxy_command = 'ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path}'
-		ansible.provisioning_path = '/vagrant/provisioning'
-		ansible.inventory_path = 'hosts'
-		ansible.playbook = 'playbooks/site.yml'
-	end
+  config.vm.provision "docker" do |d|
+    d.build_image "/vagrant/docker",
+      args: "-t devopsloft/devopsloft"
+    d.run "devopsloft/devopsloft",
+      args: "-p 80:80"
+  end
 
 	config.vm.define "dev" do |dev|
 
