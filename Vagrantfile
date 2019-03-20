@@ -63,8 +63,9 @@ Vagrant.configure("2") do |config|
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant/docker",
       args: "-t devopsloft/devopsloft"
-    d.run "devopsloft/devopsloft",
-      args: "-p 80:80"
+    d.run "web",
+      image: "devopsloft/devopsloft",
+      args: "-p 80:80 -p 3306:3306"
   end
 
 	config.vm.define "dev" do |dev|

@@ -9,16 +9,28 @@ python:
 services:
   - docker
 
+env:
+  - mysql_root_username=root mysql_root_password='12345'
+
+before_install:
+  - sudo apt-get install -y libmysqlclient-dev
+
+addons:
+  apt:
+    update: true
+
+cache:
+  apt: true`
+
 install:
-  - pip install -r test-requirements.txt
-  - docker build -t devopsloft/devopsloft --build-arg REQUIREMENTS=requirements-dev.txt docker/.
+  - pip install -r requirements-dev.txt
+  - docker build -t devopsloft/devopsloft docker/.
 
 before_script:
-  - docker run -d -p 80:80 --name web devopsloft/devopsloft
-  - docker cp tests web:/tests/
-  - docker exec -it web bash -c 'pip install pyyaml'
+  - docker run -d -p 80:80 -p 3306:3306 --name web devopsloft/devopsloft
+  - docker exec -it web bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
 
 script:
-    - flake8 --exclude venv .
-    - docker exec -it web bash -c 'python3 /tests/is_table_empty.py'
-    - docker exec -it web bash -c 'python3 /tests/basic_http_get_test.py'
+  - flake8 --exclude venv .
+  - tests/is_table_empty.py
+  - tests/basic_http_get_test.py

@@ -1,22 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 import mysql.connector
-import yaml
-
-
-def load_config(config_file):
-    with open(config_file, 'r') as stream:
-        try:
-            return yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
-
-cfg = load_config('provisioning/playbooks/group_vars/all.yml')
+import os
 
 config = {
-    'user': cfg['mysql_root_username'],
-    'password': cfg['mysql_root_password'],
-    'host': cfg['mysql_bind_address'],
+    'user': os.environ['mysql_root_username'],
+    'password': os.environ['mysql_root_password'],
+    'host': 'localhost',
     'database': 'devopsloft',
     'raise_on_warnings': True
 }

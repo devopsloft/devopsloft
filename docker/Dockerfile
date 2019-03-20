@@ -11,13 +11,12 @@ RUN apt update \
 
 COPY . /
 
-ARG REQUIREMENTS=requirements.txt
-RUN pip install -r $REQUIREMENTS \
+RUN pip install -r requirements.txt \
   && ansible-galaxy install -r provisioning/playbooks/requirements.yml -p \
     provisioning/playbooks/roles \
   && ansible-playbook --connection=local --inventory 127.0.0.1, \
     provisioning/playbooks/site.yml
 
-EXPOSE 80
+EXPOSE 80 3306
 
 ENTRYPOINT ["./entrypoint.sh", "127.0.0.1", "root", "12345"]
