@@ -5,6 +5,11 @@
 # Exit if no environment name specified.
 # -------------------------------------------------------------
 
+$script = <<-SCRIPT
+docker cp /vagrant/.secrets.json web:/.secrets.json
+docker exec web ./events.py
+SCRIPT
+
 environments = [
     "dev",
     "stage",
@@ -66,6 +71,11 @@ Vagrant.configure("2") do |config|
     d.run "web",
       image: "devopsloft/devopsloft",
       args: "-p 80:80 -p 3306:3306"
+  end
+
+  DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
+  if DEVOPSLOFT['publish'] == 'enabled'
+    config.vm.provision "shell", inline: $script
   end
 
 	config.vm.define "dev" do |dev|
