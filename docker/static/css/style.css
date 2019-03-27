@@ -70,6 +70,15 @@ html {
     color: #e0393e
   }
 
+  .fa-youtube, .fa-youtube-square {
+    color: #c4302b
+  }
+
+  .fa-slack {
+    color: #611F69 /*; #4a154b
+    background-color: #7C3085 */
+  }
+
   .fa-github, .fa-github-square {
     color: #333
   }
