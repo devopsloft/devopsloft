@@ -6,7 +6,7 @@ import os
 config = {
     'user': os.environ['mysql_root_username'],
     'password': os.environ['mysql_root_password'],
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'database': 'devopsloft',
     'raise_on_warnings': True
 }

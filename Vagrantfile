@@ -66,11 +66,17 @@ Vagrant.configure("2") do |config|
 	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
 
   config.vm.provision "docker" do |d|
-    d.build_image "/vagrant/docker",
+    d.post_install_provision "shell", inline:"docker network create devopsloft_network"
+    d.build_image "/vagrant/db_s2i",
+      args: "-t devopsloft/mysql"
+    d.run "db",
+      image: "devopsloft/mysql",
+      args: "--network devopsloft_network -p 3306:3306"
+    d.build_image "/vagrant/web_s2i",
       args: "-t devopsloft/devopsloft"
     d.run "web",
       image: "devopsloft/devopsloft",
-      args: "-p 80:80 -p 3306:3306"
+      args: "--network devopsloft_network -p 80:80"
   end
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'

@@ -1,4 +1,4 @@
-import sys
+#!/usr/bin/env python3
 
 from flask import Flask, flash, render_template, redirect, url_for, request
 from flask_mysqldb import MySQL
@@ -8,9 +8,9 @@ from passlib.hash import sha256_crypt
 application = Flask(__name__)
 
 # Config MySQL
-application.config['MYSQL_HOST'] = sys.argv[1]
-application.config['MYSQL_USER'] = sys.argv[2]
-application.config['MYSQL_PASSWORD'] = sys.argv[3]
+application.config['MYSQL_HOST'] = 'db'
+application.config['MYSQL_USER'] = 'root'
+application.config['MYSQL_PASSWORD'] = '12345'
 application.config['MYSQL_DB'] = 'devopsloft'
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Init MySQL

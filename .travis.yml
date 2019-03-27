@@ -19,16 +19,16 @@ addons:
   apt:
     update: true
 
-cache:
-  apt: true`
-
 install:
   - pip install -r requirements-dev.txt
-  - docker build -t devopsloft/devopsloft docker/.
+  - docker build -t devopsloft/mysql db_s2i/.
+  - docker build -t devopsloft/devopsloft web_s2i/.
 
 before_script:
-  - docker run -d -p 80:80 -p 3306:3306 --name web devopsloft/devopsloft
-  - docker exec -it web bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
+  - docker network create devopsloft_network
+  - docker run -d --network devopsloft_network -p 3306:3306 --name db devopsloft/mysql
+  - docker run -d --network devopsloft_network -p 80:80 --name web devopsloft/devopsloft
+  - docker exec -it db bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
 
 script:
   - flake8 --exclude venv .
