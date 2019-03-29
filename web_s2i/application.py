@@ -4,14 +4,18 @@ from flask import Flask, flash, render_template, redirect, url_for, request
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, PasswordField, validators
 from passlib.hash import sha256_crypt
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 application = Flask(__name__)
 
 # Config MySQL
-application.config['MYSQL_HOST'] = 'db'
-application.config['MYSQL_USER'] = 'root'
-application.config['MYSQL_PASSWORD'] = '12345'
-application.config['MYSQL_DB'] = 'devopsloft'
+application.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
+application.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
+application.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
+application.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Init MySQL
 mysql = MySQL(application)
@@ -97,5 +101,6 @@ def contact():
 
 
 if __name__ == '__main__':
+    APP_GUEST_PORT = os.getenv('APP_GUEST_PORT')
     application.secret_key = 'secret123'
-    application.run(debug=True, host='0.0.0.0', port=80)
+    application.run(debug=True, host='0.0.0.0', port=APP_GUEST_PORT)

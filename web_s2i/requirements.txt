@@ -18,3 +18,5 @@ flask-mysqldb
 passlib
 meetup-api
 slacker
+PyYAML
+python-dotenv

@@ -1,4 +1,4 @@
 flake8
-pyyaml
 requests
 mysql-connector-python
+python-dotenv

@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 
 import mysql.connector
+from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 config = {
-    'user': os.environ['mysql_root_username'],
-    'password': os.environ['mysql_root_password'],
-    'host': '127.0.0.1',
-    'database': 'devopsloft',
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD'),
+    'host': 'localhost',
+    'database': os.getenv('MYSQL_DB'),
     'raise_on_warnings': True
 }
 

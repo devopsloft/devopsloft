@@ -19,8 +19,7 @@ playbooks/*.retry
 *.csv
 *.db
 .vagrant/
-Vagrantfile.local
-aws.yml.local
+*local
 devopsloft_workspace.code-workspace
 aws_ubuntu.pem
 *~
