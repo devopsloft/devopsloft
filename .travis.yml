@@ -14,8 +14,9 @@ addons:
   apt:
     update: true
 install:
-- pip3 install -r tests/requirements-test.txt
+- pip install -r tests/requirements-test.txt
 before_script:
+- openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"
 - scripts/docker-compose-provision.sh $ENVIRONMENT $BASE_FOLDER
 script:
 - tests/wait_mysql_up.sh

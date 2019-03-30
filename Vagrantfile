@@ -124,6 +124,9 @@ Vagrant.configure("2") do |config|
       guest: ENV['WEB_GUEST_PORT'],
       host:  ENV['WEB_HOST_PORT']
 		dev.vm.network "forwarded_port",
+      guest: ENV['WEB_GUEST_SECURE_PORT'],
+      host:  ENV['WEB_HOST_SECURE_PORT']
+		dev.vm.network "forwarded_port",
       guest: ENV['VAULT_GUEST_PORT'],
       host:  ENV['VAULT_HOST_PORT']
 
