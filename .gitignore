@@ -1,8 +1,4 @@
--# Elastic Beanstalk Files
--*/.elasticbeanstalk/*
--!.elasticbeanstalk/*.cfg.yml
--!.elasticbeanstalk/*.global.yml
-
+.secret*
 *.sw?
 *.egg
 *.egg-info
@@ -20,16 +16,8 @@ doc/build/*
 dist/
 .idea/
 playbooks/*.retry
-
-# Data Files
 *.csv
 *.db
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-
 .vagrant/
 Vagrantfile.local
 aws.yml.local

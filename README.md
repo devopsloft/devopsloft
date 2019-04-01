@@ -68,6 +68,7 @@ And ... join our [Facebook Group](https://www.facebook.com/groups/51266453912708
 
 * Vagrant should be installed in order to launch an environment of the application.
 * AWS account is required in order to run the application in STAGE environment. (see more details in STAGE Environment section)
+* devopsloft.yml file - feature toggle. Feature is released if the value is 'enabled'. 
 
 ## DEV environment
 
