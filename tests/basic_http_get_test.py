@@ -2,6 +2,10 @@
 
 import requests
 from time import sleep
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 def http_get(uri):
@@ -46,7 +50,7 @@ def test(domain, urls, allowed_failures, sleep_between_failures):
 if __name__ == '__main__':
     urls = ('/', '/home', '/resources', '/docslist', '/contact', '/signup')
     test_config = {
-        'domain': 'http://localhost:80',
+        'domain': 'http://localhost:' + os.getenv('APP_GUEST_PORT'),
         'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,

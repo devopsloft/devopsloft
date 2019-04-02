@@ -1,36 +1,26 @@
----
 dist: xenial
-
 language: python
-
 python:
-  - "3.6"
-
+- '3.6'
 services:
-  - docker
-
-env:
-  - mysql_root_username=root mysql_root_password='12345'
-
+- docker
 before_install:
-  - sudo apt-get install -y libmysqlclient-dev
-
+- sudo apt-get install -y libmysqlclient-dev
+- cp .env web_s2i/.env
 addons:
   apt:
     update: true
-
-cache:
-  apt: true`
-
 install:
-  - pip install -r requirements-dev.txt
-  - docker build -t devopsloft/devopsloft docker/.
-
+- pip3 install -r tests/requirements-test.txt
 before_script:
-  - docker run -d -p 80:80 -p 3306:3306 --name web devopsloft/devopsloft
-  - docker exec -it web bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
-
+- source .env
+- docker build -t $NAMESPACE/$DOCKERHUB_DB db_s2i/.
+- docker build -t $NAMESPACE/$APP web_s2i/.
+- docker network create devopsloft_network
+- docker run -d --network devopsloft_network -p $MYSQL_PORT:$MYSQL_PORT --name db -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=$MYSQL_DB $NAMESPACE/$DOCKERHUB_DB
+- docker run -d --network devopsloft_network -p $APP_GUEST_PORT:$APP_GUEST_PORT --name web $NAMESPACE/$APP
+- docker exec -it db timeout 60 bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
 script:
-  - flake8 --exclude venv .
-  - tests/is_table_empty.py
-  - tests/basic_http_get_test.py
+- flake8 --exclude venv .
+- timeout 60 bash -c 'while ! tests/is_table_empty.py; do sleep 3; done'
+- tests/basic_http_get_test.py

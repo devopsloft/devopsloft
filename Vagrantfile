@@ -37,40 +37,58 @@ commandsToCheck = [
   end
 
 require 'yaml'
-AWS = YAML.load_file 'aws.yml'
-
-if File.exist?('aws.yml.local')
-    private_settings = YAML::load_file('aws.yml.local')
-    AWS.merge!(private_settings)
-end
-
 Vagrant.require_version ">= 2.2.4"
 
-Vagrant.configure("2") do |config|
+if ARGV[1] != 'dev' # aws plugin is needed only for non dev environment
+    if Vagrant::Util::Platform.windows?
+        # needed for windows as prerequisite for vagrant-aws
+        required_plugins = [
+        {"fog-ovirt" => {"version" => "1.0.1"}},
+        "vagrant-aws",
+        ]
+    else
+        required_plugins = [
+            "vagrant-aws",
+        ]
+    end
+end
 
-    if ARGV[1] != 'dev' # aws plugin is needed only for non dev environment
-        if Vagrant::Util::Platform.windows?
-            # needed for windows as prerequisite for vagrant-aws
-            required_plugins = [
-            {"fog-ovirt" => {"version" => "1.0.1"}},
-            "vagrant-aws"
-            ]
-        else
-            required_plugins = [
-                "vagrant-aws"
-            ]
-        end
-        config.vagrant.plugins = required_plugins
+required_plugins = %w(vagrant-env)
+
+plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
+if not plugins_to_install.empty?
+  puts "Installing plugins: #{plugins_to_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort "Installation of one or more plugins has failed. Aborting."
+  end
+end
+
+Vagrant.configure("2") do |config|
+    config.vagrant.plugins = required_plugins
+
+    if File.exist?('.env.local')
+        Dotenv.load('.env.local')
     end
 
-	config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
+    config.env.enable
+    config.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: 'rsync'
+    config.vm.provision 'file', source: '.env', destination: ENV['BASE_FOLDER'] + '/web_s2i/.env'
+    config.vm.provision 'file', source: '.env', destination: ENV['BASE_FOLDER'] + '/db_s2i/.env'
 
   config.vm.provision "docker" do |d|
-    d.build_image "/vagrant/docker",
-      args: "-t devopsloft/devopsloft"
+    d.post_install_provision "shell", inline:"docker network create devopsloft_network"
+    d.build_image ENV['BASE_FOLDER'] + '/db_s2i',
+      args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'] + ' --build-arg MYSQL_DATABASE=' + ENV['MYSQL_DB']
+    d.run "db",
+      image: ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'],
+      args: '--network devopsloft_network -p ' + ENV['MYSQL_PORT'] +':' + ENV['MYSQL_PORT'] + ' -e MYSQL_ROOT_PASSWORD=' + ENV['MYSQL_ROOT_PASSWORD'] + ' -e MYSQL_DATABASE=' + ENV['MYSQL_DB']
+    d.build_image ENV['BASE_FOLDER'] + '/web_s2i',
+      args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['APP']
     d.run "web",
-      image: "devopsloft/devopsloft",
-      args: "-p 80:80 -p 3306:3306"
+      image: ENV['NAMESPACE'] + '/' + ENV['APP'],
+      args: '--network devopsloft_network -p ' + ENV['APP_GUEST_PORT'] +':' + ENV['APP_GUEST_PORT']
   end
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
@@ -81,7 +99,7 @@ Vagrant.configure("2") do |config|
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
-		dev.vm.network "forwarded_port", guest: 80, host: 5000
+		dev.vm.network "forwarded_port", guest: ENV['APP_GUEST_PORT'], host: ENV['APP_HOST_PORT']
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "devopsloft_dev"
@@ -96,16 +114,16 @@ Vagrant.configure("2") do |config|
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
 		stage.vm.provider :aws do |aws,override|
-			aws.keypair_name = AWS['stage_keypair_name']
-			aws.ami = AWS['stage_ami']
-			aws.instance_type = AWS['stage_instance_type']
-			aws.region = AWS['stage_region']
-			aws.subnet_id = AWS['stage_subnet_id']
-			aws.security_groups = AWS['stage_security_groups']
+			aws.keypair_name = ENV['STAGE_KEYPAIR_NAME']
+			aws.ami = ENV['STAGE_AMI']
+			aws.instance_type = ENV['STAGE_INSTANCE_TYPE']
+			aws.region = ENV['STAGE_REGION']
+			aws.subnet_id = ENV['STAGE_SUBNET_ID']
+			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
 			aws.associate_public_ip = true
 
 			override.ssh.username = "ubuntu"
-			override.ssh.private_key_path = AWS['stage_ssh_private_key_path']
+			override.ssh.private_key_path = ENV['STAGE_SSH_PRIVATE_KEY_PATH']
 		end
 
 	end
@@ -117,17 +135,17 @@ Vagrant.configure("2") do |config|
 
 
 		prod.vm.provider :aws do |aws,override|
-			aws.keypair_name = AWS['prod_keypair_name']
-			aws.ami = AWS['prod_ami']
-			aws.instance_type = AWS['prod_instance_type']
-			aws.elastic_ip = AWS['prod_elastic_ip']
-			aws.region = AWS['prod_region']
-			aws.subnet_id = AWS['prod_subnet_id']
-			aws.security_groups = AWS['prod_security_groups']
+			aws.keypair_name = ENV['PROD_KEYPAIR_NAME']
+			aws.ami = ENV['PROD_AMI']
+			aws.instance_type = ENV['PROD_INSTANCE_TYPE']
+			aws.elastic_ip = ENV['PROD_ELASTIC_IP']
+			aws.region = ENV['PROD_REGION']
+			aws.subnet_id = ENV['PROD_SUBNET_ID']
+			aws.security_groups = ENV['PROD_SECURITY_GROUPS']
 			aws.associate_public_ip = true
 
 			override.ssh.username = "ubuntu"
-			override.ssh.private_key_path = AWS['prod_ssh_private_key_path']
+			override.ssh.private_key_path = ENV['PROD_SSH_PRIVATE_KEY_PATH']
 		end
 
 	end
