@@ -6,6 +6,7 @@ from wtforms import Form, StringField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from dotenv import load_dotenv
 import os
+import yaml
 
 load_dotenv()
 
@@ -17,6 +18,12 @@ application.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 application.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 application.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+# load statcounter variables for current environment
+STATCODES = yaml.load(os.getenv('STATCODES'), Loader=yaml.FullLoader)
+prj = STATCODES[os.getenv('ENVIRONMENT')]['project']
+scr = STATCODES[os.getenv('ENVIRONMENT')]['security']
+
 # Init MySQL
 mysql = MySQL(application)
 
@@ -24,17 +31,17 @@ mysql = MySQL(application)
 @application.route('/')
 @application.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', project=prj, security=scr)
 
 
 @application.route('/resources')
 def resources():
-    return render_template('resources.html')
+    return render_template('resources.html', project=prj, security=scr)
 
 
 @application.route('/docslist')
 def docslist():
-    return render_template('docslist.html')
+    return render_template('docslist.html', project=prj, security=scr)
 
 
 class SignupForm(Form):
@@ -92,12 +99,12 @@ def signup():
 
         return(redirect(url_for('home')))
 
-    return render_template('signup.html', form=form)
+    return render_template('signup.html', form=form, project=prj, security=scr)
 
 
 @application.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html', project=prj, security=scr)
 
 
 if __name__ == '__main__':
