@@ -13,7 +13,7 @@ addons:
 install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
-- echo ENVIRONMENT=dev >> .env
+- echo ENVIRONMENT=ci >> .env
 - cp .env web_s2i/
 - cp .env db_s2i/
 - source .env
