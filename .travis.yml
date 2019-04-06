@@ -13,6 +13,9 @@ addons:
 install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
+- echo ENVIRONMENT=ci >> .env
+- cp .env web_s2i/
+- cp .env db_s2i/
 - source .env
 - docker build -t $NAMESPACE/$DOCKERHUB_DB db_s2i/.
 - docker build -t $NAMESPACE/$APP web_s2i/.

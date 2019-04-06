@@ -34,12 +34,30 @@ commandsToCheck = [
       puts "Run 'vagrant status' to view VM names."
       exit 1
     end
-  end
+end
+
+if ARGV[1] == 'dev' || ARGV[2] == 'dev'
+  chosen_environment = 'dev'
+elsif ARGV[1] == 'stage' || ARGV[2] == 'stage'
+  chosen_environment = 'stage'
+elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
+  chosen_environment = 'prod'
+end
+
+$set_environment_variables = <<SCRIPT
+tee -a "/vagrant/.env" >> "/dev/null" <<EOF
+ENVIRONMENT=#{chosen_environment}
+EOF
+cp /vagrant/.env /vagrant/web_s2i/
+cp /vagrant/.env /vagrant/db_s2i/
+SCRIPT
+
+puts 'Working on environment: ' + chosen_environment if chosen_environment
 
 require 'yaml'
 Vagrant.require_version ">= 2.2.4"
 
-if ARGV[1] != 'dev' # aws plugin is needed only for non dev environment
+if chosen_environment != 'dev' # aws plugin is needed only for non dev environment
     if Vagrant::Util::Platform.windows?
         # needed for windows as prerequisite for vagrant-aws
         required_plugins = [
@@ -72,10 +90,11 @@ Vagrant.configure("2") do |config|
         Dotenv.load('.env.local')
     end
 
+    config.vm.provision 'shell',
+    inline: $set_environment_variables, run: "always"
+
     config.env.enable
     config.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: 'rsync'
-    config.vm.provision 'file', source: '.env', destination: ENV['BASE_FOLDER'] + '/web_s2i/.env'
-    config.vm.provision 'file', source: '.env', destination: ENV['BASE_FOLDER'] + '/db_s2i/.env'
 
   config.vm.provision "docker" do |d|
     d.post_install_provision "shell", inline:"docker network create devopsloft_network"
