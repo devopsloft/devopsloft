@@ -42,6 +42,8 @@ elsif ARGV[1] == 'stage' || ARGV[2] == 'stage'
   chosen_environment = 'stage'
 elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
   chosen_environment = 'prod'
+else
+    chosen_environment = 'None'
 end
 
 $set_environment_variables = <<SCRIPT
@@ -57,6 +59,12 @@ puts 'Working on environment: ' + chosen_environment if chosen_environment
 require 'yaml'
 Vagrant.require_version ">= 2.2.4"
 
+
+required_plugins = %w( vagrant-env )
+required_plugins.each do |plugin|
+    exec "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
+end
+
 if chosen_environment != 'dev' # aws plugin is needed only for non dev environment
     if Vagrant::Util::Platform.windows?
         # needed for windows as prerequisite for vagrant-aws
@@ -69,18 +77,6 @@ if chosen_environment != 'dev' # aws plugin is needed only for non dev environme
             "vagrant-aws",
         ]
     end
-end
-
-required_plugins = %w(vagrant-env)
-
-plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
-if not plugins_to_install.empty?
-  puts "Installing plugins: #{plugins_to_install.join(' ')}"
-  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
-    exec "vagrant #{ARGV.join(' ')}"
-  else
-    abort "Installation of one or more plugins has failed. Aborting."
-  end
 end
 
 Vagrant.configure("2") do |config|
