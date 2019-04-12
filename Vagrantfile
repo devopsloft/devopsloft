@@ -1,14 +1,48 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# -------------------------------------------------------------
-# Exit if no environment name specified.
-# -------------------------------------------------------------
-
 $script = <<-SCRIPT
 docker cp /vagrant/.secrets.json web:/.secrets.json
 docker exec web ./events.py
 SCRIPT
+
+$dump = <<-SCRIPT
+ret=$(lsmod | grep -io vboxguest)
+mysqladmin -h 127.0.0.1 ping --silent
+if [ $? == 0 -a "$ret" == "vboxguest" ]; then
+  mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > /vagrant/.dump.sql
+else
+  apt-get update
+  apt-get install -y python3-pip
+  pip3 install awscli
+  mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > .dump.sql
+  aws s3 cp .dump.sql s3://devopsloft/.dump.sql
+fi
+SCRIPT
+
+$load = <<-SCRIPT
+timeout 60 bash -c \
+  'while ! mysqladmin -h 127.0.0.1 ping --silent; do sleep 3; done'
+ret=$(lsmod | grep -io vboxguest)
+if [ "$ret" == "vboxguest" -a -s /vagrant/.dump.sql ]; then
+  mysql -h 127.0.0.1 -u root -p12345 devopsloft < /vagrant/.dump.sql
+  rm -rf /vagrant/.dump.sql
+else
+  apt-get update
+  apt-get install -y python3-pip
+  pip3 install awscli
+  exists=$(aws s3 ls s3://devopsloft/.dump.sql)
+  if [ -n "$exists" ]; then
+    aws s3 cp s3://devopsloft/.dump.sql .dump.sql
+    mysql -h 127.0.0.1 -u root -p12345 devopsloft < .dump.sql
+    rm -rf .dump.sql
+  fi
+fi
+SCRIPT
+
+# -------------------------------------------------------------
+# Exit if no environment name specified.
+# -------------------------------------------------------------
 
 environments = [
     "dev",
@@ -84,20 +118,22 @@ if not plugins_to_install.empty?
 end
 
 Vagrant.configure("2") do |config|
-    config.vagrant.plugins = required_plugins
+  config.vagrant.plugins = required_plugins
 
-    if File.exist?('.env.local')
-        Dotenv.load('.env.local')
-    end
+  if File.exist?('.env.local')
+      Dotenv.load('.env.local')
+  end
 
-    config.vm.provision 'shell',
+  config.vm.provision 'shell',
     inline: $set_environment_variables, run: "always"
+  config.vm.provision "shell",
+    inline: "apt-get update; apt-get install -y mysql-client"
 
-    config.env.enable
-    config.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: 'rsync'
+  config.env.enable
 
   config.vm.provision "docker" do |d|
-    d.post_install_provision "shell", inline:"docker network create devopsloft_network"
+    d.post_install_provision "shell",
+      inline:"docker network create devopsloft_network"
     d.build_image ENV['BASE_FOLDER'] + '/db_s2i',
       args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'] + ' --build-arg MYSQL_DATABASE=' + ENV['MYSQL_DB']
     d.run "db",
@@ -115,22 +151,40 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: $script
   end
 
+  config.trigger.after :up do |trigger|
+    trigger.info = "Loading database"
+    trigger.run_remote = {inline: $load}
+  end
+  config.trigger.before :destroy do |trigger|
+    trigger.info = "Dumping database"
+    trigger.run_remote = {inline: $dump}
+  end
+
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
-		dev.vm.network "forwarded_port", guest: ENV['APP_GUEST_PORT'], host: ENV['APP_HOST_PORT']
+		dev.vm.network "forwarded_port",
+      guest: ENV['APP_GUEST_PORT'],
+      host:  ENV['APP_HOST_PORT']
+
+    dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
-			virtualbox.name = "devopsloft_dev"
+			virtualbox.name = "dev"
 			virtualbox.memory = 1024
 			virtualbox.cpus = 2
 		end
+
 	end
 
 	config.vm.define "stage" do |stage|
 
 		stage.vm.box = "dummy"
 		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+
+    stage.vm.synced_folder '.', ENV['BASE_FOLDER'],
+      disabled: false,
+      type: 'rsync'
 
 		stage.vm.provider :aws do |aws,override|
 			aws.keypair_name = ENV['STAGE_KEYPAIR_NAME']
@@ -140,6 +194,7 @@ Vagrant.configure("2") do |config|
 			aws.subnet_id = ENV['STAGE_SUBNET_ID']
 			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
 			aws.associate_public_ip = true
+      aws.iam_instance_profile_name = ENV['STAGE_INSTANCE_PROFILE_NAME']
 
 			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = ENV['STAGE_SSH_PRIVATE_KEY_PATH']
@@ -152,6 +207,9 @@ Vagrant.configure("2") do |config|
 		prod.vm.box = "dummy"
 		prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
+    prod.vm.synced_folder '.', ENV['BASE_FOLDER'],
+      disabled: false,
+      type: 'rsync'
 
 		prod.vm.provider :aws do |aws,override|
 			aws.keypair_name = ENV['PROD_KEYPAIR_NAME']
@@ -162,6 +220,7 @@ Vagrant.configure("2") do |config|
 			aws.subnet_id = ENV['PROD_SUBNET_ID']
 			aws.security_groups = ENV['PROD_SECURITY_GROUPS']
 			aws.associate_public_ip = true
+      aws.iam_instance_profile_name = ENV['PROD_INSTANCE_PROFILE_NAME']
 
 			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = ENV['PROD_SSH_PRIVATE_KEY_PATH']
