@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 $script = <<-SCRIPT
-docker cp /vagrant/.secrets.json web:/.secrets.json
+docker cp $1/.secrets.json web:/.secrets.json
 docker exec web ./events.py
 SCRIPT
 
@@ -10,13 +10,13 @@ $dump = <<-SCRIPT
 ret=$(lsmod | grep -io vboxguest)
 mysqladmin -h 127.0.0.1 ping --silent
 if [ $? == 0 -a "$ret" == "vboxguest" ]; then
-  mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > /vagrant/.dump.sql
+  mysqldump -h 127.0.0.1 -u root -p$1 $2 > $4/.dump.sql
 else
   apt-get update
   apt-get install -y python3-pip
   pip3 install awscli
-  mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > .dump.sql
-  aws s3 cp .dump.sql s3://devopsloft/.dump.sql
+  mysqldump -h 127.0.0.1 -u root -p$1 $2 > .dump.sql
+  aws s3 cp .dump.sql s3://$3/.dump.sql
 fi
 SCRIPT
 
@@ -24,17 +24,17 @@ $load = <<-SCRIPT
 timeout 60 bash -c \
   'while ! mysqladmin -h 127.0.0.1 ping --silent; do sleep 3; done'
 ret=$(lsmod | grep -io vboxguest)
-if [ "$ret" == "vboxguest" -a -s /vagrant/.dump.sql ]; then
-  mysql -h 127.0.0.1 -u root -p12345 devopsloft < /vagrant/.dump.sql
-  rm -rf /vagrant/.dump.sql
+if [ "$ret" == "vboxguest" -a -s $4/.dump.sql ]; then
+  mysql -h 127.0.0.1 -u root -p$1 $2 < $4/.dump.sql
+  rm -rf $4/.dump.sql
 else
   apt-get update
   apt-get install -y python3-pip
   pip3 install awscli
-  exists=$(aws s3 ls s3://devopsloft/.dump.sql)
+  exists=$(aws s3 ls s3://$3/.dump.sql)
   if [ -n "$exists" ]; then
-    aws s3 cp s3://devopsloft/.dump.sql .dump.sql
-    mysql -h 127.0.0.1 -u root -p12345 devopsloft < .dump.sql
+    aws s3 cp s3://$3/.dump.sql .dump.sql
+    mysql -h 127.0.0.1 -u root -p$1 $2 < .dump.sql
     rm -rf .dump.sql
   fi
 fi
@@ -79,11 +79,11 @@ elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
 end
 
 $set_environment_variables = <<SCRIPT
-tee -a "/vagrant/.env" >> "/dev/null" <<EOF
+tee -a "$1/.env" >> "/dev/null" <<EOF
 ENVIRONMENT=#{chosen_environment}
 EOF
-cp /vagrant/.env /vagrant/web_s2i/
-cp /vagrant/.env /vagrant/db_s2i/
+cp $1/.env $1/web_s2i/
+cp $1/.env $1/db_s2i/
 SCRIPT
 
 puts 'Working on environment: ' + chosen_environment if chosen_environment
@@ -125,7 +125,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision 'shell',
-    inline: $set_environment_variables, run: "always"
+    inline: $set_environment_variables, args: "#{ENV['BASE_FOLDER']}", run: "always"
   config.vm.provision "shell",
     inline: "apt-get update; apt-get install -y mysql-client"
 
@@ -148,16 +148,16 @@ Vagrant.configure("2") do |config|
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
   if DEVOPSLOFT['publish'] == 'enabled'
-    config.vm.provision "shell", inline: $script
+    config.vm.provision "shell", inline: $script, args: "#{ENV['BASE_FOLDER']}"
   end
 
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
-    trigger.run_remote = {inline: $load}
+    trigger.run_remote = {inline: $load, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DB']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
   end
   config.trigger.before :destroy do |trigger|
     trigger.info = "Dumping database"
-    trigger.run_remote = {inline: $dump}
+    trigger.run_remote = {inline: $dump, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DB']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
   end
 
 	config.vm.define "dev" do |dev|
