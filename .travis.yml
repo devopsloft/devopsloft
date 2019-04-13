@@ -25,5 +25,6 @@ before_script:
 - docker exec -it db timeout 60 bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
 script:
 - flake8 --exclude venv .
-- timeout 60 bash -c 'while ! tests/is_table_empty.py; do sleep 3; done'
+- tests/wait_mysql_up.sh
+- tests/is_table_empty.py
 - tests/basic_http_get_test.py
