@@ -1,36 +1,17 @@
--# Elastic Beanstalk Files
--*/.elasticbeanstalk/*
--!.elasticbeanstalk/*.cfg.yml
--!.elasticbeanstalk/*.global.yml
-
-*.sw?
-*.egg
-*.egg-info
-*.pyc
-*.log.*
-*.log
-.test
-.testrepository
-.tox
+.*
+!/.env
+!/.gitattributes
+!/.gitignore
+!/.travis.yml
 venv
 AUTHORS
 build/*
 ChangeLog
 doc/build/*
 dist/
-.idea/
 playbooks/*.retry
-
-# Data Files
-*.csv
-*.db
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-
-.vagrant/
-Vagrantfile.local
+*local
 devopsloft_workspace.code-workspace
 aws_ubuntu.pem
+*~
+*.log

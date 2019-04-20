@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/devopsloft/devopsloft.svg?branch=master)](https://travis-ci.org/devopsloft/devopsloft)
+
 # DevOps Loft
 
 ## Drive our Career Path into DevOps
@@ -66,10 +68,15 @@ And ... join our [Facebook Group](https://www.facebook.com/groups/51266453912708
 
 * Vagrant should be installed in order to launch an environment of the application.
 * AWS account is required in order to run the application in STAGE environment. (see more details in STAGE Environment section)
+* devopsloft.yml file - feature toggle. Feature is released if the value is 'enabled'.
 
 ## DEV environment
 
 * The application will be deployed as local VM using VirtualBox
+* Install manually the following plugin: vagrant-env
+```
+vagrant plugin install vagrant-env
+```
 * Create the environment
 
 ```
@@ -90,10 +97,9 @@ localhost:5000
   * AMI ID
   * Subnet ID
   * Security Group with inbound ports for SSH and TCP port 5000
-* Adjust `Vagrantfile.local` with your configuration (see the Vagrantfile.local.example file for reference)
-* Install Vagrant AWS plugin
-```
-vagrant plugin install vagrant-aws
+* Copy the file `.env` to `.env.local`
+* Adjust `.env.local` with **your** configuration
+* Vagrant AWS plugin or any dependencies are done automatic on the **first run**
 ```
 * Launch the environment
 ```
