@@ -9,24 +9,40 @@ SCRIPT
 $dump = <<-SCRIPT
 ret=$(lsmod | grep -io vboxguest)
 mysqladmin -h 127.0.0.1 ping --silent
-if [ $? == 0 -a "$ret" == "vboxguest" ]; then
-  mysqldump -h 127.0.0.1 -u root -p$1 $2 > $4/.dump.sql
-else
-  apt-get update
-  apt-get install -y python3-pip
-  pip3 install awscli
-  mysqldump -h 127.0.0.1 -u root -p$1 $2 > .dump.sql
-  aws s3 cp .dump.sql s3://$3/.dump.sql
+if [ $? == 0 ]
+then
+  if [ "$ret" == "vboxguest" ]
+  then
+    mysqldump -h 127.0.0.1 -u root -p$1 $2 > $4/.dump.sql
+  else
+    apt-get update
+    apt-get install -y python3-pip
+    pip3 install awscli
+    mysqldump -h 127.0.0.1 -u root -p$1 $2 > .dump.sql
+    if [ $? == 0 ]
+    then
+      aws s3 cp .dump.sql s3://$3/.dump.sql
+    fi
+  fi
 fi
 SCRIPT
 
 $load = <<-SCRIPT
 timeout 60 bash -c \
   'while ! mysqladmin -h 127.0.0.1 ping --silent; do sleep 3; done'
+
+mysqladmin -h 127.0.0.1 ping --silent
 ret=$(lsmod | grep -io vboxguest)
-if [ "$ret" == "vboxguest" -a -s $4/.dump.sql ]; then
-  mysql -h 127.0.0.1 -u root -p$1 $2 < $4/.dump.sql
-  rm -rf $4/.dump.sql
+if [ "$ret" == "vboxguest" ]
+then
+  if [ -s $4/.dump.sql ]
+  then
+    mysql -h 127.0.0.1 -u root -p$1 $2 < $4/.dump.sql
+    if [ $? == 0 ]
+    then
+      rm -rf $4/.dump.sql
+    fi
+  fi
 else
   apt-get update
   apt-get install -y python3-pip
@@ -35,7 +51,10 @@ else
   if [ -n "$exists" ]; then
     aws s3 cp s3://$3/.dump.sql .dump.sql
     mysql -h 127.0.0.1 -u root -p$1 $2 < .dump.sql
-    rm -rf .dump.sql
+    if [ $? == 0 ]
+    then
+      rm -rf .dump.sql
+    fi
   fi
 fi
 SCRIPT
@@ -79,9 +98,8 @@ elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
 end
 
 $set_environment_variables = <<SCRIPT
-tee -a "$1/.env" >> "/dev/null" <<EOF
-ENVIRONMENT=#{chosen_environment}
-EOF
+sed -i -n -e '/^ENVIRONMENT=/!p' -e '$aENVIRONMENT=#{chosen_environment}' $1/.env
+
 cp $1/.env $1/web_s2i/
 cp $1/.env $1/db_s2i/
 SCRIPT
@@ -124,16 +142,16 @@ Vagrant.configure("2") do |config|
       Dotenv.load('.env.local')
   end
 
+  config.env.enable
+
   config.vm.provision 'shell',
-    inline: $set_environment_variables, args: "#{ENV['BASE_FOLDER']}", run: "always"
+    inline: $set_environment_variables, args: ENV['BASE_FOLDER'], run: "always"
   config.vm.provision "shell",
     inline: "apt-get update; apt-get install -y mysql-client"
 
-  config.env.enable
-
   config.vm.provision "docker" do |d|
     d.post_install_provision "shell",
-      inline:"docker network create devopsloft_network"
+      inline: 'docker network create devopsloft_network'
     d.build_image ENV['BASE_FOLDER'] + '/db_s2i',
       args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'] + ' --build-arg MYSQL_DATABASE=' + ENV['MYSQL_DB']
     d.run "db",
@@ -148,7 +166,7 @@ Vagrant.configure("2") do |config|
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
   if DEVOPSLOFT['publish'] == 'enabled'
-    config.vm.provision "shell", inline: $script, args: "#{ENV['BASE_FOLDER']}"
+    config.vm.provision "shell", inline: $script, args: ENV['BASE_FOLDER']
   end
 
   config.trigger.after :up do |trigger|
