@@ -1,6 +1,15 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+$dcompose = <<-SCRIPT
+curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose > /dev/null 2>&1
+chmod +x /usr/local/bin/docker-compose > /dev/null 2>&1
+set -a
+source /vagrant/.env
+docker-compose -f /vagrant/docker-compose.yml up -d --build --force-recreate
+
+SCRIPT
+
 $script = <<-SCRIPT
 docker cp /vagrant/.secrets.json web:/.secrets.json
 docker exec web ./events.py
@@ -16,7 +25,7 @@ else
   apt-get install -y python3-pip
   pip3 install awscli
   mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > .dump.sql
-  aws s3 cp .dump.sql s3://devopsloft-prod/.dump.sql
+  aws s3 cp .dump.sql s3://devopsloft-vadim/.dump.sql
 fi
 SCRIPT
 
@@ -31,9 +40,9 @@ else
   apt-get update
   apt-get install -y python3-pip
   pip3 install awscli
-  exists=$(aws s3 ls s3://devopsloft-prod/.dump.sql)
+  exists=$(aws s3 ls s3://devopsloft-vadim/.dump.sql)
   if [ -n "$exists" ]; then
-    aws s3 cp s3://devopsloft-prod/.dump.sql .dump.sql
+    aws s3 cp s3://devopsloft-vadim/.dump.sql .dump.sql
     mysql -h 127.0.0.1 -u root -p12345 devopsloft < .dump.sql
     rm -rf .dump.sql
   fi
@@ -127,24 +136,17 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'shell',
     inline: $set_environment_variables, run: "always"
   config.vm.provision "shell",
-    inline: "apt-get update; apt-get install -y mysql-client"
+    inline: "rm /var/lib/dpkg/lock-frontend; rm /var/lib/dpkg/lock; rm /var/cache/apt/archives/lock; apt-get update; apt-get install -y mysql-client"
 
   config.env.enable
-
   config.vm.provision "docker" do |d|
     d.post_install_provision "shell",
       inline:"docker network create devopsloft_network"
-    d.build_image ENV['BASE_FOLDER'] + '/db_s2i',
-      args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'] + ' --build-arg MYSQL_DATABASE=' + ENV['MYSQL_DB']
-    d.run "db",
-      image: ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'],
-      args: '--network devopsloft_network -p ' + ENV['MYSQL_PORT'] +':' + ENV['MYSQL_PORT'] + ' -e MYSQL_ROOT_PASSWORD=' + ENV['MYSQL_ROOT_PASSWORD'] + ' -e MYSQL_DATABASE=' + ENV['MYSQL_DB']
-    d.build_image ENV['BASE_FOLDER'] + '/web_s2i',
-      args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['APP']
-    d.run "web",
-      image: ENV['NAMESPACE'] + '/' + ENV['APP'],
-      args: '--network devopsloft_network -p ' + ENV['APP_GUEST_PORT'] +':' + ENV['APP_GUEST_PORT']
   end
+
+  config.vm.provision "shell",
+    inline: $dcompose, run: "always"
+
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
   if DEVOPSLOFT['publish'] == 'enabled'
