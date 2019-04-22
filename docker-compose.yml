@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  db:
+    image: devopsloft/mysql
+    build:
+      context: ./db_s2i
+
+#    networks:
+#      - devopsloft_network
+
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_HOST=%
+  
+    ports:
+      - 3306:3306
+    restart: always
+
+  web:
+    image: devopsloft/app
+    build: ./web_s2i
+#    networks:
+#      - devopsloft_network
+
+    ports:
+      - 80:80
+    restart: always
+
+#networks:
+#  devopsloft_network:
+#    external: true
+
