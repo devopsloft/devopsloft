@@ -25,7 +25,7 @@ else
   apt-get install -y python3-pip
   pip3 install awscli
   mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > .dump.sql
-  aws s3 cp .dump.sql s3://devopsloft-vadim/.dump.sql
+  aws s3 cp .dump.sql s3://devopsloft-prod/.dump.sql
 fi
 SCRIPT
 
@@ -40,9 +40,9 @@ else
   apt-get update
   apt-get install -y python3-pip
   pip3 install awscli
-  exists=$(aws s3 ls s3://devopsloft-vadim/.dump.sql)
+  exists=$(aws s3 ls s3://devopsloft-prod/.dump.sql)
   if [ -n "$exists" ]; then
-    aws s3 cp s3://devopsloft-vadim/.dump.sql .dump.sql
+    aws s3 cp s3://devopsloft-prod/.dump.sql .dump.sql
     mysql -h 127.0.0.1 -u root -p12345 devopsloft < .dump.sql
     rm -rf .dump.sql
   fi
