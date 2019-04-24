@@ -9,7 +9,7 @@ load_dotenv()
 config = {
     'user': os.getenv('MYSQL_USER'),
     'password': os.getenv('MYSQL_PASSWORD'),
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'database': os.getenv('MYSQL_DB'),
     'raise_on_warnings': True
 }
