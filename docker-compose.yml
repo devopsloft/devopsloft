@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   db:
-    image: devopsloft/mysql
+    image: ${APP}/${DOCKERHUB_DB}
     build:
       context: ./db_s2i
 
@@ -14,17 +14,17 @@ services:
       - MYSQL_ROOT_HOST=%
   
     ports:
-      - 3306:3306
+      - 3306:${MYSQL_PORT}
     restart: always
 
   web:
-    image: devopsloft/app
+    image: ${APP}/app
     build: ./web_s2i
 #    networks:
 #      - devopsloft_network
 
     ports:
-      - 80:80
+      - 80:${APP_GUEST_PORT}
     restart: always
 
 #networks:

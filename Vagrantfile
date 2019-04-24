@@ -136,8 +136,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'shell',
     inline: $set_environment_variables, run: "always"
   config.vm.provision "shell",
-    inline: "rm /var/lib/dpkg/lock-frontend; rm /var/lib/dpkg/lock; rm /var/cache/apt/archives/lock; apt-get update; apt-get install -y mysql-client"
-
+    inline: "kill $(pgrep 'unattended'); apt-get update; apt-get install -y mysql-client"
   config.env.enable
   config.vm.provision "docker" do |d|
     d.post_install_provision "shell",
