@@ -15,3 +15,5 @@ devopsloft_workspace.code-workspace
 aws_ubuntu.pem
 *~
 *.log
+mod_auth
+__pycache__
