@@ -26,5 +26,6 @@ before_script:
 script:
 - flake8 --exclude venv .
 - tests/wait_mysql_up.sh
+- sleep 15
 - tests/is_table_empty.py
 - tests/basic_http_get_test.py
