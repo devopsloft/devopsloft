@@ -9,24 +9,40 @@ SCRIPT
 $dump = <<-SCRIPT
 ret=$(lsmod | grep -io vboxguest)
 mysqladmin -h 127.0.0.1 ping --silent
-if [ $? == 0 -a "$ret" == "vboxguest" ]; then
-  mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > /vagrant/.dump.sql
-else
-  apt-get update
-  apt-get install -y python3-pip
-  pip3 install awscli
-  mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > .dump.sql
-  aws s3 cp .dump.sql s3://devopsloft-prod/.dump.sql
+if [ $? == 0 ]
+then
+  if [ "$ret" == "vboxguest" ]
+  then
+    mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > /vagrant/.dump.sql
+  else
+    apt-get update
+    apt-get install -y python3-pip
+    pip3 install awscli
+    mysqldump -h 127.0.0.1 -u root -p12345 devopsloft > .dump.sql
+    if [ $? == 0 ]
+    then
+      aws s3 cp .dump.sql s3://devopsloft-prod/.dump.sql
+    fi
+  fi
 fi
 SCRIPT
 
 $load = <<-SCRIPT
 timeout 60 bash -c \
   'while ! mysqladmin -h 127.0.0.1 ping --silent; do sleep 3; done'
+
+mysqladmin -h 127.0.0.1 ping --silent
 ret=$(lsmod | grep -io vboxguest)
-if [ "$ret" == "vboxguest" -a -s /vagrant/.dump.sql ]; then
-  mysql -h 127.0.0.1 -u root -p12345 devopsloft < /vagrant/.dump.sql
-  rm -rf /vagrant/.dump.sql
+if [ "$ret" == "vboxguest" ]
+then
+  if [ -s /vagrant/.dump.sql ]
+  then
+    mysql -h 127.0.0.1 -u root -p12345 devopsloft < /vagrant/.dump.sql
+    if [ $? == 0 ]
+    then
+      rm -rf /vagrant/.dump.sql
+    fi
+  fi
 else
   apt-get update
   apt-get install -y python3-pip
@@ -35,7 +51,10 @@ else
   if [ -n "$exists" ]; then
     aws s3 cp s3://devopsloft-prod/.dump.sql .dump.sql
     mysql -h 127.0.0.1 -u root -p12345 devopsloft < .dump.sql
-    rm -rf .dump.sql
+    if [ $? == 0 ]
+    then
+      rm -rf .dump.sql
+    fi
   fi
 fi
 SCRIPT
