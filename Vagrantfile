@@ -180,7 +180,8 @@ Vagrant.configure("2") do |config|
       guest: ENV['APP_GUEST_PORT'],
       host:  ENV['APP_HOST_PORT']
 
-    dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false
+    dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: "rsync",
+        rsync__exclude: ['.git/', 'workshops/', 'venv/']
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "dev"
