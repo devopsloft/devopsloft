@@ -87,6 +87,10 @@ vagrant up dev
 ```
 localhost:5000
 ```
+* Vault end point:
+```
+localhost:8200
+```
 
 ## STAGE environment
 
