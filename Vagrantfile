@@ -96,18 +96,16 @@ elsif ARGV[1] == 'stage' || ARGV[2] == 'stage'
 elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
   chosen_environment = 'prod'
 else
-    chosen_environment = 'None'
+  chosen_environment = 'None'
 end
 
 $set_environment_variables = <<SCRIPT
-tee -a "/vagrant/.env" >> "/dev/null" <<EOF
-ENVIRONMENT=#{chosen_environment}
-EOF
-cp /vagrant/.env /vagrant/web_s2i/
-cp /vagrant/.env /vagrant/db_s2i/
+sed -i -n -e '/^ENVIRONMENT=/!p' -e '$aENVIRONMENT=#{chosen_environment}' $1/.env
+cp $1/.env $1/web_s2i/
+cp $1/.env $1/db_s2i/
 SCRIPT
 
-puts 'Working on environment: ' + chosen_environment if chosen_environment
+puts 'Working on environment: ' + chosen_environment if chosen_environment != 'None'
 
 require 'yaml'
 Vagrant.require_version ">= 2.2.4"
@@ -182,7 +180,8 @@ Vagrant.configure("2") do |config|
       guest: ENV['APP_GUEST_PORT'],
       host:  ENV['APP_HOST_PORT']
 
-    dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false
+    dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: "rsync",
+        rsync__exclude: ['.git/', 'workshops/', 'venv/']
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "dev"
