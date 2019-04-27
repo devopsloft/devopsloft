@@ -18,11 +18,13 @@ application.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 application.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 application.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+application.config['ENVIRONMENT'] = os.getenv('ENVIRONMENT')
 
 # load statcounter variables for current environment
 STATCODES = yaml.load(os.getenv('STATCODES'), Loader=yaml.FullLoader)
-prj = STATCODES[os.getenv('ENVIRONMENT')]['project']
-scr = STATCODES[os.getenv('ENVIRONMENT')]['security']
+application.config['project'] = STATCODES[os.getenv('ENVIRONMENT')]['project']
+application.config['security'] = \
+    STATCODES[os.getenv('ENVIRONMENT')]['security']
 
 # Init MySQL
 mysql = MySQL(application)
@@ -31,17 +33,17 @@ mysql = MySQL(application)
 @application.route('/')
 @application.route('/home')
 def home():
-    return render_template('home.html', project=prj, security=scr)
+    return render_template('home.html')
 
 
 @application.route('/resources')
 def resources():
-    return render_template('resources.html', project=prj, security=scr)
+    return render_template('resources.html')
 
 
 @application.route('/docslist')
 def docslist():
-    return render_template('docslist.html', project=prj, security=scr)
+    return render_template('docslist.html')
 
 
 class SignupForm(Form):
@@ -99,12 +101,12 @@ def signup():
 
         return(redirect(url_for('home')))
 
-    return render_template('signup.html', form=form, project=prj, security=scr)
+    return render_template('signup.html', form=form)
 
 
 @application.route('/contact')
 def contact():
-    return render_template('contact.html', project=prj, security=scr)
+    return render_template('contact.html')
 
 
 if __name__ == '__main__':
