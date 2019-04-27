@@ -37,9 +37,9 @@
 
     <!-- Default Statcounter code for Devopsloft  -->
     <script type="text/javascript">
-    var sc_project={{ project }};
+    var sc_project={{ config['project'] }};
     var sc_invisible=0;
-    var sc_security="{{ security }}";
+    var sc_security="{{ config['security'] }}";
     var scJsHost = "https://";
     document.write("<sc"+"ript type='text/javascript' src='" +
     scJsHost+
@@ -48,10 +48,10 @@
     <noscript><div class="statcounter"><a title="Web Analytics"
     href="https://statcounter.com/" target="_blank"><img
     class="statcounter"
-    src="https://c.statcounter.com/{{ project }}/0/{{ security }}/0/"
+    src="https://c.statcounter.com/{{ config['project'] }}/0/{{ config['security'] }}/0/"
     alt="Web Analytics"></a></div></noscript>
     <!-- End of Statcounter Code -->
-    <a href="https://statcounter.com/p{{ project }}/?guest=1">View My
+    <a href="https://statcounter.com/p{{ config['project'] }}/?guest=1">{{ config['ENVIRONMENT'] }}
     Stats</a>
   </body>
 
