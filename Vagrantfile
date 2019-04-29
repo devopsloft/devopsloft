@@ -1,6 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+$dcompose = <<-SCRIPT
+curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose > /dev/null 2>&1
+chmod +x /usr/local/bin/docker-compose > /dev/null 2>&1
+set -a
+source /vagrant/.env
+docker-compose -f /vagrant/docker-compose.yml up -d --build --force-recreate
+SCRIPT
+
 $script = <<-SCRIPT
 docker cp $1/.secrets.json web:/.secrets.json
 docker exec web ./events.py
@@ -142,22 +150,15 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'shell',
     inline: $set_environment_variables, args: ENV['BASE_FOLDER'], run: "always"
   config.vm.provision "shell",
-    inline: "apt-get update; apt-get install -y mysql-client"
+    inline: "kill $(pgrep 'unattended'); apt-get update; apt-get install -y mysql-client"
 
   config.vm.provision "docker" do |d|
     d.post_install_provision "shell",
       inline: 'docker network create devopsloft_network'
-    d.build_image ENV['BASE_FOLDER'] + '/db_s2i',
-      args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'] + ' --build-arg MYSQL_DATABASE=' + ENV['MYSQL_DB']
-    d.run "db",
-      image: ENV['NAMESPACE'] + '/' + ENV['DOCKERHUB_DB'],
-      args: '--network devopsloft_network -p ' + ENV['MYSQL_PORT'] +':' + ENV['MYSQL_PORT'] + ' -e MYSQL_ROOT_PASSWORD=' + ENV['MYSQL_ROOT_PASSWORD'] + ' -e MYSQL_DATABASE=' + ENV['MYSQL_DB']
-    d.build_image ENV['BASE_FOLDER'] + '/web_s2i',
-      args: '-t ' + ENV['NAMESPACE'] + '/' + ENV['APP']
-    d.run "web",
-      image: ENV['NAMESPACE'] + '/' + ENV['APP'],
-      args: '--network devopsloft_network -p ' + ENV['APP_GUEST_PORT'] +':' + ENV['APP_GUEST_PORT']
   end
+
+  config.vm.provision "shell",
+    inline: $dcompose, run: "always"
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
   if DEVOPSLOFT['publish'] == 'enabled'
