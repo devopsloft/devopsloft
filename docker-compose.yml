@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  db:
+    image: ${APP}/${DOCKERHUB_DB}
+    build:
+      context: ./db_s2i
+
+#    networks:
+#      - devopsloft_network
+
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_HOST=%
+  
+    ports:
+      - 3306:${MYSQL_PORT}
+    restart: always
+
+  web:
+    image: ${APP}/app
+    build: ./web_s2i
+#    networks:
+#      - devopsloft_network
+
+    ports:
+      - 80:${APP_GUEST_PORT}
+    restart: always
+
+#networks:
+#  devopsloft_network:
+#    external: true
+
