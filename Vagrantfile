@@ -99,12 +99,6 @@ else
   chosen_environment = 'None'
 end
 
-$set_environment_variables = <<SCRIPT
-sed -i -n -e '/^ENVIRONMENT=/!p' -e '$aENVIRONMENT=#{chosen_environment}' $1/.env
-cp $1/.env $1/web_s2i/
-cp $1/.env $1/db_s2i/
-SCRIPT
-
 puts 'Working on environment: ' + chosen_environment if chosen_environment != 'None'
 
 require 'yaml'
@@ -140,10 +134,11 @@ Vagrant.configure("2") do |config|
   config.env.enable
 
   config.vm.provision 'shell',
-    inline: $set_environment_variables, args: ENV['BASE_FOLDER'], run: "always"
+    path: "scripts/set-environment-variables.sh",
+    args: "#{chosen_environment} #{ENV['BASE_FOLDER']}",
+    run: "always"
   config.vm.provision "shell",
     inline: "apt-get update; apt-get install -y mysql-client"
-
   config.vm.provision "docker" do |d|
     d.post_install_provision "shell",
       inline: 'docker network create devopsloft_network'
@@ -157,7 +152,17 @@ Vagrant.configure("2") do |config|
     d.run "web",
       image: ENV['NAMESPACE'] + '/' + ENV['APP'],
       args: '--network devopsloft_network -p ' + ENV['APP_GUEST_PORT'] +':' + ENV['APP_GUEST_PORT']
+    d.build_image "#{ENV['BASE_FOLDER']}/vault_s2i",
+      args: "-t #{ENV['NAMESPACE']}/vault --build-arg VAULT_GUEST_PORT=#{ENV['VAULT_GUEST_PORT']}"
+    d.run "vault",
+      image: "#{ENV['NAMESPACE']}/vault",
+      args: "--network devopsloft_network --cap-add=IPC_LOCK -p #{ENV['VAULT_GUEST_PORT']}:#{ENV['VAULT_GUEST_PORT']}",
+      cmd: "server"
   end
+  config.vm.provision 'shell',
+    path: "scripts/vault-init.sh",
+    args: "#{ENV['BASE_FOLDER']}",
+    run: "once"
 
   DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
   if DEVOPSLOFT['publish'] == 'enabled'
@@ -179,6 +184,9 @@ Vagrant.configure("2") do |config|
 		dev.vm.network "forwarded_port",
       guest: ENV['APP_GUEST_PORT'],
       host:  ENV['APP_HOST_PORT']
+		dev.vm.network "forwarded_port",
+      guest: ENV['VAULT_GUEST_PORT'],
+      host:  ENV['VAULT_HOST_PORT']
 
     dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: "rsync",
         rsync__exclude: ['.git/', 'workshops/', 'venv/']

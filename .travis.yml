@@ -6,23 +6,23 @@ services:
 - docker
 before_install:
 - sudo apt-get install -y libmysqlclient-dev
-- cp .env web_s2i/.env
 addons:
   apt:
     update: true
 install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
-- echo ENVIRONMENT=ci >> .env
-- cp .env web_s2i/
-- cp .env db_s2i/
+- scripts/set-environment-variables.sh ci .
 - source .env
 - docker build -t $NAMESPACE/$DOCKERHUB_DB db_s2i/.
 - docker build -t $NAMESPACE/$APP web_s2i/.
+- docker build -t $NAMESPACE/vault --build-arg VAULT_GUEST_PORT=$VAULT_GUEST_PORT vault_s2i/.
 - docker network create devopsloft_network
 - docker run -d --network devopsloft_network -p $MYSQL_PORT:$MYSQL_PORT --name db -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=$MYSQL_DB $NAMESPACE/$DOCKERHUB_DB
 - docker run -d --network devopsloft_network -p $APP_GUEST_PORT:$APP_GUEST_PORT --name web $NAMESPACE/$APP
 - docker exec -it db timeout 60 bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
+- docker run -d --network devopsloft_network --cap-add=IPC_LOCK -p $VAULT_GUEST_PORT:$VAULT_GUEST_PORT --name vault $NAMESPACE/vault server
+- scripts/vault-init.sh .
 script:
 - flake8 --exclude venv .
 - tests/wait_mysql_up.sh
