@@ -2,8 +2,7 @@ version: "3.7"
 services:
   db:
     image: ${APP}/${DOCKERHUB_DB}
-    build:
-      context: ./db_s2i
+    build: ./db_s2i
 
 #    networks:
 #      - devopsloft_network
@@ -26,6 +25,23 @@ services:
     ports:
       - 80:${APP_GUEST_PORT}
     restart: always
+
+  vault:
+    image: ${APP}/vault
+    container_name: vault
+    build: 
+      context: ./vault_s2i
+      args:
+        VAULT_GUEST_PORT: ${VAULT_GUEST_PORT}
+    ports:
+      - 8200:${VAULT_GUEST_PORT}
+    cap_add:
+      - IPC_LOCK
+    command: server
+#    networks:
+#      - devopsloft_network
+    restart: always
+
 
 #networks:
 #  devopsloft_network:
