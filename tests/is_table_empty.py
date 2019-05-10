@@ -10,7 +10,7 @@ config = {
     'user': os.getenv('MYSQL_USER'),
     'password': os.getenv('MYSQL_PASSWORD'),
     'host': '127.0.0.1',
-    'database': os.getenv('MYSQL_DB'),
+    'database': os.getenv('MYSQL_DATABASE'),
     'raise_on_warnings': True
 }
 

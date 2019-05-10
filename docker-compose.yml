@@ -3,15 +3,11 @@ services:
   db:
     image: ${APP}/${DOCKERHUB_DB}
     build: ./db_s2i
-
-#    networks:
-#      - devopsloft_network
-
+    container_name: db
     environment:
-      - MYSQL_DATABASE=${MYSQL_DB}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_ROOT_HOST=%
-  
+      - MYSQL_DATABASE
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_HOST
     ports:
       - 3306:${MYSQL_PORT}
     restart: always
@@ -19,9 +15,7 @@ services:
   web:
     image: ${APP}/app
     build: ./web_s2i
-#    networks:
-#      - devopsloft_network
-
+    container_name: web
     ports:
       - 80:${APP_GUEST_PORT}
     restart: always
@@ -29,7 +23,7 @@ services:
   vault:
     image: ${APP}/vault
     container_name: vault
-    build: 
+    build:
       context: ./vault_s2i
       args:
         VAULT_GUEST_PORT: ${VAULT_GUEST_PORT}
@@ -38,12 +32,4 @@ services:
     cap_add:
       - IPC_LOCK
     command: server
-#    networks:
-#      - devopsloft_network
     restart: always
-
-
-#networks:
-#  devopsloft_network:
-#    external: true
-

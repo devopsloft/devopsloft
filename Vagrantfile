@@ -5,9 +5,8 @@ $dcompose = <<-SCRIPT
 curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose > /dev/null 2>&1
 chmod +x /usr/local/bin/docker-compose > /dev/null 2>&1
 set -a
-source /vagrant/.env
-docker-compose -f /vagrant/docker-compose.yml up -d --build --force-recreate
-
+cd /vagrant
+docker-compose -f docker-compose.yml up -d --build --force-recreate
 SCRIPT
 
 
@@ -171,11 +170,11 @@ Vagrant.configure("2") do |config|
 
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
-    trigger.run_remote = {inline: $load, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DB']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
+    trigger.run_remote = {inline: $load, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DATABASE']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
   end
   config.trigger.before :destroy do |trigger|
     trigger.info = "Dumping database"
-    trigger.run_remote = {inline: $dump, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DB']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
+    trigger.run_remote = {inline: $dump, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DATABASE']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
   end
 
 	config.vm.define "dev" do |dev|

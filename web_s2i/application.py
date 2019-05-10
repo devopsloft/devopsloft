@@ -16,7 +16,7 @@ application = Flask(__name__)
 application.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 application.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 application.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
-application.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
+application.config['MYSQL_DB'] = os.getenv('MYSQL_DATABASE')
 application.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 application.config['ENVIRONMENT'] = os.getenv('ENVIRONMENT')
 

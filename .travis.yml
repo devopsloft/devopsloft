@@ -13,19 +13,11 @@ install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
 - scripts/set-environment-variables.sh ci .
-- source .env
-- docker build -t $NAMESPACE/$DOCKERHUB_DB db_s2i/.
-- docker build -t $NAMESPACE/$APP web_s2i/.
-- docker build -t $NAMESPACE/vault --build-arg VAULT_GUEST_PORT=$VAULT_GUEST_PORT vault_s2i/.
-- docker network create devopsloft_network
-- docker run -d --network devopsloft_network -p $MYSQL_PORT:$MYSQL_PORT --name db -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=$MYSQL_DB $NAMESPACE/$DOCKERHUB_DB
-- docker run -d --network devopsloft_network -p $APP_GUEST_PORT:$APP_GUEST_PORT --name web $NAMESPACE/$APP
-- docker exec -it db timeout 60 bash -c 'while ! mysqladmin ping --silent; do sleep 3; done'
-- docker run -d --network devopsloft_network --cap-add=IPC_LOCK -p $VAULT_GUEST_PORT:$VAULT_GUEST_PORT --name vault $NAMESPACE/vault server
+- docker-compose -f docker-compose.yml up -d --build --force-recreate
 - scripts/vault-init.sh .
 script:
-- flake8 --exclude venv .
 - tests/wait_mysql_up.sh
 - sleep 15
 - tests/is_table_empty.py
 - tests/basic_http_get_test.py
+- flake8 --exclude venv .
