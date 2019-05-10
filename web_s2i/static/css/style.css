@@ -100,3 +100,11 @@ body {
   pointer-events: none;
   cursor: default;
 }
+/* jumbotron */
+.jumbotron-fluid {
+  padding: 20px 0;
+  margin-bottom: 0;
+}
+.lead {
+	font-size: 1.5rem;
+}
