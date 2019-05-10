@@ -12,7 +12,7 @@ dist/
 playbooks/*.retry
 *local
 devopsloft_workspace.code-workspace
-aws_ubuntu.pem
+*.pem
 *~
 *.log
 mod_auth
