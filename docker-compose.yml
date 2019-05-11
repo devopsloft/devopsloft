@@ -9,7 +9,7 @@ services:
       - MYSQL_ROOT_PASSWORD
       - MYSQL_ROOT_HOST
     ports:
-      - 3306:${MYSQL_PORT}
+      - $MYSQL_PORT:$MYSQL_PORT
     restart: always
 
   app:
@@ -17,7 +17,7 @@ services:
     build: ./app_s2i
     container_name: app
     ports:
-      - 80:${APP_GUEST_PORT}
+      - $APP_HOST_PORT:$APP_GUEST_PORT
     restart: always
 
   vault:
@@ -28,8 +28,17 @@ services:
       args:
         VAULT_GUEST_PORT: ${VAULT_GUEST_PORT}
     ports:
-      - 8200:${VAULT_GUEST_PORT}
+      - $VAULT_HOST_PORT:$VAULT_GUEST_PORT
     cap_add:
       - IPC_LOCK
     command: server
+    restart: always
+
+  web:
+    image: ${APP}/web
+    container_name: web
+    build:
+      context: ./web_s2i
+    ports:
+      - $WEB_HOST_PORT:$WEB_GUEST_PORT
     restart: always

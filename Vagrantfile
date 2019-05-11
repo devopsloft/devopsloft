@@ -145,14 +145,14 @@ Vagrant.configure("2") do |config|
   config.vm.provision :docker
   config.vm.provision :docker_compose,
     compose_version: "1.24.0"
-  config.vm.provision "app",
+  config.vm.provision "docker compose",
     type: "shell",
     keep_color: true,
     privileged: false,
     run: "always",
     inline: <<-SCRIPT
       cd /vagrant
-      docker-compose -f /vagrant/docker-compose.yml up -d --build --force-recreate
+      docker-compose -f #{ENV['BASE_FOLDER']}/docker-compose.yml up -d --build --force-recreate
     SCRIPT
 
   config.vm.provision 'shell',
@@ -179,6 +179,9 @@ Vagrant.configure("2") do |config|
 	config.vm.define "dev" do |dev|
 
 		dev.vm.box = "ubuntu/bionic64"
+		dev.vm.network "forwarded_port",
+      guest: ENV['WEB_GUEST_PORT'],
+      host:  ENV['WEB_HOST_PORT']
 		dev.vm.network "forwarded_port",
       guest: ENV['APP_GUEST_PORT'],
       host:  ENV['APP_HOST_PORT']
