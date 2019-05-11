@@ -133,15 +133,9 @@ Vagrant.configure("2") do |config|
 
   config.env.enable
 
-  config.vm.provision 'shell',
-    path: "scripts/set-environment-variables.sh",
-    args: "#{chosen_environment} #{ENV['BASE_FOLDER']}",
-    run: "always"
-
   config.vm.provision "shell",
     inline: "apt-get update; apt-get install -y mysql-client"
 
-  config.env.enable
   config.vm.provision :docker
   config.vm.provision :docker_compose,
     compose_version: "1.24.0"

@@ -17,7 +17,13 @@ services:
     build: ./app_s2i
     container_name: app
     environment:
+      - STATCODES
       - ENVIRONMENT
+      - MYSQL_HOST
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - APP_GUEST_PORT
     ports:
       - $APP_HOST_PORT:$APP_GUEST_PORT
     restart: always

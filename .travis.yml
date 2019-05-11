@@ -14,7 +14,6 @@ addons:
 install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
-- scripts/set-environment-variables.sh ci .
 - docker-compose -f docker-compose.yml up -d --build --force-recreate
 - scripts/vault-init.sh .
 script:
