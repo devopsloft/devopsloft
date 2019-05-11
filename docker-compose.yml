@@ -56,6 +56,8 @@ services:
     container_name: share
     build:
       context: ./share_s2i
+    volumes:
+      - $BASE_FOLDER/modules:/modules
     environment:
       - PYTHONPATH=$PYTHONPATH:/modules
       - VAULT_ADDR=http://vault:$VAULT_GUEST_PORT

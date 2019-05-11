@@ -145,10 +145,10 @@ Vagrant.configure("2") do |config|
       docker-compose -f #{ENV['BASE_FOLDER']}/docker-compose.yml up -d --build --force-recreate
     SCRIPT
 
-  config.vm.provision 'shell',
-    path: "scripts/vault-init.sh",
-    args: "#{ENV['BASE_FOLDER']}",
-    run: "once"
+  # config.vm.provision 'shell',
+  #   path: "scripts/vault-init.sh",
+  #   args: "#{ENV['BASE_FOLDER']}",
+  #   run: "once"
 
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
