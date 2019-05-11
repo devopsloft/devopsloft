@@ -152,6 +152,7 @@ Vagrant.configure("2") do |config|
     run: "always",
     inline: <<-SCRIPT
       cd /vagrant
+      export ENVIRONMENT=#{chosen_environment}
       docker-compose -f #{ENV['BASE_FOLDER']}/docker-compose.yml up -d --build --force-recreate
     SCRIPT
 
