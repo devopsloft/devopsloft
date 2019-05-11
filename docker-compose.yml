@@ -12,10 +12,10 @@ services:
       - 3306:${MYSQL_PORT}
     restart: always
 
-  web:
+  app:
     image: ${APP}/app
-    build: ./web_s2i
-    container_name: web
+    build: ./app_s2i
+    container_name: app
     ports:
       - 80:${APP_GUEST_PORT}
     restart: always
