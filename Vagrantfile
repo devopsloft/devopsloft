@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 $script = <<-SCRIPT
-docker cp $1/.secrets.json web:/.secrets.json
-docker exec web ./events.py
+docker cp $1/.secrets.json app:/.secrets.json
+docker exec app ./events.py
 SCRIPT
 
 $dump = <<-SCRIPT
