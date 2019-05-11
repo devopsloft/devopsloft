@@ -83,7 +83,7 @@ commandsToCheck = [
   if commandsToCheck.include?(enteredCommand)
     # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
     if not (environments.include?ARGV[1] or environments.include?ARGV[2])
-      puts "You must use 'vagrant #{ARGV[0]} " + environments.join("/") + "....'"
+      puts "You must use 'vagrant #{ARGV[0]} #{environments.join("/")}....'"
       puts "Run 'vagrant status' to view VM names."
       exit 1
     end
@@ -99,7 +99,7 @@ else
   chosen_environment = 'None'
 end
 
-puts 'Working on environment: ' + chosen_environment if chosen_environment != 'None'
+puts "Working on environment: #{chosen_environment}" if chosen_environment != 'None'
 
 require 'yaml'
 Vagrant.require_version ">= 2.2.4"
