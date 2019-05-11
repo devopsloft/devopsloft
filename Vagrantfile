@@ -1,11 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-$script = <<-SCRIPT
-docker cp $1/.secrets.json app:/.secrets.json
-docker exec app ./events.py
-SCRIPT
-
 $dump = <<-SCRIPT
 ret=$(lsmod | grep -io vboxguest)
 mysqladmin -h 127.0.0.1 ping --silent
@@ -154,11 +149,6 @@ Vagrant.configure("2") do |config|
     path: "scripts/vault-init.sh",
     args: "#{ENV['BASE_FOLDER']}",
     run: "once"
-
-  DEVOPSLOFT = YAML.load_file 'devopsloft.yml'
-  if DEVOPSLOFT['publish'] == 'enabled'
-    config.vm.provision "shell", inline: $script, args: ENV['BASE_FOLDER']
-  end
 
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
