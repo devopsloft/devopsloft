@@ -4,6 +4,8 @@ python:
 - '3.6'
 services:
 - docker
+env:
+- ENVIRONMENT=ci
 before_install:
 - sudo apt-get install -y libmysqlclient-dev
 addons:

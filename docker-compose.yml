@@ -16,6 +16,8 @@ services:
     image: ${APP}/app
     build: ./app_s2i
     container_name: app
+    environment:
+      - ENVIRONMENT
     ports:
       - $APP_HOST_PORT:$APP_GUEST_PORT
     restart: always
