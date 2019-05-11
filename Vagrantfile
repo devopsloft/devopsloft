@@ -1,15 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-$dcompose = <<-SCRIPT
-curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose > /dev/null 2>&1
-chmod +x /usr/local/bin/docker-compose > /dev/null 2>&1
-set -a
-cd /vagrant
-docker-compose -f docker-compose.yml up -d --build --force-recreate
-SCRIPT
-
-
 $script = <<-SCRIPT
 docker cp $1/.secrets.json web:/.secrets.json
 docker exec web ./events.py
@@ -114,7 +105,7 @@ require 'yaml'
 Vagrant.require_version ">= 2.2.4"
 
 
-required_plugins = %w( vagrant-env )
+required_plugins = %w( vagrant-env vagrant-docker-compose)
 required_plugins.each do |plugin|
     exec "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
 end
@@ -148,15 +139,21 @@ Vagrant.configure("2") do |config|
     run: "always"
 
   config.vm.provision "shell",
-    inline: "kill $(pgrep 'unattended'); apt-get update; apt-get install -y mysql-client"
-  config.env.enable
-  config.vm.provision "docker" do |d|
-    d.post_install_provision "shell",
-      inline:"docker network create devopsloft_network"
-  end
+    inline: "apt-get update; apt-get install -y mysql-client"
 
-  config.vm.provision "shell",
-    inline: $dcompose, run: "always"
+  config.env.enable
+  config.vm.provision :docker
+  config.vm.provision :docker_compose,
+    compose_version: "1.24.0"
+  config.vm.provision "app",
+    type: "shell",
+    keep_color: true,
+    privileged: false,
+    run: "always",
+    inline: <<-SCRIPT
+      cd /vagrant
+      docker-compose -f /vagrant/docker-compose.yml up -d --build --force-recreate
+    SCRIPT
 
   config.vm.provision 'shell',
     path: "scripts/vault-init.sh",
