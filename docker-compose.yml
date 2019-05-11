@@ -44,9 +44,19 @@ services:
 
   web:
     image: ${APP}/web
-    container_name: web
     build:
       context: ./web_s2i
+    container_name: web
     ports:
       - $WEB_HOST_PORT:$WEB_GUEST_PORT
+    restart: always
+
+  share:
+    image: ${APP}/share
+    container_name: share
+    build:
+      context: ./share_s2i
+    environment:
+      - PYTHONPATH=$PYTHONPATH:/modules
+      - VAULT_ADDR=http://vault:$VAULT_GUEST_PORT
     restart: always
