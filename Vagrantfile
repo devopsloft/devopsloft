@@ -171,10 +171,12 @@ Vagrant.configure("2") do |config|
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
     trigger.run_remote = {inline: $load, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DATABASE']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
+    trigger.on_error = :continue
   end
   config.trigger.before :destroy do |trigger|
     trigger.info = "Dumping database"
     trigger.run_remote = {inline: $dump, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DATABASE']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
+    trigger.on_error = :continue
   end
 
 	config.vm.define "dev" do |dev|
