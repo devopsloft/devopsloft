@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-from flask import Flask, flash, render_template, redirect, url_for, request
+from flask import Flask, flash, render_template, redirect, url_for
+from flask import request, make_response
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from dotenv import load_dotenv
 import os
 import yaml
+import loft_meetup
 
 load_dotenv()
 
@@ -33,6 +35,9 @@ mysql = MySQL(application)
 @application.route('/')
 @application.route('/home')
 def home():
+    code = request.args.get("code")
+    if code is not None:
+        loft_meetup.get_token(code)
     return render_template('home.html')
 
 
@@ -109,9 +114,12 @@ def contact():
     return render_template('contact.html')
 
 
-@application.route('/meetup')
-def meetup():
-    return request.data
+@application.route('/share', methods=['GET', 'POST'])
+def share():
+    if request.method == 'POST':
+        return make_response(loft_meetup.auth())
+    else:
+        return render_template('share.html')
 
 
 if __name__ == '__main__':

@@ -4,8 +4,6 @@ import json
 import meetup.api
 from slacker import Slacker
 import loft_hvac
-import os
-import requests
 
 
 def getEvents(status):
@@ -43,27 +41,8 @@ def putSlack(channel='sandbox', message='Hello World', event=None):
         print(e)
 
 
-def auth():
-
-    with requests.Session() as session:
-        API_KEY_ENV_NAME = 'MEETUP_CONSUMER_KEY'
-        # API_SECRET_ENV_NAME = 'MEETUP_CONSUMER_SECRET'
-
-        parameters = {}
-        parameters['client_id'] = os.environ.get(API_KEY_ENV_NAME)
-        parameters['response_type'] = 'authorize'
-        parameters['redirect_uri'] = 'http://www.devopsloft.io/meetup'
-        parameters['allow_redirects'] = True
-        session.get(
-            url="https://secure.meetup.com/oauth2/authorize",
-            params=parameters,
-            allow_redirects=True
-        )
-
-
 def main():
 
-    auth()
     while True:
         events = getEvents(status='upcoming')
         if events is not None:

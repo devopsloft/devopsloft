@@ -17,3 +17,6 @@ flask-mysqldb
 passlib
 PyYAML
 python-dotenv
+meetup-api
+slacker
+hvac

@@ -5,7 +5,9 @@ python:
 services:
 - docker
 env:
-- ENVIRONMENT=ci
+  global:
+    - ENVIRONMENT=ci
+    - BASE_FOLDER=.
 before_install:
 - sudo apt-get install -y libmysqlclient-dev
 addons:
@@ -15,7 +17,6 @@ install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
 - docker-compose -f docker-compose.yml up -d --build --force-recreate
-- scripts/vault-init.sh .
 script:
 - tests/wait_mysql_up.sh
 - sleep 15
