@@ -198,6 +198,7 @@ Vagrant.configure("2") do |config|
 			aws.keypair_name = ENV['STAGE_KEYPAIR_NAME']
 			aws.ami = ENV['STAGE_AMI']
 			aws.instance_type = ENV['STAGE_INSTANCE_TYPE']
+			aws.elastic_ip = ENV['STAGE_ELASTIC_IP']
 			aws.region = ENV['STAGE_REGION']
 			aws.subnet_id = ENV['STAGE_SUBNET_ID']
 			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
