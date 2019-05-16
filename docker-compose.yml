@@ -16,6 +16,8 @@ services:
     image: ${APP}/app
     build: ./app_s2i
     container_name: app
+    volumes:
+      - $BASE_FOLDER/modules:/modules
     environment:
       - STATCODES
       - ENVIRONMENT
@@ -24,6 +26,7 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_DATABASE
       - APP_GUEST_PORT
+      - PYTHONPATH=$PYTHONPATH:/modules
     ports:
       - $APP_HOST_PORT:$APP_GUEST_PORT
     restart: always
@@ -49,16 +52,4 @@ services:
     container_name: web
     ports:
       - $WEB_HOST_PORT:$WEB_GUEST_PORT
-    restart: always
-
-  share:
-    image: ${APP}/share
-    container_name: share
-    build:
-      context: ./share_s2i
-    volumes:
-      - $BASE_FOLDER/modules:/modules
-    environment:
-      - PYTHONPATH=$PYTHONPATH:/modules
-      - VAULT_ADDR=http://vault:$VAULT_GUEST_PORT
     restart: always
