@@ -7,7 +7,7 @@ services:
 env:
   global:
     - ENVIRONMENT=ci
-    - BASE_FOLDER=.
+    - BASE_FOLDER=$TRAVIS_BUILD_DIR
 before_install:
 - sudo apt-get install -y libmysqlclient-dev
 addons:
@@ -16,7 +16,7 @@ addons:
 install:
 - pip3 install -r tests/requirements-test.txt
 before_script:
-- docker-compose -f docker-compose.yml up -d --build --force-recreate
+- scripts/docker-compose-provision.sh $ENVIRONMENT $BASE_FOLDER
 script:
 - tests/wait_mysql_up.sh
 - sleep 15

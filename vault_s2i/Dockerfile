@@ -1,4 +1,4 @@
-FROM python:3-stretch
+FROM python:3
 
 COPY . /
 ARG VAULT_GUEST_PORT
