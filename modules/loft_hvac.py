@@ -27,24 +27,24 @@ def initialize():
         root_token = result['root_token']
         keys = result['keys']
 
-        if not os.path.isdir('/vault'):
-            os.mkdir('/vault')
-            print("Directory '/vault' Created")
+        # if not os.path.isdir('/vault'):
+        #     os.mkdir('/vault')
+        #     print("Directory '/vault' Created")
 
-        with open('/vault/keys.json', "w+") as keysfile:
+        with open('.devopsloft/keys.json', "w+") as keysfile:
             json.dump(keys, keysfile)
 
-        with open('/vault/root_token.txt', "w+") as tokenfile:
+        with open('.devopsloft/root_token.txt', "w+") as tokenfile:
             tokenfile.write(root_token)
 
     else:
 
         if keys is None:
-            with open('/vault/keys.json') as keysfile:
+            with open('.devopsloft/keys.json') as keysfile:
                 keys = json.load(keysfile)
 
         if root_token is None:
-            with open('/vault/root_token.txt') as tokenfile:
+            with open('.devopsloft/root_token.txt') as tokenfile:
                 root_token = tokenfile.read()
 
         if client.token is None:
@@ -66,21 +66,16 @@ def seal():
     client.sys.seal()
 
 
-def read_secret(apikey):
+def read_secret(path='secret', key=None):
 
     global client
 
     initialize()
 
     unseal()
-    # response = client.secrets.kv.v2.list_secrets(
-    #     path='secret/apikey/',
-    #     mount_point='secret')
-    # print(response)
-    response = client.secrets.kv.v2.read_secret_version(
-        path='secret/apikey/' + apikey,
-        mount_point='secret')
-    return response['data']['data']['key']
+    response = client.secrets.kv.v2.read_secret_version(path=path)
+    print(response)
+    return response['data']
 
 
 def write_secret(path, secret, mount_point):

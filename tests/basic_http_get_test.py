@@ -48,7 +48,15 @@ def test(domain, urls, allowed_failures, sleep_between_failures):
 
 
 if __name__ == '__main__':
-    urls = ('/', '/home', '/resources', '/docslist', '/contact', '/signup')
+    urls = (
+        '/',
+        '/home',
+        '/resources',
+        '/docslist',
+        '/contact',
+        '/signup',
+        '/share'
+    )
     test_config = {
         'domain': 'http://127.0.0.1:' + os.getenv('APP_GUEST_PORT'),
         'urls': urls,

@@ -100,7 +100,7 @@ require 'yaml'
 Vagrant.require_version ">= 2.2.4"
 
 
-required_plugins = %w( vagrant-env vagrant-docker-compose)
+required_plugins = %w( vagrant-env vagrant-docker-compose vagrant-disksize)
 required_plugins.each do |plugin|
     exec "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
 end
@@ -134,21 +134,11 @@ Vagrant.configure("2") do |config|
   config.vm.provision :docker
   config.vm.provision :docker_compose,
     compose_version: "1.24.0"
-  config.vm.provision "docker compose",
+  config.vm.provision "docker compose provision",
     type: "shell",
-    keep_color: true,
-    privileged: false,
-    run: "always",
-    inline: <<-SCRIPT
-      cd /vagrant
-      export ENVIRONMENT=#{chosen_environment}
-      docker-compose -f #{ENV['BASE_FOLDER']}/docker-compose.yml up -d --build --force-recreate
-    SCRIPT
-
-  # config.vm.provision 'shell',
-  #   path: "scripts/vault-init.sh",
-  #   args: "#{ENV['BASE_FOLDER']}",
-  #   run: "once"
+    path: "scripts/docker-compose-provision.sh",
+    args: "#{chosen_environment} #{ENV['BASE_FOLDER']}",
+    run: "always"
 
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
@@ -168,14 +158,13 @@ Vagrant.configure("2") do |config|
       guest: ENV['WEB_GUEST_PORT'],
       host:  ENV['WEB_HOST_PORT']
 		dev.vm.network "forwarded_port",
-      guest: ENV['APP_GUEST_PORT'],
-      host:  ENV['APP_HOST_PORT']
-		dev.vm.network "forwarded_port",
       guest: ENV['VAULT_GUEST_PORT'],
       host:  ENV['VAULT_HOST_PORT']
 
     dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: "rsync",
         rsync__exclude: ['.git/', 'workshops/', 'venv/']
+
+    dev.disksize.size = '10GB'
 
 		dev.vm.provider :virtualbox do |virtualbox,override|
 			virtualbox.name = "dev"
