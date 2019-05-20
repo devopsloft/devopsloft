@@ -1,0 +1,14 @@
+{
+  "Comment": "CREATE a record ",
+  "Changes": [{
+    "Action": "CREATE",
+    "ResourceRecordSet": {
+      "Name": "{{ domain_name }}",
+      "Type": "A",
+      "TTL": 300,
+      "ResourceRecords": [{
+        "Value": "{{ guest_ip }}"
+      }]
+    }
+  }]
+}

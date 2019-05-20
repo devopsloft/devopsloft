@@ -1,5 +1,4 @@
 python-dateutil
-django-meetup
 click
 configparser
 dominate
@@ -17,6 +16,6 @@ flask-mysqldb
 passlib
 PyYAML
 python-dotenv
-meetup-api
+git+https://github.com/lioramilbaum/meetup-api.git@access_token
 slacker
 hvac

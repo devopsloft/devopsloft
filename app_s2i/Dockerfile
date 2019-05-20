@@ -1,9 +1,8 @@
-FROM ubuntu:18.04
+FROM python:3
 
 COPY . /
 
-RUN apt-get update && \
-    apt-get install -y python3-pip libmysqlclient-dev && \
+RUN pip3 install --upgrade pip && \
     pip3 install --default-timeout=100 -r requirements.txt
 
 ENTRYPOINT ["python3"]

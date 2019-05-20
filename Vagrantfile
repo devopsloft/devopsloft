@@ -1,59 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-$dump = <<-SCRIPT
-ret=$(lsmod | grep -io vboxguest)
-mysqladmin -h 127.0.0.1 ping --silent
-if [ $? == 0 ]
-then
-  if [ "$ret" == "vboxguest" ]
-  then
-    mysqldump -h 127.0.0.1 -u root -p$1 $2 > $4/.dump.sql
-  else
-    apt-get update
-    apt-get install -y python3-pip
-    pip3 install awscli
-    mysqldump -h 127.0.0.1 -u root -p$1 $2 > .dump.sql
-    if [ $? == 0 ]
-    then
-      aws s3 cp .dump.sql s3://$3/.dump.sql
-    fi
-  fi
-fi
-SCRIPT
-
-$load = <<-SCRIPT
-timeout 60 bash -c \
-  'while ! mysqladmin -h 127.0.0.1 ping --silent; do sleep 3; done'
-
-mysqladmin -h 127.0.0.1 ping --silent
-ret=$(lsmod | grep -io vboxguest)
-if [ "$ret" == "vboxguest" ]
-then
-  if [ -s $4/.dump.sql ]
-  then
-    mysql -h 127.0.0.1 -u root -p$1 $2 < $4/.dump.sql
-    if [ $? == 0 ]
-    then
-      rm -rf $4/.dump.sql
-    fi
-  fi
-else
-  apt-get update
-  apt-get install -y python3-pip
-  pip3 install awscli
-  exists=$(aws s3 ls s3://$3/.dump.sql)
-  if [ -n "$exists" ]; then
-    aws s3 cp s3://$3/.dump.sql .dump.sql
-    mysql -h 127.0.0.1 -u root -p$1 $2 < .dump.sql
-    if [ $? == 0 ]
-    then
-      rm -rf .dump.sql
-    fi
-  fi
-fi
-SCRIPT
-
 # -------------------------------------------------------------
 # Exit if no environment name specified.
 # -------------------------------------------------------------
@@ -129,7 +76,9 @@ Vagrant.configure("2") do |config|
   config.env.enable
 
   config.vm.provision "shell",
-    inline: "apt-get update; apt-get install -y mysql-client"
+    path: "scripts/bootstrap.sh",
+    args: "#{ENV['BASE_FOLDER']}",
+    run: "always"
 
   config.vm.provision :docker
   config.vm.provision :docker_compose,
@@ -140,14 +89,31 @@ Vagrant.configure("2") do |config|
     args: "#{chosen_environment} #{ENV['BASE_FOLDER']}",
     run: "always"
 
+    config.vm.provision "vault initialize",
+    type: "shell",
+    path: "scripts/vault-init.py",
+    env: {
+      "ENVIRONMENT" => "#{chosen_environment}",
+      "BASE_FOLDER" => "#{ENV['BASE_FOLDER']}",
+      "PYTHONPATH" => "#{ENV['PYTHONPATH']}:#{ENV['BASE_FOLDER']}/modules",
+      "VAULT_ADDR" => "http://127.0.0.1:#{ENV['VAULT_GUEST_PORT']}"
+    },
+    run: "always"
+
   config.trigger.after :up do |trigger|
     trigger.info = "Loading database"
-    trigger.run_remote = {inline: $load, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DATABASE']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
+    trigger.run_remote = {
+      path: "scripts/load-db.sh",
+      args: "#{chosen_environment} #{ENV['BASE_FOLDER']}"
+    }
     trigger.on_error = :continue
   end
   config.trigger.before :destroy do |trigger|
     trigger.info = "Dumping database"
-    trigger.run_remote = {inline: $dump, args: "#{ENV['MYSQL_ROOT_PASSWORD']} #{ENV['MYSQL_DATABASE']} #{ENV['AWS_BUCKET']} #{ENV['BASE_FOLDER']}"}
+    trigger.run_remote = {
+      path: "scripts/dump-db.sh",
+      args: "#{chosen_environment} #{ENV['BASE_FOLDER']}"
+    }
     trigger.on_error = :continue
   end
 
@@ -161,8 +127,10 @@ Vagrant.configure("2") do |config|
       guest: ENV['VAULT_GUEST_PORT'],
       host:  ENV['VAULT_HOST_PORT']
 
-    dev.vm.synced_folder '.', ENV['BASE_FOLDER'], disabled: false, type: "rsync",
-        rsync__exclude: ['.git/', 'workshops/', 'venv/']
+    dev.vm.synced_folder '.', ENV['BASE_FOLDER'],
+      disabled: false,
+      type: "rsync",
+      rsync__exclude: ['.git/', 'workshops/', 'venv/']
 
     dev.disksize.size = '10GB'
 
@@ -187,7 +155,6 @@ Vagrant.configure("2") do |config|
 			aws.keypair_name = ENV['STAGE_KEYPAIR_NAME']
 			aws.ami = ENV['STAGE_AMI']
 			aws.instance_type = ENV['STAGE_INSTANCE_TYPE']
-			aws.elastic_ip = ENV['STAGE_ELASTIC_IP']
 			aws.region = ENV['STAGE_REGION']
 			aws.subnet_id = ENV['STAGE_SUBNET_ID']
 			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']

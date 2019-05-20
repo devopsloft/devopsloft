@@ -27,24 +27,20 @@ def initialize():
         root_token = result['root_token']
         keys = result['keys']
 
-        # if not os.path.isdir('/vault'):
-        #     os.mkdir('/vault')
-        #     print("Directory '/vault' Created")
-
-        with open('.devopsloft/keys.json', "w+") as keysfile:
+        with open('/tmp/.devopsloft/keys.json', "w+") as keysfile:
             json.dump(keys, keysfile)
 
-        with open('.devopsloft/root_token.txt', "w+") as tokenfile:
+        with open('/tmp/.devopsloft/root_token.txt', "w+") as tokenfile:
             tokenfile.write(root_token)
 
     else:
 
         if keys is None:
-            with open('.devopsloft/keys.json') as keysfile:
+            with open('/tmp/.devopsloft/keys.json') as keysfile:
                 keys = json.load(keysfile)
 
         if root_token is None:
-            with open('.devopsloft/root_token.txt') as tokenfile:
+            with open('/tmp/.devopsloft/root_token.txt') as tokenfile:
                 root_token = tokenfile.read()
 
         if client.token is None:
@@ -66,23 +62,22 @@ def seal():
     client.sys.seal()
 
 
-def read_secret(path='secret', key=None):
+def read_secret(path='secret'):
 
     global client
 
     initialize()
-
     unseal()
+
     response = client.secrets.kv.v2.read_secret_version(path=path)
-    print(response)
-    return response['data']
+    return response['data']['data']['key']
 
 
 def write_secret(path, secret, mount_point):
 
     initialize()
-
     unseal()
+
     client.secrets.kv.v2.create_or_update_secret(
         path=path,
         secret=secret,
@@ -93,20 +88,20 @@ def write_secret(path, secret, mount_point):
 def configure():
 
     initialize()
-
     unseal()
+
     client.secrets.kv.v2.configure(
         max_versions=20,
         mount_point='secret',
     )
 
 
-def secrets_engine():
+def enable_secrets_engine():
 
     initialize()
-
     unseal()
-    if 'secret/' not in client.sys.list_mounted_secrets_engines()['data']:
+
+    if 'secret' not in client.sys.list_mounted_secrets_engines()['data']:
         client.sys.enable_secrets_engine(
             backend_type='kv',
             path='secret',
