@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import os
 import yaml
 import loft_meetup
+import events
 
 load_dotenv()
 
@@ -37,7 +38,7 @@ mysql = MySQL(application)
 def home():
     code = request.args.get("code")
     if code is not None:
-        loft_meetup.get_token(code)
+        events.share(token=loft_meetup.get_token(code))
     return render_template('home.html')
 
 
