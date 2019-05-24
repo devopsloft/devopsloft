@@ -28,6 +28,7 @@ source .env
 if [[ "$ENVIRONMENT" == "dev" ]]; then
   vagrant box update --provider virtualbox
 elif [[ "$ENVIRONMENT" == "stage" ]]; then
+  export AWS_PROFILE=$STAGE_AWS_PROFILE
   if [[ -f record-set-create.json ]]; then
     source venv/bin/activate
     pip install --upgrade awscli
@@ -37,6 +38,8 @@ elif [[ "$ENVIRONMENT" == "stage" ]]; then
       --change-batch file://record-set-delete.json
     rm -rf record-set-create.json record-set-delete.json
   fi
+elif [[ "$ENVIRONMENT" == "prod" ]]; then
+  export AWS_PROFILE=$PROD_AWS_PROFILE
 fi
 
 vagrant destroy -f $ENVIRONMENT
