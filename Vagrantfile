@@ -163,6 +163,8 @@ Vagrant.configure("2") do |config|
 			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
 			aws.associate_public_ip = true
       aws.iam_instance_profile_name = ENV['STAGE_INSTANCE_PROFILE_NAME']
+      aws.aws_dir = ENV['HOME'] + "/.aws/"
+      aws.aws_profile = "#{ENV['STAGE_AWS_PROFILE']}"
 
 			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = ENV['STAGE_SSH_PRIVATE_KEY_PATH']
@@ -189,6 +191,8 @@ Vagrant.configure("2") do |config|
 			aws.security_groups = ENV['PROD_SECURITY_GROUPS']
 			aws.associate_public_ip = true
       aws.iam_instance_profile_name = ENV['PROD_INSTANCE_PROFILE_NAME']
+      aws.aws_dir = ENV['HOME'] + "/.aws/"
+      aws.aws_profile = "#{ENV['PROD_AWS_PROFILE']}"
 
 			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = ENV['PROD_SSH_PRIVATE_KEY_PATH']
