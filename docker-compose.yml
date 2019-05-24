@@ -16,7 +16,10 @@ services:
 
   app:
     image: $APP/app
-    build: ./app_s2i
+    build:
+      context: ./app_s2i
+      args:
+        APP_GUEST_PORT: $APP_GUEST_PORT
     container_name: app
     environment:
       - STATCODES
@@ -41,7 +44,7 @@ services:
     build:
       context: ./vault_s2i
       args:
-        VAULT_GUEST_PORT: ${VAULT_GUEST_PORT}
+        VAULT_GUEST_PORT: $VAULT_GUEST_PORT
     ports:
       - $VAULT_HOST_PORT:$VAULT_GUEST_PORT
     cap_add:
@@ -55,6 +58,10 @@ services:
     image: $APP/web
     build:
       context: ./web_s2i
+      args:
+        WEB_HOST_PORT: $WEB_HOST_PORT
+        WEB_HOST_SECURE_PORT: $WEB_HOST_SECURE_PORT
+        APP_HOST_PORT: $APP_HOST_PORT
     container_name: web
     ports:
       - $WEB_HOST_PORT:$WEB_GUEST_PORT

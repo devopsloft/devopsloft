@@ -86,7 +86,12 @@ Vagrant.configure("2") do |config|
   config.vm.provision "docker compose provision",
     type: "shell",
     path: "scripts/docker-compose-provision.sh",
-    args: "#{chosen_environment} #{ENV['BASE_FOLDER']}",
+    args: "#{chosen_environment}"\
+          " #{ENV['BASE_FOLDER']}"\
+          " #{ENV['WEB_HOST_PORT']}"\
+          " #{ENV['WEB_GUEST_PORT']}"\
+          " #{ENV['WEB_HOST_SECURE_PORT']}"\
+          " #{ENV['WEB_GUEST_SECURE_PORT']}",
     run: "always"
 
     config.vm.provision "vault initialize",
