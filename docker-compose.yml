@@ -58,6 +58,7 @@ services:
     container_name: web
     ports:
       - $WEB_HOST_PORT:$WEB_GUEST_PORT
+      - $WEB_HOST_SECURE_PORT:$WEB_GUEST_SECURE_PORT
     volumes:
       - /tmp/.devopsloft:/tmp/.devopsloft
     restart: always

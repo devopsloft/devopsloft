@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 
 ENVIRONMENT=$1
 BASE_FOLDER=$2
