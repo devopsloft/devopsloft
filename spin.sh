@@ -26,7 +26,10 @@ if [[ "$ENVIRONMENT" == "dev" ]]; then
   if [[ $(vboxmanage --version) != "6.0.8r130520" ]]; then
     echo "Wrong virtualbox version"
   fi
+  
   vagrant box update --provider virtualbox
+  vagrant box prune  --provider virtualbox
+
   export WEB_HOST_PORT=$DEV_WEB_HOST_PORT
   export WEB_GUEST_PORT=$DEV_WEB_GUEST_PORT
   export WEB_HOST_SECURE_PORT=$DEV_WEB_HOST_SECURE_PORT
