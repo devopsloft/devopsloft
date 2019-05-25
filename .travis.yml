@@ -1,13 +1,10 @@
 dist: xenial
-
 language: python
-
 python:
 - '3.6'
-
 services:
 - docker
-
+- xvfb
 env:
   global:
     - ENVIRONMENT=ci
@@ -17,21 +14,23 @@ env:
     - WEB_HOST_SECURE_PORT=8443
     - WEB_GUEST_SECURE_PORT=8443
 
-before_install:
-- sudo apt-get install -y libmysqlclient-dev
-
-addons:
-  apt:
-    update: true
-
 install:
+- wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+- mkdir geckodriver
+- tar -xzf geckodriver-v0.24.0-linux64.tar.gz -C geckodriver
+- export PATH=$PATH:$PWD/geckodriver
+- sudo apt-get install -y libmysqlclient-dev
 - pip install -r tests/requirements-test.txt
+- wget https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_linux64.zip
+- unzip chromedriver_linux64.zip -d /home/travis/virtualenv/python3.6/bin/
+- export CHROME_BIN=chromium-browser
 
 before_script:
 - openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"
 - scripts/docker-compose-provision.sh $ENVIRONMENT $BASE_FOLDER $WEB_HOST_PORT $WEB_GUEST_PORT $WEB_HOST_SECURE_PORT $WEB_GUEST_SECURE_PORT
 
 script:
+- tests/navbar.py
 - tests/wait_mysql_up.sh
 - sleep 15
 - tests/is_table_empty.py
