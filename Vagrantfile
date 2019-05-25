@@ -135,6 +135,8 @@ Vagrant.configure("2") do |config|
       guest: ENV['VAULT_GUEST_PORT'],
       host:  ENV['VAULT_HOST_PORT']
 
+    dev.vm.network "private_network", ip: "10.0.0.1"
+
     dev.vm.synced_folder '.', ENV['BASE_FOLDER'],
       disabled: false,
       type: "rsync",
