@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/devopsloft/devopsloft.svg?branch=master)](https://travis-ci.org/devopsloft/devopsloft)
 
-# DevOps Loft
+# The devopsloft app
+
+<img src="http://www.devopsloft.io/static/logo.png" alt="drawing" width="250" hight="250"/>
 
 ## Drive our Career Path into DevOps
 
