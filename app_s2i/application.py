@@ -52,6 +52,11 @@ def docslist():
     return render_template('docslist.html')
 
 
+@application.route('/statistics')
+def statistics():
+    return render_template('statistics.html')
+
+
 class SignupForm(Form):
     name = StringField('Name', [
         validators.Regexp(r'[A-Za-z\s]+',

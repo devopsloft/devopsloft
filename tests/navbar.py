@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 
+from dotenv import load_dotenv
 import os
+import yaml
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
+
+load_dotenv()
+
+# load statcounter variables for current environment
+STATCODES = yaml.load(os.getenv('STATCODES'), Loader=yaml.FullLoader)
+project = STATCODES[os.getenv('ENVIRONMENT')]['project']
 
 if os.getenv('TRAVIS') in [None, False]:
     SELENIUM_HUB = 'http://localhost:4444/wd/hub'
@@ -31,11 +39,19 @@ try:
         driver.find_element_by_link_text('Home').click()
         assert driver.current_url == app_url + "/home"
 
+        stats_url = "https://statcounter.com/p" + str(project) + "/?guest=1"
+        driver.find_element_by_partial_link_text('Stats').click()
+        print(stats_url)
+        assert driver.current_url == stats_url
+
         driver.find_element_by_link_text('Resources').click()
         assert driver.current_url == app_url + "/resources"
 
         driver.find_element_by_link_text('Documents').click()
         assert driver.current_url == app_url + "/docslist"
+
+        driver.find_element_by_link_text('Statistics').click()
+        assert driver.current_url == app_url + "/statistics"
 
         driver.find_element_by_link_text('Contact Us').click()
         assert driver.current_url == app_url + "/contact"
