@@ -2,6 +2,8 @@
 
 set -e
 
+
+
 if [[ "$(uname)" != "Darwin" ]]; then
   echo "This script can run only on OS-X"
 fi
@@ -26,7 +28,7 @@ if [[ "$ENVIRONMENT" == "dev" ]]; then
   if [[ $(vboxmanage --version) != "6.0.8r130520" ]]; then
     echo "Wrong virtualbox version"
   fi
-  
+
   vagrant box update --provider virtualbox
   vagrant box prune  --provider virtualbox
 
