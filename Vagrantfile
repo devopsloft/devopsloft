@@ -126,14 +126,14 @@ Vagrant.configure("2") do |config|
 
 		dev.vm.box = "ubuntu/bionic64"
 		dev.vm.network "forwarded_port",
-      guest: ENV['WEB_GUEST_PORT'],
-      host:  ENV['WEB_HOST_PORT']
+            guest: ENV['WEB_GUEST_PORT'],
+            host:  ENV['WEB_HOST_PORT']
 		dev.vm.network "forwarded_port",
-      guest: ENV['WEB_GUEST_SECURE_PORT'],
-      host:  ENV['WEB_HOST_SECURE_PORT']
+            guest: ENV['WEB_GUEST_SECURE_PORT'],
+            host:  ENV['WEB_HOST_SECURE_PORT']
 		dev.vm.network "forwarded_port",
-      guest: ENV['VAULT_GUEST_PORT'],
-      host:  ENV['VAULT_HOST_PORT']
+            guest: ENV['VAULT_GUEST_PORT'],
+            host:  ENV['VAULT_HOST_PORT']
 
     dev.vm.network "private_network", ip: "10.0.0.1"
 
@@ -169,9 +169,9 @@ Vagrant.configure("2") do |config|
 			aws.subnet_id = ENV['STAGE_SUBNET_ID']
 			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
 			aws.associate_public_ip = true
-      aws.iam_instance_profile_name = ENV['STAGE_INSTANCE_PROFILE_NAME']
-      aws.aws_dir = ENV['HOME'] + "/.aws/"
-      aws.aws_profile = "#{ENV['STAGE_AWS_PROFILE']}"
+			aws.iam_instance_profile_name = ENV['STAGE_INSTANCE_PROFILE_NAME']
+			aws.aws_dir = ENV['HOME'] + "/.aws/"
+			aws.aws_profile = "#{ENV['STAGE_AWS_PROFILE']}"
 
 			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = ENV['STAGE_SSH_PRIVATE_KEY_PATH']
@@ -197,9 +197,9 @@ Vagrant.configure("2") do |config|
 			aws.subnet_id = ENV['PROD_SUBNET_ID']
 			aws.security_groups = ENV['PROD_SECURITY_GROUPS']
 			aws.associate_public_ip = true
-      aws.iam_instance_profile_name = ENV['PROD_INSTANCE_PROFILE_NAME']
-      aws.aws_dir = ENV['HOME'] + "/.aws/"
-      aws.aws_profile = "#{ENV['PROD_AWS_PROFILE']}"
+			aws.iam_instance_profile_name = ENV['PROD_INSTANCE_PROFILE_NAME']
+			aws.aws_dir = ENV['HOME'] + "/.aws/"
+			aws.aws_profile = "#{ENV['PROD_AWS_PROFILE']}"
 
 			override.ssh.username = "ubuntu"
 			override.ssh.private_key_path = ENV['PROD_SSH_PRIVATE_KEY_PATH']
