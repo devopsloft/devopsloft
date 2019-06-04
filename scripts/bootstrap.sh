@@ -4,7 +4,7 @@ set -e
 
 BASE_FOLDER=$1
 
-mkdir /tmp/.devopsloft
+mkdir -p /tmp/.devopsloft
 apt-get update
 apt-get install -y mysql-client python3-pip
 

@@ -3,3 +3,4 @@ requests
 mysql-connector-python
 python-dotenv
 selenium
+PyYAML

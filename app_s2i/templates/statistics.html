@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% from 'includes/_formhelpers.html' import render_field %}
+
+<script>
+  function removeLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('resources').style.display = 'block';
+  }
+</script>
+
+<div id="loader">
+  {% include 'utils/loader.html' %}
+</div>
+
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe id="resources" style="display:none" onload="removeLoader()" class="embed-responsive-item"
+    src="https://statcounter.com/p{{ config['project'] }}/?guest=1"
+    height=100%
+    width=100%
+    allowfullscreen>
+  </iframe>
+</div>
+
+{% endblock %}
