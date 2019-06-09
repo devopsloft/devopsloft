@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
-import platform
 import dotenv
 import vagrant
 import sys
 import os
-
-
-def findPlatformName():
-    platformType = platform.system()
-    return platformType
-
 
 def prepareEnvironmentVars(environementName):
     # Reads the .env file from the repository
