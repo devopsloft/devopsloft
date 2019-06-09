@@ -1,9 +1,5 @@
 hvac
 python-dotenv
 python-vagrant
-<<<<<<< HEAD
 pyOpenSSL
 click
-=======
-click
->>>>>>> f4090b9413f11cfe6fedf670c8b6f948ab3f4c44
