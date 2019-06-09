@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import dotenv
 import vagrant
-import sys
 import os
+import click
+
 
 def prepareEnvironmentVars(environementName):
     # Reads the .env file from the repository
@@ -26,10 +27,25 @@ def startVagrant(machineName, envVars):
     vagrantInstance.up(vm_name=machineName)
 
 
-try:
-    inputEnvironmentName = sys.argv[1]  # Should be: dev,prod or stage
-except IndexError:
-    print('You should enter the environement name you want to start')
-    raise
-envVar = prepareEnvironmentVars(inputEnvironmentName)
-startVagrant(inputEnvironmentName, envVar)
+def destroyVagrant(machineName, envVars):
+    vagrantInstance = vagrant.Vagrant(quiet_stdout=False, quiet_stderr=False)
+    vagrantInstance.env = envVars
+    vagrantInstance.destroy(vm_name=machineName)
+
+
+@click.command()
+@click.option("-e", "--envioronment", required=True,
+                    type=click.Choice(["dev", "prod", "stage"]))
+@click.option("-a", "--action", required=True,
+                    type=click.Choice(["up", "destroy"]))
+def main(envioronment, action):
+    machineName = envioronment
+    envVars = prepareEnvironmentVars(machineName)
+    if (action == 'up'):
+        startVagrant(machineName, envVars)
+    elif (action == 'destroy'):
+        destroyVagrant(machineName, envVars)
+
+
+if __name__ == '__main__':
+    main()
