@@ -3,6 +3,8 @@ import dotenv
 import vagrant
 import os
 import click
+from OpenSSL import SSL
+
 
 
 def prepareEnvironmentVars(environementName):
@@ -17,6 +19,12 @@ def prepareEnvironmentVars(environementName):
         envArray['WEB_GUEST_SECURE_PORT'] = \
             envArray['DEV_WEB_GUEST_SECURE_PORT']
     return envArray
+
+
+def SelfSignedCertificate():
+    # check if cert.pem file exist, if yes delete 
+    # if noe create new file with certifecate
+
 
 
 def startVagrant(machineName, envVars):
