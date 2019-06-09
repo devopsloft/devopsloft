@@ -35,9 +35,9 @@ def destroyVagrant(machineName, envVars):
 
 
 @click.command()
-@click.option("-e", "--envioronment", required=True,
+@click.option("-e", "--envioronment", required=False, default="dev",
                     type=click.Choice(["dev", "prod", "stage"]))
-@click.option("-a", "--action", required=True,
+@click.option("-a", "--action", required=False, default="up",
                     type=click.Choice(["up", "destroy"]))
 def main(envioronment, action):
     SelfSignedCertificate()
