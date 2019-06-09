@@ -1,25 +1,22 @@
-from OpenSSL import crypto, SSL
+from OpenSSL import crypto
 from socket import gethostname
-from pprint import pprint
-from time import gmtime, mktime
 
 
 CERT_FILE = "web_s2i/cert.pem"
 KEY_FILE = "web_s2i/key.pem"
 
-def create_self_signed_cert():
 
+def SelfSignedCertificate():
     # create a key pair
     k = crypto.PKey()
     k.generate_key(crypto.TYPE_RSA, 1024)
 
     # create a self-signed cert
     cert = crypto.X509()
-    cert.get_subject().C = "UK"
-    cert.get_subject().ST = "London"
-    cert.get_subject().L = "London"
-    cert.get_subject().O = "Dummy Company Ltd"
-    cert.get_subject().OU = "Dummy Company Ltd"
+    cert.get_subject().C = "IL"
+    cert.get_subject().ST = "Jerusalem"
+    cert.get_subject().L = "Jerusalem"
+    cert.get_subject().OU = "DevOps Loft"
     cert.get_subject().CN = gethostname()
     cert.set_serial_number(1000)
     cert.gmtime_adj_notBefore(0)
@@ -28,9 +25,7 @@ def create_self_signed_cert():
     cert.set_pubkey(k)
     cert.sign(k, 'sha1')
 
-    open(CERT_FILE, "wt").write(
+    open(CERT_FILE, "wb").write(
         crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
-    open(KEY_FILE, "wt").write(
+    open(KEY_FILE, "wb").write(
         crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
-
-create_self_signed_cert()

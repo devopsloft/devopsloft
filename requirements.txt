@@ -1,3 +1,5 @@
 hvac
 python-dotenv
 python-vagrant
+pyOpenSSL
+click
