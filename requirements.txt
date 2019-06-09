@@ -1,2 +1,3 @@
 hvac
 python-dotenv
+python-vagrant
