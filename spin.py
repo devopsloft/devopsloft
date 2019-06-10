@@ -4,6 +4,7 @@ import vagrant
 import os
 import click
 from createPemFiles import SelfSignedCertificate
+from createPemFiles import IsCertExist
 
 
 def prepareEnvironmentVars(environementName):
@@ -40,7 +41,8 @@ def destroyVagrant(machineName, envVars):
 @click.option("-a", "--action", required=False, default="up",
                     type=click.Choice(["up", "destroy"]))
 def main(envioronment, action):
-    SelfSignedCertificate()
+    if IsCertExist():
+        SelfSignedCertificate()
     machineName = envioronment
     envVars = prepareEnvironmentVars(machineName)
     if (action == 'up'):

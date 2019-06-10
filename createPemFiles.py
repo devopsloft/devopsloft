@@ -1,9 +1,16 @@
 from OpenSSL import crypto
 from socket import gethostname
-
+import os
 
 CERT_FILE = "web_s2i/cert.pem"
 KEY_FILE = "web_s2i/key.pem"
+
+
+def IsCertExist():
+    if os.path.exists(CERT_FILE) and os.path.exists(KEY_FILE):
+        return True
+    else:
+        return False
 
 
 def SelfSignedCertificate():
