@@ -32,7 +32,7 @@ def SelfSignedCertificate():
     cert.set_pubkey(k)
     cert.sign(k, 'sha1')
 
-    open(CERT_FILE, "wb").write(
-        crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
-    open(KEY_FILE, "wb").write(
-        crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
+    with open(CERT_FILE, "wb") as cert_f:
+        cert_f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
+    with open(KEY_FILE, "wb") as key_f:
+        key_f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k))

@@ -41,7 +41,7 @@ def destroyVagrant(machineName, envVars):
 @click.option("-a", "--action", required=False, default="up",
                     type=click.Choice(["up", "destroy"]))
 def main(envioronment, action):
-    if IsCertExist():
+    if not (IsCertExist()):
         SelfSignedCertificate()
     machineName = envioronment
     envVars = prepareEnvironmentVars(machineName)
