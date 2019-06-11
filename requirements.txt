@@ -1,4 +1,4 @@
 hvac
 python-dotenv
-python-vagrant
+git+https://github.com/devopsloft/python-vagrant.git
 click
