@@ -3,6 +3,7 @@ import dotenv
 import vagrant
 import os
 import click
+from createPemFiles import SelfSignedCertificate, IsCertExist
 
 
 def prepareEnvironmentVars(environementName):
@@ -45,6 +46,8 @@ def updateBox():
 @click.option("-a", "--action", required=False, default="up",
                     type=click.Choice(["up", "destroy"]))
 def main(envioronment, action):
+    if not (IsCertExist()):
+        SelfSignedCertificate()
     machineName = envioronment
     envVars = prepareEnvironmentVars(machineName)
     if (action == 'up'):
