@@ -1,0 +1,19 @@
+ui = true
+
+listener "tcp" {
+  address     = "0.0.0.0:{{ VAULT_GUEST_PORT }}"
+  tls_disable = 1
+}
+
+{% if 'dev' in ENVIRONMENT or 'ci' in ENVIRONMENT %}
+storage "file" {
+  "path" = "/vault/data"
+}
+{% else %}
+storage "s3" {
+  bucket = "{{ AWS_S3_BUCKET }}"
+  region = "eu-west-1"
+}
+{% endif %}
+
+api_addr = "http://127.0.0.1:{{ VAULT_GUEST_PORT }}"

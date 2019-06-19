@@ -26,13 +26,15 @@ install:
 - export CHROME_BIN=chromium-browser
 
 before_script:
+- sudo scripts/bootstrap.sh $ENVIRONMENT $BASE_FOLDER
 - openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"
 - scripts/docker-compose-provision.sh $ENVIRONMENT $BASE_FOLDER $WEB_HOST_PORT $WEB_GUEST_PORT $WEB_HOST_SECURE_PORT $WEB_GUEST_SECURE_PORT
 
 script:
+- tests/basic_http_get_test.py
 - tests/navbar.py
+- tests/test_vault.py
 - tests/wait_mysql_up.sh
 - sleep 15
 - tests/is_table_empty.py
-- tests/basic_http_get_test.py
 - flake8 --exclude venv .
