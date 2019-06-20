@@ -1,5 +1,5 @@
 hvac
 python-dotenv
-python-vagrant
-pyOpenSSL
+git+https://github.com/devopsloft/python-vagrant.git
 click
+pyOpenSSL

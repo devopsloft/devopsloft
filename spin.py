@@ -3,8 +3,7 @@ import dotenv
 import vagrant
 import os
 import click
-from createPemFiles import SelfSignedCertificate
-from createPemFiles import IsCertExist
+from createPemFiles import SelfSignedCertificate, IsCertExist
 
 
 def prepareEnvironmentVars(environementName):
@@ -24,15 +23,21 @@ def prepareEnvironmentVars(environementName):
 def startVagrant(machineName, envVars):
     # Starts a Vagrant instance with noisy logs
     # Loading the enviornement vars that was created in prepareEnvironmentVars
-    vagrantInstance = vagrant.Vagrant(quiet_stdout=False, quiet_stderr=False)
-    vagrantInstance.env = envVars
-    vagrantInstance.up(vm_name=machineName)
+    v = vagrant.Vagrant(quiet_stdout=False, quiet_stderr=False)
+    v.env = envVars
+    v.up(vm_name=machineName)
 
 
 def destroyVagrant(machineName, envVars):
-    vagrantInstance = vagrant.Vagrant(quiet_stdout=False, quiet_stderr=False)
-    vagrantInstance.env = envVars
-    vagrantInstance.destroy(vm_name=machineName)
+    v = vagrant.Vagrant(quiet_stdout=False, quiet_stderr=False)
+    v.env = envVars
+    v.destroy(vm_name=machineName)
+
+
+def updateBox():
+    v = vagrant.Vagrant(quiet_stdout=False, quiet_stderr=False)
+    v.box_update()
+    v.box_prune()
 
 
 @click.command()
@@ -46,6 +51,8 @@ def main(envioronment, action):
     machineName = envioronment
     envVars = prepareEnvironmentVars(machineName)
     if (action == 'up'):
+        if (envioronment == 'dev'):
+            updateBox()
         startVagrant(machineName, envVars)
     elif (action == 'destroy'):
         destroyVagrant(machineName, envVars)
