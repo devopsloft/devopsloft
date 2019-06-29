@@ -1,2 +1,4 @@
 hvac
 python-dotenv
+j2cli
+boto3

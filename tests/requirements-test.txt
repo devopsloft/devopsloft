@@ -3,4 +3,6 @@ requests
 mysql-connector-python
 python-dotenv
 selenium
-PyYAML
+PyYAML>=5.1
+boto3
+hvac
