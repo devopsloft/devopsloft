@@ -31,6 +31,8 @@ if [[ ! -d /vault ]]; then
   exit
 fi
 
+vagrant plugin update
+
 if [[ "$ENVIRONMENT" == "dev" ]]; then
   if [[ $(vboxmanage --version) != "6.0.8r130520" ]]; then
     echo "Wrong virtualbox version"
