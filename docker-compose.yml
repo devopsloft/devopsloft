@@ -10,8 +10,6 @@ services:
       - MYSQL_ROOT_HOST
     ports:
       - $MYSQL_PORT:$MYSQL_PORT
-    volumes:
-      - /tmp/.devopsloft:/tmp/.devopsloft
     restart: always
 
   app:
@@ -35,23 +33,21 @@ services:
       - $APP_HOST_PORT:$APP_GUEST_PORT
     volumes:
       - $BASE_FOLDER/modules:/modules
-      - /tmp/.devopsloft:/tmp/.devopsloft
+      - $BASE_FOLDER/.env:/.env
+      - $BASE_FOLDER/.env.local:/.env.local
+      - /vault:/vault
     restart: always
 
   vault:
-    image: $APP/vault
+    image: vault:1.1.2
     container_name: vault
-    build:
-      context: ./vault_s2i
-      args:
-        VAULT_GUEST_PORT: $VAULT_GUEST_PORT
+    volumes:
+      - /vault:/vault:rw
     ports:
       - $VAULT_HOST_PORT:$VAULT_GUEST_PORT
     cap_add:
       - IPC_LOCK
     command: server
-    volumes:
-      - /tmp/.devopsloft:/tmp/.devopsloft
     restart: always
 
   web:
@@ -66,6 +62,4 @@ services:
     ports:
       - $WEB_HOST_PORT:$WEB_GUEST_PORT
       - $WEB_HOST_SECURE_PORT:$WEB_GUEST_SECURE_PORT
-    volumes:
-      - /tmp/.devopsloft:/tmp/.devopsloft
     restart: always
