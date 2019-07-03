@@ -44,7 +44,7 @@ end
 puts "Working on environment: #{chosen_environment}" if chosen_environment != 'None'
 
 require 'yaml'
-Vagrant.require_version ">= 2.2.4"
+Vagrant.require_version ">= 2.2.5"
 
 
 required_plugins = %w( vagrant-env vagrant-docker-compose vagrant-disksize)
@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :docker
   config.vm.provision :docker_compose,
-    compose_version: "1.24.0"
+    compose_version: "1.24.1"
   config.vm.provision "docker compose provision",
     type: "shell",
     path: "scripts/docker-compose-provision.sh",
