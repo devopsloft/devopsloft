@@ -4,6 +4,7 @@ set -e
 
 if [[ "$(uname)" != "Darwin" ]]; then
   echo "This script can run only on OS-X"
+  exit
 fi
 
 ACTION=${1:-'up'}
@@ -21,12 +22,20 @@ function self_signed_certificate() {
 self_signed_certificate
 
 source .env
+if [[ -f .env.local ]]; then
+  source .env.local
+fi
+
+if [[ ! -d /vault ]]; then
+  echo "Directory /vault doesn't exists"
+  exit
+fi
 
 if [[ "$ENVIRONMENT" == "dev" ]]; then
   if [[ $(vboxmanage --version) != "6.0.8r130520" ]]; then
     echo "Wrong virtualbox version"
   fi
-  
+
   vagrant box update --provider virtualbox
   vagrant box prune  --provider virtualbox
 

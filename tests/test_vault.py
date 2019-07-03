@@ -9,9 +9,9 @@ from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-import loft_hvac  # noqa: E402
-
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../modules')
+
+import loft_hvac  # noqa: E402
 
 env_path = Path('..') / '.env'
 load_dotenv()

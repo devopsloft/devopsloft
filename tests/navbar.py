@@ -37,6 +37,8 @@ else:
 
 try:
     for driver in [chrome_driver, firefox_driver]:
+        driver.set_page_load_timeout(30)
+
         print("==== " + str(driver.name) + " ====")
         driver.get(app_url)
 
@@ -79,6 +81,7 @@ except AssertionError as error:
     logging.error("Error:" + str(error), exc_info=True)
 except NoSuchElementException as exception:
     print("Element not found and test failed: " + exception)
+    print(driver.current_url)
 finally:
     for driver in [chrome_driver, firefox_driver]:
         driver.quit()

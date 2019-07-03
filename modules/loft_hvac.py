@@ -1,13 +1,30 @@
 import os
 import json
 import hvac
+import boto3
 
 client = None
 root_token = None
 keys = None
 
 
-def initialize():
+def get_key(index):
+    global keys
+    if keys is None:
+        with open('/vault/keys.json') as keysfile:
+            keys = json.load(keysfile)
+    return keys[index]
+
+
+def get_root_token():
+    global root_token
+    if root_token is None:
+        with open('/vault/root_token.txt') as tokenfile:
+            root_token = tokenfile.read()
+    return root_token
+
+
+def initialize(provider='virtualbox', bucket=None):
 
     global client
     global root_token
@@ -27,55 +44,86 @@ def initialize():
         root_token = result['root_token']
         keys = result['keys']
 
-        with open('/tmp/.devopsloft/keys.json', "w+") as keysfile:
+        with open('/vault/keys.json', "w+") as keysfile:
             json.dump(keys, keysfile)
 
-        with open('/tmp/.devopsloft/root_token.txt', "w+") as tokenfile:
+        with open('/vault/root_token.txt', "w+") as tokenfile:
             tokenfile.write(root_token)
+
+        if provider == 'aws':
+            s3_client = boto3.client('s3')
+            s3_client.upload_file(
+                '/vault/keys.json',
+                bucket,
+                'keys.json'
+            )
+            s3_client.upload_file(
+                '/vault/root_token.txt',
+                bucket,
+                'root_token.txt'
+            )
 
     else:
 
-        if keys is None:
-            with open('/tmp/.devopsloft/keys.json') as keysfile:
+        if keys is None or root_token is None:
+            if provider == 'aws':
+                s3_client = boto3.client('s3')
+                s3_client.download_file(
+                    bucket,
+                    'keys.json',
+                    '/vault/keys.json'
+                )
+                s3_client.download_file(
+                    bucket,
+                    'root_token.txt',
+                    '/vault/root_token.txt'
+                )
+
+            with open('/vault/keys.json') as keysfile:
                 keys = json.load(keysfile)
 
-        if root_token is None:
-            with open('/tmp/.devopsloft/root_token.txt') as tokenfile:
+            with open('/vault/root_token.txt') as tokenfile:
                 root_token = tokenfile.read()
 
         if client.token is None:
             client.token = root_token
 
 
-def unseal():
+def unseal(provider='virtualbox', bucket=None):
 
-    initialize()
+    initialize(provider=provider, bucket=bucket)
 
     if client.sys.is_sealed():
         client.sys.submit_unseal_keys(keys)
 
 
-def seal():
+def seal(provider='virtualbox', bucket=None):
 
-    initialize()
+    initialize(provider=provider, bucket=bucket)
 
-    client.sys.seal()
+    if not client.sys.is_sealed():
+        client.sys.seal()
 
 
-def read_secret(path='secret'):
+def read_secret(provider='virtualbox', bucket=None, path='secret'):
 
     global client
 
-    initialize()
+    initialize(provider=provider, bucket=bucket)
     unseal()
 
     response = client.secrets.kv.v2.read_secret_version(path=path)
     return response['data']['data']['key']
 
 
-def write_secret(path, secret, mount_point):
+def write_secret(
+        provider='virtualbox',
+        bucket=None,
+        path=None,
+        secret=None,
+        mount_point=None):
 
-    initialize()
+    initialize(provider=provider, bucket=bucket)
     unseal()
 
     client.secrets.kv.v2.create_or_update_secret(
@@ -85,9 +133,9 @@ def write_secret(path, secret, mount_point):
     )
 
 
-def configure():
+def configure(provider='virtualbox', bucket=None):
 
-    initialize()
+    initialize(provider=provider, bucket=bucket)
     unseal()
 
     client.secrets.kv.v2.configure(
@@ -96,9 +144,9 @@ def configure():
     )
 
 
-def enable_secrets_engine():
+def enable_secrets_engine(provider='virtualbox', bucket=None):
 
-    initialize()
+    initialize(provider=provider, bucket=bucket)
     unseal()
 
     if 'secret' not in client.sys.list_mounted_secrets_engines()['data']:
