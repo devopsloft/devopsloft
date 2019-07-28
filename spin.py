@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
-import dotenv
-import vagrant
-import os
-import click
-from createPemFiles import SelfSignedCertificate, IsCertExist
+
+from checkPythonVer import checkPythonMinVer
+checkPythonMinVer(3,6)
+
+try:
+    import dotenv
+    import vagrant
+    import os
+    import click
+    from createPemFiles import SelfSignedCertificate, IsCertExist
+except ImportError:
+    with open("./requirements.txt", 'r') as fin:
+        print ("Make sure the following imports were done before running this program:")
+        print ("*********")
+        print (fin.read())
+        print ("*********:")
 
 
 def prepareEnvironmentVars(environementName):
