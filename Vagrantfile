@@ -44,7 +44,7 @@ end
 puts "Working on environment: #{chosen_environment}" if chosen_environment != 'None'
 
 require 'yaml'
-Vagrant.require_version ">= 2.2.4"
+Vagrant.require_version ">= 2.2.5"
 
 
 required_plugins = %w( vagrant-env vagrant-docker-compose vagrant-disksize)
@@ -77,12 +77,13 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell",
     path: "scripts/bootstrap.sh",
-    args: "#{ENV['BASE_FOLDER']}",
+    args: "#{chosen_environment}"\
+          " #{ENV['BASE_FOLDER']}",
     run: "always"
 
   config.vm.provision :docker
   config.vm.provision :docker_compose,
-    compose_version: "1.24.0"
+    compose_version: "1.24.1"
   config.vm.provision "docker compose provision",
     type: "shell",
     path: "scripts/docker-compose-provision.sh",
@@ -92,17 +93,6 @@ Vagrant.configure("2") do |config|
           " #{ENV['WEB_GUEST_PORT']}"\
           " #{ENV['WEB_HOST_SECURE_PORT']}"\
           " #{ENV['WEB_GUEST_SECURE_PORT']}",
-    run: "always"
-
-    config.vm.provision "vault initialize",
-    type: "shell",
-    path: "scripts/vault-init.py",
-    env: {
-      "ENVIRONMENT" => "#{chosen_environment}",
-      "BASE_FOLDER" => "#{ENV['BASE_FOLDER']}",
-      "PYTHONPATH" => "#{ENV['PYTHONPATH']}:#{ENV['BASE_FOLDER']}/modules",
-      "VAULT_ADDR" => "http://127.0.0.1:#{ENV['VAULT_GUEST_PORT']}"
-    },
     run: "always"
 
   config.trigger.after :up do |trigger|
@@ -141,6 +131,10 @@ Vagrant.configure("2") do |config|
       disabled: false,
       type: "rsync",
       rsync__exclude: ['.git/', 'workshops/', 'venv/']
+
+    dev.vm.synced_folder '/vault', '/vault',
+      owner: 100,
+      group: 1000
 
     dev.disksize.size = '10GB'
 

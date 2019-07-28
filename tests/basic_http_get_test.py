@@ -16,7 +16,12 @@ def http_get(uri):
     return None
 
 
-def test(domain, urls, allowed_failures, sleep_between_failures):
+def test(
+        domain=None,
+        urls=('/'),
+        allowed_failures=6,
+        sleep_between_failures=5,
+        page_expected_content=None):
     test_succeeded = True
     for url in urls:
         response = http_get(domain + url)
@@ -36,7 +41,6 @@ def test(domain, urls, allowed_failures, sleep_between_failures):
 
     # Test homepage content
     response = http_get(domain + '/')
-    page_expected_content = '<title>DevOps Loft</title>'
     if not response or response.text.find(page_expected_content) < 0:
         found_output = 'Failed to find page expected content: '
         test_succeeded = False
@@ -62,6 +66,7 @@ if __name__ == '__main__':
         'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,
+        'page_expected_content': '<title>DevOps Loft</title>'
     }
     if not test(**test_config):
         exit(1)
@@ -70,6 +75,15 @@ if __name__ == '__main__':
         'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,
+        'page_expected_content': '<title>DevOps Loft</title>'
+    }
+    if not test(**test_config):
+        exit(1)
+    test_config = {
+        'domain': 'http://127.0.0.1:' + os.getenv('VAULT_GUEST_PORT'),
+        'allowed_failures': 6,
+        'sleep_between_failures': 5,
+        'page_expected_content': '<title>Vault</title>'
     }
     if not test(**test_config):
         exit(1)

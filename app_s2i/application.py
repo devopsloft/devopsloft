@@ -11,7 +11,13 @@ import yaml
 import loft_meetup
 import events
 
-load_dotenv()
+load_dotenv(
+    dotenv_path='.env',
+)
+load_dotenv(
+    dotenv_path='.env.local',
+    override=True
+)
 
 application = Flask(__name__)
 
@@ -38,7 +44,11 @@ mysql = MySQL(application)
 def home():
     code = request.args.get("code")
     if code is not None:
-        events.share(token=loft_meetup.get_token(code))
+        events.share(
+            token=loft_meetup.get_token(
+                code=code
+            )
+        )
     return render_template('home.html')
 
 
