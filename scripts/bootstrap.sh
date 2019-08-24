@@ -6,7 +6,7 @@ ENVIRONMENT=$1
 HOME_DIR=$2
 
 apt-get update
-apt-get install -y mysql-client python3-pip
+apt-get install -y mysql-client python3-pip python3-setuptools
 
 # shellcheck source=/vagrant/.env
 source $HOME_DIR/.env
