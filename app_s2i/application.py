@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, flash, render_template, redirect, url_for
-from flask import request, make_response
+from flask import request, make_response, send_from_directory
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, PasswordField, validators
 from passlib.hash import sha256_crypt
@@ -19,7 +19,7 @@ load_dotenv(
     override=True
 )
 
-application = Flask(__name__)
+application = Flask(__name__, static_folder='/static', static_url_path='')
 
 # Config MySQL
 application.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
@@ -50,6 +50,12 @@ def home():
             )
         )
     return render_template('home.html')
+
+
+@application.route('/robots.txt')
+@application.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(application.static_folder, request.path[1:])
 
 
 @application.route('/resources')
