@@ -24,6 +24,11 @@
   <ul>
     <li>VirtualBox</li>
     <li>Verify /vault directory exists and is writable</li>
+        <li>Install the following packages: </li>
+          <li>virtualbox</li>
+        <li>fabric3</li>
+        <li>docker-compose</li>
+ 
   </ul>
 </details>
 

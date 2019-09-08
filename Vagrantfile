@@ -19,27 +19,38 @@ commandsToCheck = [
     "suspend",
     "up"
   ]
-  enteredCommand = ARGV[0]
 
-  # Is this one of the problem commands?
-  if commandsToCheck.include?(enteredCommand)
-    # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
-    if not (environments.include?ARGV[1] or environments.include?ARGV[2])
-      puts "You must use 'vagrant #{ARGV[0]} #{environments.join("/")}....'"
-      puts "Run 'vagrant status' to view VM names."
-      exit 1
+  
+  if ENV['RUN_BY_PYTHON'] == 'yes'
+    puts "***** Run using python vagrant tool *****"
+    enteredCommand = ENV['VAGRANT_RUN_COMMAND']
+    chosen_environment = ENV['VAGRANT_ENV_COMMAND']
+  elsif 
+    enteredCommand = ARGV[0]
+    if ARGV[1] == 'dev' || ARGV[2] == 'dev'
+       chosen_environment = 'dev'
+    elsif ARGV[1] == 'stage' || ARGV[2] == 'stage'
+       chosen_environment = 'stage'
+    elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
+       chosen_environment = 'prod'
+    else
+       chosen_environment = 'None'
     end
-end
+  end
 
-if ARGV[1] == 'dev' || ARGV[2] == 'dev'
-  chosen_environment = 'dev'
-elsif ARGV[1] == 'stage' || ARGV[2] == 'stage'
-  chosen_environment = 'stage'
-elsif ARGV[1] == 'prod' || ARGV[2] == 'prod'
-  chosen_environment = 'prod'
-else
-  chosen_environment = 'None'
-end
+  
+ 
+  # Is this one of the problem commands?
+      if commandsToCheck.include?(enteredCommand)
+        # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
+        if not (environments.include?chosen_environment)
+          puts "You must use 'vagrant #{enteredCommand} #{environments.join("/")}....'"
+          puts "Run 'vagrant status' to view VM names."
+          exit 1
+        end
+    end
+
+
 
 puts "Working on environment: #{chosen_environment}" if chosen_environment != 'None'
 
@@ -65,6 +76,8 @@ if chosen_environment != 'dev' # aws plugin is needed only for non dev environme
         ]
     end
 end
+
+puts "Start vagrant configure."
 
 Vagrant.configure("2") do |config|
   config.vagrant.plugins = required_plugins
@@ -112,92 +125,104 @@ Vagrant.configure("2") do |config|
     trigger.on_error = :continue
   end
 
-	config.vm.define "dev" do |dev|
+  if chosen_environment == "dev"
+    config.vm.define "dev" do |dev|
 
-		dev.vm.box = "ubuntu/bionic64"
-		dev.vm.network "forwarded_port",
-            guest: ENV['WEB_GUEST_PORT'],
-            host:  ENV['WEB_HOST_PORT']
-		dev.vm.network "forwarded_port",
-            guest: ENV['WEB_GUEST_SECURE_PORT'],
-            host:  ENV['WEB_HOST_SECURE_PORT']
-		dev.vm.network "forwarded_port",
-            guest: ENV['VAULT_GUEST_PORT'],
-            host:  ENV['VAULT_HOST_PORT']
+      puts "Inside config.vm.define Dev Vagrant file"
+      if File.exist?('.env.local')
+        Dotenv.load('.env.local')
+      end
 
-    dev.vm.network "private_network", ip: "10.0.0.1"
+      config.env.enable
+      dev.vm.network "forwarded_port",
+              guest: ENV['DEV_WEB_GUEST_PORT'],
+              host:  ENV['DEV_WEB_HOST_PORT']
+      dev.vm.network "forwarded_port",
+              guest: ENV['DEV_WEB_GUEST_SECURE_PORT'],
+              host:  ENV['DEV_WEB_HOST_SECURE_PORT']
+      dev.vm.network "forwarded_port",
+              guest: ENV['VAULT_GUEST_PORT'],
+              host:  ENV['VAULT_HOST_PORT']
+      dev.vm.network "private_network", ip: "10.0.0.1"
 
-    dev.vm.synced_folder '.', ENV['BASE_FOLDER'],
-      disabled: false,
-      type: "rsync",
-      rsync__exclude: ['.git/', 'workshops/', 'venv/']
+      dev.vm.synced_folder '.', ENV['BASE_FOLDER'],
+        disabled: false,
+        type: "rsync",
+        rsync__exclude: ['.git/', 'workshops/', 'venv/']
 
-    dev.vm.synced_folder '/vault', '/vault',
-      owner: 100,
-      group: 1000
+      dev.vm.synced_folder ENV['DEV_VAULT_FOLDER'], '/vault',
+        owner: 100,
+        group: 1000
 
-    dev.disksize.size = '10GB'
+      dev.disksize.size = '10GB'
+      
+      dev.vm.provider :virtualbox do |virtualbox,override|
+        dev.vm.box = ENV['DEV_VAGRANT_BOX']
+  #     dev.vm.box_url = "https://app.vagrantup.com/ubuntu/boxes/bionic64"
+        virtualbox.memory = 1024
+        virtualbox.cpus = 2
+      end
 
-		dev.vm.provider :virtualbox do |virtualbox,override|
-			virtualbox.name = "dev"
-			virtualbox.memory = 1024
-			virtualbox.cpus = 2
-		end
+    end
+  end
 
-	end
+  if chosen_environment == "stage"
+    config.vm.define "stage" do |stage|
 
-	config.vm.define "stage" do |stage|
+      puts "Inside config.vm.define Stage Vagrant file"
+      stage.vm.box = "dummy"
+      stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
-		stage.vm.box = "dummy"
-		stage.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      stage.vm.synced_folder '.', ENV['BASE_FOLDER'],
+        disabled: false,
+        type: 'rsync'
 
-    stage.vm.synced_folder '.', ENV['BASE_FOLDER'],
-      disabled: false,
-      type: 'rsync'
+      stage.vm.provider :aws do |aws,override|
+        aws.keypair_name = ENV['STAGE_KEYPAIR_NAME']
+        aws.ami = ENV['STAGE_AMI']
+        aws.instance_type = ENV['STAGE_INSTANCE_TYPE']
+        aws.region = ENV['STAGE_REGION']
+        aws.subnet_id = ENV['STAGE_SUBNET_ID']
+        aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
+        aws.associate_public_ip = true
+        aws.iam_instance_profile_name = ENV['STAGE_INSTANCE_PROFILE_NAME']
+        aws.aws_dir = ENV['HOME'] + "/.aws/"
+        aws.aws_profile = "#{ENV['STAGE_AWS_PROFILE']}"
 
-		stage.vm.provider :aws do |aws,override|
-			aws.keypair_name = ENV['STAGE_KEYPAIR_NAME']
-			aws.ami = ENV['STAGE_AMI']
-			aws.instance_type = ENV['STAGE_INSTANCE_TYPE']
-			aws.region = ENV['STAGE_REGION']
-			aws.subnet_id = ENV['STAGE_SUBNET_ID']
-			aws.security_groups = ENV['STAGE_SECURITY_GROUPS']
-			aws.associate_public_ip = true
-			aws.iam_instance_profile_name = ENV['STAGE_INSTANCE_PROFILE_NAME']
-			aws.aws_dir = ENV['HOME'] + "/.aws/"
-			aws.aws_profile = "#{ENV['STAGE_AWS_PROFILE']}"
+        override.ssh.username = "ubuntu"
+  #			override.ssh.private_key_path = ENV['STAGE_SSH_PRIVATE_KEY_PATH']
+      end
 
-			override.ssh.username = "ubuntu"
-			override.ssh.private_key_path = ENV['STAGE_SSH_PRIVATE_KEY_PATH']
-		end
+    end
+  end
+  if chosen_environment == "prod"
+    config.vm.define "prod" do |prod|
 
-	end
+      puts "Inside config.vm.define Prod Vagrant file"
+      prod.vm.box = "dummy"
+      prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
-	config.vm.define "prod" do |prod|
+      prod.vm.synced_folder '.', ENV['BASE_FOLDER'],
+        disabled: false,
+        type: 'rsync'
 
-		prod.vm.box = "dummy"
-		prod.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      prod.vm.provider :aws do |aws,override|
+        aws.keypair_name = ENV['PROD_KEYPAIR_NAME']
+        aws.ami = ENV['PROD_AMI']
+        aws.instance_type = ENV['PROD_INSTANCE_TYPE']
+        aws.elastic_ip = ENV['PROD_ELASTIC_IP']
+        aws.region = ENV['PROD_REGION']
+        aws.subnet_id = ENV['PROD_SUBNET_ID']
+        aws.security_groups = ENV['PROD_SECURITY_GROUPS']
+        aws.associate_public_ip = true
+        aws.iam_instance_profile_name = ENV['PROD_INSTANCE_PROFILE_NAME']
+        aws.aws_dir = ENV['HOME'] + "/.aws/"
+        aws.aws_profile = "#{ENV['PROD_AWS_PROFILE']}"
 
-    prod.vm.synced_folder '.', ENV['BASE_FOLDER'],
-      disabled: false,
-      type: 'rsync'
+        override.ssh.username = "ubuntu"
+        override.ssh.private_key_path = ENV['PROD_SSH_PRIVATE_KEY_PATH']
+      end
 
-		prod.vm.provider :aws do |aws,override|
-			aws.keypair_name = ENV['PROD_KEYPAIR_NAME']
-			aws.ami = ENV['PROD_AMI']
-			aws.instance_type = ENV['PROD_INSTANCE_TYPE']
-			aws.elastic_ip = ENV['PROD_ELASTIC_IP']
-			aws.region = ENV['PROD_REGION']
-			aws.subnet_id = ENV['PROD_SUBNET_ID']
-			aws.security_groups = ENV['PROD_SECURITY_GROUPS']
-			aws.associate_public_ip = true
-			aws.iam_instance_profile_name = ENV['PROD_INSTANCE_PROFILE_NAME']
-			aws.aws_dir = ENV['HOME'] + "/.aws/"
-			aws.aws_profile = "#{ENV['PROD_AWS_PROFILE']}"
-
-			override.ssh.username = "ubuntu"
-			override.ssh.private_key_path = ENV['PROD_SSH_PRIVATE_KEY_PATH']
-		end
-
-	end
+    end
+  end
 end

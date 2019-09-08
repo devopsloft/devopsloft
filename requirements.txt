@@ -1,6 +1,9 @@
 hvac
 python-dotenv
+docker-compose
 git+https://github.com/devopsloft/python-vagrant.git
+virtualbox
+fabric3
 click
 pyOpenSSL
 j2cli

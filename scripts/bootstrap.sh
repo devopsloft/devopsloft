@@ -4,9 +4,11 @@ set -e
 
 ENVIRONMENT=$1
 HOME_DIR=$2
-
 apt-get update
-apt-get install -y mysql-client python3-pip
+apt-get install -y mysql-client python3-pip docker-compose
+
+ls $HOME_DIR/requirements.txt
+pip3 install -r $HOME_DIR/requirements.txt
 
 # shellcheck source=/vagrant/.env
 source $HOME_DIR/.env
@@ -15,7 +17,6 @@ if [[ -f $HOME_DIR/.env.local ]]; then
   source $HOME_DIR/.env.local
 fi
 
-pip3 install -r $HOME_DIR/requirements.txt
 
 export VAULT_GUEST_PORT=$VAULT_GUEST_PORT
 export ENVIRONMENT=$ENVIRONMENT
@@ -27,6 +28,6 @@ else
   AWS_S3_BUCKET="undefined"
 fi
 export AWS_S3_BUCKET
-mkdir -p /vault/config
-chmod 777 /vault
-j2 $HOME_DIR/vault/config.hcl.j2 -o /vault/config/config.hcl
+mkdir -p $HOME_DIR/vault/config
+chmod 777 $HOME_DIR/vault
+j2 $HOME_DIR/vault/config.hcl.j2 -o $HOME_DIR/vault/config/config.hcl
