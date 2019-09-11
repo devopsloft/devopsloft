@@ -26,7 +26,7 @@ if [[ -f .env.local ]]; then
   source .env.local
 fi
 
-if [[ ! -d /vault ]]; then
+if [[ ! -d ./vault ]]; then
   echo "Directory /vault doesn't exists"
   exit
 fi
