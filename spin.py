@@ -73,14 +73,14 @@ def updateBox(envArray):
             print_info("Update Machine: ")
             v.box_update()
             print_info("Prone Machine: ")
-            v.box_prune()
+            #v.box_prune()
             return
     print_info("Adding a new machine to your repository: ")
     print_info(vagrant_box)
     v.box_add(name=vagrant_box, url=vagrant_box_url,
               provider=vagrant_box_provider, force=True)
     v.box_update(vagrant_box, vagrant_box_provider)
-    v.box_prune()\
+    #v.box_prune()
 
 
 
@@ -91,7 +91,7 @@ def updateBox(envArray):
                     type=click.Choice(["up", "destroy"]))
 @click.option("-d", "--debug", required=False, default="no",
                     type=click.Choice(["yes", "no"]))
-def main(envioronment, action):
+def main(envioronment, action, debug):
     machineName = envioronment
     envVars = (machineName)
     envVars = PrepareEnvironmentVars(envVars, action)
