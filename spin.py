@@ -84,7 +84,6 @@ def updateBox(envArray):
     v.box_prune()
 
 
-
 @click.command()
 @click.option("-e", "--envioronment", required=False, default="dev",
                     type=click.Choice(["dev", "prod", "stage"]))
