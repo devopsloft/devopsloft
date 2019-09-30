@@ -10,16 +10,18 @@ keys = None
 
 def get_key(index):
     global keys
+    vault_var = os.environ["BASE_FOLDER"]+"/vault"
     if keys is None:
-        with open('/vault/keys.json') as keysfile:
+        with open(vault_var+'/keys.json') as keysfile:
             keys = json.load(keysfile)
     return keys[index]
 
 
 def get_root_token():
     global root_token
+    vault_var = os.environ["BASE_FOLDER"]+"/vault"
     if root_token is None:
-        with open('/vault/root_token.txt') as tokenfile:
+        with open(vault_var+'/root_token.txt') as tokenfile:
             root_token = tokenfile.read()
     return root_token
 
@@ -29,6 +31,7 @@ def initialize(provider='virtualbox', bucket=None):
     global client
     global root_token
     global keys
+    vault_var = os.environ["BASE_FOLDER"]+"/vault"
 
     if client is None:
         VAULT_ADDR = os.environ["VAULT_ADDR"]
@@ -44,21 +47,21 @@ def initialize(provider='virtualbox', bucket=None):
         root_token = result['root_token']
         keys = result['keys']
 
-        with open('/vault/keys.json', "w+") as keysfile:
+        with open(vault_var+'/keys.json', "w+") as keysfile:
             json.dump(keys, keysfile)
 
-        with open('/vault/root_token.txt', "w+") as tokenfile:
+        with open(vault_var+'/root_token.txt', "w+") as tokenfile:
             tokenfile.write(root_token)
 
         if provider == 'aws':
             s3_client = boto3.client('s3')
             s3_client.upload_file(
-                '/vault/keys.json',
+                vault_var+'/keys.json',
                 bucket,
                 'keys.json'
             )
             s3_client.upload_file(
-                '/vault/root_token.txt',
+                vault_var+'/root_token.txt',
                 bucket,
                 'root_token.txt'
             )
@@ -71,18 +74,18 @@ def initialize(provider='virtualbox', bucket=None):
                 s3_client.download_file(
                     bucket,
                     'keys.json',
-                    '/vault/keys.json'
+                    vault_var+'/keys.json'
                 )
                 s3_client.download_file(
                     bucket,
                     'root_token.txt',
-                    '/vault/root_token.txt'
+                    vault_var+'/root_token.txt'
                 )
 
-            with open('/vault/keys.json') as keysfile:
+            with open(vault_var+'/keys.json') as keysfile:
                 keys = json.load(keysfile)
 
-            with open('/vault/root_token.txt') as tokenfile:
+            with open(vault_var+'/root_token.txt') as tokenfile:
                 root_token = tokenfile.read()
 
         if client.token is None:

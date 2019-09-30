@@ -35,14 +35,14 @@ services:
       - $BASE_FOLDER/modules:/modules
       - $BASE_FOLDER/.env:/.env
       - $BASE_FOLDER/.env.local:/.env.local
-      - /vault:/vault
+      - $BASE_FOLDER/vault:/vault
     restart: always
 
   vault:
     image: vault:1.1.2
     container_name: vault
     volumes:
-      - /vault:/vault:rw
+      - $BASE_FOLDER/vault:/vault:rw
     ports:
       - $VAULT_HOST_PORT:$VAULT_GUEST_PORT
     cap_add:
