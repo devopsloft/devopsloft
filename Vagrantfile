@@ -20,12 +20,12 @@ commandsToCheck = [
     "up"
   ]
 
-  
+
   if ENV['RUN_BY_PYTHON'] == 'yes'
     puts "***** Run using python vagrant tool *****"
     enteredCommand = ENV['VAGRANT_RUN_COMMAND']
     chosen_environment = ENV['VAGRANT_ENV_COMMAND']
-  elsif 
+  elsif
     enteredCommand = ARGV[0]
     if ARGV[1] == 'dev' || ARGV[2] == 'dev'
        chosen_environment = 'dev'
@@ -38,8 +38,8 @@ commandsToCheck = [
     end
   end
 
-  
- 
+
+
   # Is this one of the problem commands?
       if commandsToCheck.include?(enteredCommand)
         # Is this command lacking any other supported environments ? e.g. "vagrant destroy dev".
@@ -155,7 +155,7 @@ Vagrant.configure("2") do |config|
         group: 1000
 
       dev.disksize.size = '10GB'
-      
+
       dev.vm.provider :virtualbox do |virtualbox,override|
         dev.vm.box = ENV['DEV_VAGRANT_BOX']
   #     dev.vm.box_url = "https://app.vagrantup.com/ubuntu/boxes/bionic64"
