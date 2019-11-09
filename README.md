@@ -57,7 +57,9 @@
   vagrant ssh [dev|stage]
 ~~~
 
+
 ##### Don't forget to destroy the environment when you done to avoid unnecessary charges!!!
+
 
 ~~~
   ./spin.py destroy [dev|stage]
