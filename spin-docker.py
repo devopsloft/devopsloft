@@ -19,18 +19,11 @@ def print_info(message):
 def PrepareEnvironmentVars(environmentName, action):
     # Reads the .env file from the repository
     # Returns an array with all the env vars, inclduing modificatoins per env
-<<<<<<< HEAD
 	
     dotenv.load_dotenv()
     envArray = os.environ.copy()
     envArray['RUN_BY_PYTHON'] = 'yes'
-=======
 
-    dotenv.load_dotenv()
-    envArray = os.environ.copy()
-    envArray['RUN_BY_PYTHON'] = 'yes'
-    envArray['BASE_FOLDER'] = in_docker.get_binds()['/resources']
->>>>>>> 379abf1... dockerfile initial
     envArray['ENVIRONMENT'] = environmentName
     if (environmentName == 'dev'):
 
