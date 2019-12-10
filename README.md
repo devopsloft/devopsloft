@@ -71,7 +71,7 @@ Steps for Docker:
 Setting the App 
  1. install docker or docker for windows 
  2. Run  in the directory where docker file is located:
- "docker build -t spincontainer ."
+ "docker build -t spinner ."
 
  3. Run 
  "docker run -t -d --name spincontainer -v /var/run/docker.sock:/var/run/docker.sock spinner"
