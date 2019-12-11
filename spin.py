@@ -12,6 +12,7 @@ print_debug = 'No'
 
 
 def print_info(message):
+    global print_debug
     if print_debug == 'yes':
         print("--- python debug ---> ", message)
 
@@ -80,8 +81,7 @@ def updateBox(envArray):
     v.box_add(name=vagrant_box, url=vagrant_box_url,
               provider=vagrant_box_provider, force=True)
     v.box_update(vagrant_box, vagrant_box_provider)
-    v.box_prune()\
-
+    v.box_prune()
 
 
 @click.command()
@@ -91,20 +91,22 @@ def updateBox(envArray):
                     type=click.Choice(["up", "destroy"]))
 @click.option("-d", "--debug", required=False, default="no",
                     type=click.Choice(["yes", "no"]))
-def main(envioronment, action):
+def main(envioronment, action, debug):
     machineName = envioronment
-    envVars = (machineName)
+    envVars = machineName
     envVars = PrepareEnvironmentVars(envVars, action)
+    global print_debug
+    print_debug = debug
 
     if not (IsCertExist()):
         SelfSignedCertificate()
 
-    if (action == 'up'):
-        if (envioronment == 'dev'):
+    if action == 'up':
+        if envioronment == 'dev':
             updateBox(envVars)
         print("start Vagrant ...")
         startVagrant(machineName, envVars)
-    elif (action == 'destroy'):
+    elif action == 'destroy':
         destroyVagrant(machineName, envVars)
 
 
