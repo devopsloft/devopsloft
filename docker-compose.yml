@@ -15,7 +15,8 @@ services:
   app:
     image: $APP/app
     build:
-      context: ./app_s2i
+      context: /home
+      dockerfile: app_s2i/Dockerfile
       args:
         APP_GUEST_PORT: $APP_GUEST_PORT
     container_name: app
@@ -31,18 +32,12 @@ services:
       - VAULT_ADDR=http://vault:$VAULT_GUEST_PORT
     ports:
       - $APP_HOST_PORT:$APP_GUEST_PORT
-    volumes:
-      - $BASE_FOLDER/modules:/modules
-      - $BASE_FOLDER/.env:/.env
-      - $BASE_FOLDER/.env.local:/.env.local
-      - $BASE_FOLDER/vault:/vault
     restart: always
 
   vault:
     image: vault:1.1.2
     container_name: vault
-    volumes:
-      - $BASE_FOLDER/vault:/vault:rw
+
     ports:
       - $VAULT_HOST_PORT:$VAULT_GUEST_PORT
     cap_add:

@@ -63,6 +63,29 @@
   ./spin.py destroy [dev|stage]
 ~~~
 
-#### Notes
+
 
 -   Do not use vagrant directly to spin and environment. It might work, but most likely it won't
+==============================================================================================
+Steps for Docker:
+Setting the App 
+ 1. install docker or docker for windows 
+ 2. Run  in the directory where docker file is located:
+ "docker build -t spinner ."
+
+ 3. Run 
+ "docker run -t -d --name spincontainer -v /var/run/docker.sock:/var/run/docker.sock spinner"
+ 4. Run
+ "docker exec -it spincontainer bash"
+ 6. Run
+ "python spin-docker.py"
+ 7. Now you can exit the container and you'll see the apps containers created on host and running
+ 
+ Destroying the App and cleaning up the spin container-
+ 1. docker exec -it spincontainer bash
+ 2. python spin-docker.py --action destroy
+ ###### if you want to remove the intermediate container and image as well:
+ 3. docker rm -f spincontainer
+ 4. docker rmi spinner
+ 
+ #### Notes
