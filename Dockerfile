@@ -6,7 +6,8 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip \
   && apt-get install libssl-dev \
-  && apt-get install -y locales
+  && apt-get install -y locales\
+  && apt-get install -y curl
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
@@ -18,6 +19,11 @@ COPY web_s2i /home/web_s2i/
 COPY db_s2i  /home/db_s2i
 COPY app_s2i  /home/app_s2i
 COPY modules  /home/modules
+COPY vault /home/vault
+RUN mkdir -p /home/vault/config
+RUN chmod 777 /home/vault
+RUN curl -sSL https://get.docker.com/ | sh
+
 
 WORKDIR /home
 ENTRYPOINT [ "/bin/bash" ]
