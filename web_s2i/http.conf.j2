@@ -1,0 +1,14 @@
+server {
+    listen {{ WEB_HOST_PORT }};
+    server_name localhost;
+
+    # Pass this particular URL off to certbot, to authenticate HTTPS certificates
+    location '/.well-known/acme-challenge' {
+        default_type "text/plain";
+        proxy_pass http://localhost:1337;
+    }
+
+    location / {
+      proxy_pass http://app:{{ APP_HOST_PORT }}/;
+    }
+  }

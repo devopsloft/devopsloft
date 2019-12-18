@@ -53,6 +53,10 @@ services:
         WEB_HOST_PORT: $WEB_HOST_PORT
         WEB_HOST_SECURE_PORT: $WEB_HOST_SECURE_PORT
         APP_HOST_PORT: $APP_HOST_PORT
+        PROD_APP_DOMAIN: $PROD_APP_DOMAIN
+    environment:
+      IS_STAGING: $IS_STAGING
+      CERTBOT_EMAIL: $PROD_CERTBOT_EMAIL
     container_name: web
     ports:
       - $WEB_HOST_PORT:$WEB_GUEST_PORT

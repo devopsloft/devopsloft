@@ -2,20 +2,28 @@ events {}
 
 http {
   server {
-    listen {{ WEB_HOST_SECURE_PORT }} ssl;
+    listen {{ WEB_HOST_PORT }};
     server_name localhost;
-    ssl_certificate /cert.pem;
-    ssl_certificate_key /key.pem;
+
+    # Pass this particular URL off to certbot, to authenticate HTTPS certificates
+    location '/.well-known/acme-challenge' {
+        default_type "text/plain";
+        proxy_pass http://localhost:1337;
+    }
+    # Everything else gets shunted over to HTTPS
+    location / {
+      
+      return 301 https://$http_host$request_uri;
+    }
+  }
+  server {
+    listen {{ WEB_HOST_SECURE_PORT }} ssl;
+    server_name {{ PROD_APP_DOMAIN }};
+    ssl_certificate     /etc/letsencrypt/live/{{ PROD_APP_DOMAIN }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ PROD_APP_DOMAIN }}/privkey.pem;
     location / {
       proxy_pass http://app:{{ APP_HOST_PORT }}/;
     }
   }
 
-  server {
-    listen {{ WEB_HOST_PORT }};
-    server_name localhost;
-    location / {
-      proxy_pass http://app:{{ APP_HOST_PORT }}/;
-    }
-  }
 }

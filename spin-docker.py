@@ -31,6 +31,9 @@ def PrepareEnvironmentVars(environmentName, action):
         envArray['WEB_GUEST_PORT'] = envArray['DEV_WEB_GUEST_PORT']
         envArray['WEB_HOST_SECURE_PORT'] = envArray['DEV_WEB_HOST_SECURE_PORT']
         envArray['WEB_GUEST_SECURE_PORT'] = envArray['DEV_WEB_GUEST_SECURE_PORT']
+        envArray['PROD_APP_DOMAIN'] = envArray['STAGE_APP_DOMAIN']
+    elif (environmentName == 'prod'):
+        envArray['IS_STAGING'] = 0
     return envArray
 
 
