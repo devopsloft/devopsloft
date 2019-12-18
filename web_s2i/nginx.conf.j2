@@ -1,21 +1,4 @@
-events {}
 
-http {
-  server {
-    listen {{ WEB_HOST_PORT }};
-    server_name localhost;
-
-    # Pass this particular URL off to certbot, to authenticate HTTPS certificates
-    location '/.well-known/acme-challenge' {
-        default_type "text/plain";
-        proxy_pass http://localhost:1337;
-    }
-    # Everything else gets shunted over to HTTPS
-    location / {
-      
-      return 301 https://$http_host$request_uri;
-    }
-  }
   server {
     listen {{ WEB_HOST_SECURE_PORT }} ssl;
     server_name {{ PROD_APP_DOMAIN }};
@@ -26,4 +9,4 @@ http {
     }
   }
 
-}
+
