@@ -3,7 +3,6 @@ import dotenv
 import os
 import subprocess
 import click
-import in_docker
 from createPemFiles import SelfSignedCertificate, IsCertExist
 
 
@@ -19,18 +18,17 @@ def print_info(message):
 def PrepareEnvironmentVars(environmentName, action):
     # Reads the .env file from the repository
     # Returns an array with all the env vars, inclduing modificatoins per env
-	
+    devwebsport = 'DEV_WEB_GUEST_SECURE_PORT'
     dotenv.load_dotenv()
     envArray = os.environ.copy()
     envArray['RUN_BY_PYTHON'] = 'yes'
-
     envArray['ENVIRONMENT'] = environmentName
+    envArray['HOMEPATH'] = '/home'
     if (environmentName == 'dev'):
-
         envArray['WEB_HOST_PORT'] = envArray['DEV_WEB_HOST_PORT']
         envArray['WEB_GUEST_PORT'] = envArray['DEV_WEB_GUEST_PORT']
         envArray['WEB_HOST_SECURE_PORT'] = envArray['DEV_WEB_HOST_SECURE_PORT']
-        envArray['WEB_GUEST_SECURE_PORT'] = envArray['DEV_WEB_GUEST_SECURE_PORT']
+        envArray['WEB_GUEST_SECURE_PORT'] = envArray[devwebsport]
     return envArray
 
 
@@ -49,7 +47,11 @@ def main(environment, action, debug):
         SelfSignedCertificate()
     if(action == "up"):
         command = "docker-compose up -d"
-        subprocess.Popen(command, env=envVars, shell=True)
+        vault_command = "j2 vault/config.hcl.j2 -o vault/config/config.hcl"
+        vault_copy = "docker cp vault/config/config.hcl vault:/vault/config"
+        subprocess.call(command, env=envVars, shell=True)
+        subprocess.call(vault_command, env=envVars, shell=True)
+        subprocess.call(vault_copy, env=envVars, shell=True)
     if(action == "destroy"):
         command = "docker-compose down -v --rmi all --remove-orphans"
         subprocess.Popen(command, env=envVars, shell=True)

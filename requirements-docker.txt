@@ -3,3 +3,5 @@ Click==7.0
 pyOpenSSL==19.1.0
 python-dotenv==0.10.3
 python-vagrant==0.5.15
+j2cli==0.3.10
+
