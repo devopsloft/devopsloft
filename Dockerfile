@@ -14,7 +14,7 @@ ENV LANG=en_US.UTF-8
 COPY requirements-docker.txt /home/
 RUN pip install -r /home/requirements-docker.txt
 RUN pip install docker-compose
-COPY .env spin-docker.py docker-compose.yml createPemFiles.py in_docker.py /home/
+COPY .env spin-docker.py docker-compose.yml createPemFiles.py /home/
 COPY web_s2i /home/web_s2i/
 COPY db_s2i  /home/db_s2i
 COPY app_s2i  /home/app_s2i
