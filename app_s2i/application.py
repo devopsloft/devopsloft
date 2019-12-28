@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 from flask import Flask, flash, render_template, redirect, url_for
 from flask import request, make_response, send_from_directory
 from flask_mysqldb import MySQL
@@ -10,6 +11,7 @@ import os
 import yaml
 import loft_meetup
 import events
+from apiUtil import apigetter
 
 load_dotenv(
     dotenv_path='.env',
@@ -39,9 +41,20 @@ application.config['security'] = \
 mysql = MySQL(application)
 
 
+def get_url_image(document, page, width=350, square=1):
+    base = 'https://www.lucidchart.com/documents/image'
+    width = str(width)
+    square = str(square)
+    return base + '/' + document + '/' + page + '/' + width + '/' + square
+
+
 @application.route('/')
 @application.route('/home')
 def home():
+    getter = apigetter()
+    url = get_url_image('50f3a681-24ff-4c98-815c-94922e07b701', '0_0')
+    imagepath = 'static/images/diagram.png'
+    getter.save_image(url, imagepath)
     code = request.args.get("code")
     if code is not None:
         events.share(
