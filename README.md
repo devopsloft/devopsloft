@@ -68,6 +68,7 @@ Also make sure you have Docker installed on the system where you plan to run the
 
 Run the following to cleanup your environment
 
-1. deactivate && rm -r ~/devopsloft_venv
-2. docker rm -f spincontainer
-3. docker rmi spinner
+1. docker exec -it spincontainer bash
+2. python spin-docker.py --action destroy
+3. docker rm -f spincontainer
+4. docker rmi spinner
