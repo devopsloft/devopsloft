@@ -29,7 +29,12 @@
           <li>virtualbox</li>
         <li>fabric3</li>
         <li>docker-compose</li>
- 
+        <li>For Windoes 10 Home users</li>
+        <ul>
+          <li>Docker toolbox</li>
+          <li>docker-cli (`choco install docker-cli` - using prompt)</li>
+          <li>docker-compose (`choco install docker-compose` - using prompt)</li>
+        </ul>
   </ul>
 </details>
 
@@ -66,6 +71,16 @@ Also make sure you have Docker installed on the system where you plan to run the
 3.  Run `docker exec -it spincontainer bash`
 4.  Run `python spin-docker.py`
 
+##### Run the app on Windows 10 Home
+
+1. Run `docker-machine env default`
+2. Run `eval $(docker-machine env default --shell linux)`
+3. In the root directory of the project run `docker build -t spinner .`
+4. Run `docker run -t -d --name spincontainer -v //var/run/docker.sock:/var/run/docker.sock spinner`
+5. Run `winpty docker exec -it spincontainer bash`
+6. Run `python spin-docker.py`
+7. Check the ip for your lochalhost - on the host machine run `docker-machine ip default`
+
 ##### Cleanup Environment
 
 Run the following to cleanup your environment
@@ -74,43 +89,3 @@ Run the following to cleanup your environment
 2. python spin-docker.py --action destroy
 3. docker rm -f spincontainer
 4. docker rmi spinner
-
-##### Run the app on Windows 10 Home
-
-<details>
-  <summary>Windowws 10 Home Prerequisites</summary>
-  <ul>
-    <li>Docker toolbox</li>
-    <li>docker-cli (`choco install docker-cli` - using prompt)</li>
-    <li>docker-compose (`choco install docker-compose` - using prompt)</li>
-  </ul>
-</details>
-
-We need to set up our Docker environment variables. This is to allow the Docker client and Docker Compose to communicate with the Docker Engine running in the Linux VM, `default`. You can do this by executing the commands in Git Bash:
-
-```
-# Print out docker machine instance settings
-$ docker-machine env default
-
-# Set environment variables using Linux 'export' command
-$ eval $(docker-machine env default --shell linux)
-```
-
-You’ll need to set the environment variables every time you start a new Git Bash terminal. If you’d like to avoid this, you can copy `eval` output and save it in your `.bashrc` file. It should look something like this:
-
-```
-export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://192.168.99.101:2376"
-export DOCKER_CERT_PATH="C:\Users\Michael Wanyoike\.docker\machine\machines\default"
-export DOCKER_MACHINE_NAME="default"
-export COMPOSE_CONVERT_WINDOWS_PATHS="true"
-```
-
-<strong>IMPORTANT</strong> for the `DOCKER_CERT_PATH`, you’ll need to change the Linux file path to a Windows path format. Also take note that there’s a chance the IP address assigned might be different from the one you saved every time you start the `default` VM.
-
-1. In the root directory of the project run `docker build -t spinner .`
-2. Run `docker run -t -d --name spincontainer -v //var/run/docker.sock:/var/run/docker.sock spinner`
-3. Run `winpty docker exec -it spincontainer bash`
-4. Run `python spin-docker.py`
-
-To cheack the ip for the lochalhost you need to return to the host and run `docker-machine ip default`. We are using port 5000.
