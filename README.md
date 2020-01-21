@@ -19,6 +19,7 @@
 </details>
 
 #### DEV environment
+
 <details>
   <summary>Prerequisites</summary>
   <ul>
@@ -28,11 +29,17 @@
           <li>virtualbox</li>
         <li>fabric3</li>
         <li>docker-compose</li>
- 
+        <li>For Windoes 10 Home users</li>
+        <ul>
+          <li>Docker toolbox</li>
+          <li>docker-cli (`choco install docker-cli` - using prompt)</li>
+          <li>docker-compose (`choco install docker-compose` - using prompt)</li>
+        </ul>
   </ul>
 </details>
 
 #### STAGE environment
+
 <details>
   <summary>Prerequisites</summary>
   <ul>
@@ -59,11 +66,21 @@ Also make sure you have Docker installed on the system where you plan to run the
 
 ##### Run the app
 
- 1. In the root directory of the project run `docker build -t spinner .`
- 2. Run `docker run -t -d --name spincontainer -v /var/run/docker.sock:/var/run/docker.sock spinner`
- 3. Run `docker exec -it spincontainer bash`
- 4. Run `python spin-docker.py`
- 
+1.  In the root directory of the project run `docker build -t spinner .`
+2.  Run `docker run -t -d --name spincontainer -v /var/run/docker.sock:/var/run/docker.sock spinner`
+3.  Run `docker exec -it spincontainer bash`
+4.  Run `python spin-docker.py`
+
+##### Run the app on Windows 10 Home
+
+1. Run `docker-machine env default`
+2. Run `eval $(docker-machine env default --shell linux)`
+3. In the root directory of the project run `docker build -t spinner .`
+4. Run `docker run -t -d --name spincontainer -v //var/run/docker.sock:/var/run/docker.sock spinner`
+5. Run `winpty docker exec -it spincontainer bash`
+6. Run `python spin-docker.py`
+7. Check the ip for your lochalhost - on the host machine run `docker-machine ip default`
+
 ##### Cleanup Environment
 
 Run the following to cleanup your environment
