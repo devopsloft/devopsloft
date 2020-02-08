@@ -12,8 +12,6 @@
   <summary>Global Prerequisites</summary>
   <ul>
     <li>python 3</li>
-    <li>vagrant</li>
-    <li>vagrant plugin: vagrant-env</li>
     <li>Use `.env.local` file for configuration keys which overrides `.env`</li>
   </ul>
 </details>
@@ -23,18 +21,13 @@
 <details>
   <summary>Prerequisites</summary>
   <ul>
-    <li>VirtualBox</li>
     <li>Verify /vault directory exists and is writable</li>
-        <li>Install the following packages: </li>
-          <li>virtualbox</li>
-        <li>fabric3</li>
-        <li>docker-compose</li>
-        <li>For Windoes 10 Home users</li>
-        <ul>
-          <li>Docker toolbox</li>
-          <li>docker-cli (`choco install docker-cli` - using prompt)</li>
-          <li>docker-compose (`choco install docker-compose` - using prompt)</li>
-        </ul>
+    <li>For Windoes 10 Home users</li>
+      <ul>
+        <li>Docker toolbox</li>
+        <li>docker-cli (`choco install docker-cli` - using prompt)</li>
+        <li>docker-compose (`choco install docker-compose` - using prompt)</li>
+      </ul>
   </ul>
 </details>
 
