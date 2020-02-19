@@ -23,7 +23,8 @@ COPY vault /home/vault
 RUN mkdir -p /home/vault/config
 RUN chmod 777 /home/vault
 RUN curl -sSL https://get.docker.com/ | sh
-
+RUN curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
+RUN chmod 777 /usr/local/bin/ecs-cli
 
 WORKDIR /home
 ENTRYPOINT [ "/bin/bash" ]
