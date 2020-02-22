@@ -36,6 +36,7 @@ script:
 - tests/navbar.py
 - tests/test_vault.py
 - tests/wait_mysql_up.sh
+- tests/test_ecs_cli.sh
 - sleep 15
 - tests/is_table_empty.py
 - flake8 --exclude venv .
