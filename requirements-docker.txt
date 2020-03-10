@@ -1,5 +1,5 @@
 cffi==1.14.0
-Click==7.0
+Click==7.1.1
 pyOpenSSL==19.1.0
 python-dotenv==0.12.0
 python-vagrant==0.5.15
