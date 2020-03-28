@@ -4,8 +4,6 @@
 
 <img src="http://www.devopsloft.io/static/logo.png" alt="drawing" width="250" hight="250"/>
 
-## Contributing
-
 ### Spinning [dev|stage] environment
 
 <details>
@@ -37,7 +35,7 @@
   <summary>Prerequisites</summary>
   <ul>
     <li>AWS account</li>
-    <li>AWS credentials: access key & access secret</li>
+    <li><a href='https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html'>AWS ~/.aws or %UserProfile%\.aws folder</a></li>
     <li>keypair</li>
     <li>subnet ID</li>
     <li>Security Group with inbound ports for SSH (22), HTTP (80), HTTPS (443), and 8200</li>
@@ -60,7 +58,7 @@ Also make sure you have Docker installed on the system where you plan to run the
 ##### Run the app
 
 1.  In the root directory of the project run `docker build -t spinner .`
-2.  Run `docker run -t -d --name spincontainer -v /var/run/docker.sock:/var/run/docker.sock spinner`
+2.  Run `docker run -t -d --name spincontainer -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock spinner`
 3.  Run `docker exec -it spincontainer bash`
 4.  Run `python spin-docker.py`
 
@@ -69,7 +67,7 @@ Also make sure you have Docker installed on the system where you plan to run the
 1. Run `docker-machine env default`
 2. Run `eval $(docker-machine env default --shell linux)`
 3. In the root directory of the project run `docker build -t spinner .`
-4. Run `docker run -t -d --name spincontainer -v //var/run/docker.sock:/var/run/docker.sock spinner`
+4. Run `docker run -t -d --name spincontainer -v %UserProfile%\.aws:/root/.aws -v //var/run/docker.sock:/var/run/docker.sock spinner`
 5. Run `winpty docker exec -it spincontainer bash`
 6. Run `python spin-docker.py`
 7. Check the ip for your lochalhost - on the host machine run `docker-machine ip default`
