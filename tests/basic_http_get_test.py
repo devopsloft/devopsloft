@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import requests
 from time import sleep
+
+import requests
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         '/share'
     )
     test_config = {
-        'domain': 'http://127.0.0.1:' + os.getenv('WEB_GUEST_PORT'),
+        'domain': 'http://127.0.0.1:80',
         'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     if not test(**test_config):
         exit(1)
     test_config = {
-        'domain': 'https://127.0.0.1:' + os.getenv('WEB_GUEST_SECURE_PORT'),
+        'domain': 'https://127.0.0.1:8443',
         'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     if not test(**test_config):
         exit(1)
     test_config = {
-        'domain': 'http://127.0.0.1:' + os.getenv('VAULT_GUEST_PORT'),
+        'domain': 'http://127.0.0.1:8200',
         'allowed_failures': 6,
         'sleep_between_failures': 5,
         'page_expected_content': '<title>Vault</title>'

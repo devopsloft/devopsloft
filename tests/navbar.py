@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 import logging
-from dotenv import load_dotenv
-from pathlib import Path
 import os
 import re
+from pathlib import Path
+
 import yaml
+from dotenv import load_dotenv
+
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 env_path = Path('..') / '.env'
 load_dotenv()
@@ -29,11 +31,11 @@ if os.getenv('TRAVIS') in [None, False]:
       command_executor=SELENIUM_HUB,
       desired_capabilities=DesiredCapabilities.FIREFOX,
     )
-    app_url = 'http://10.0.0.1:5000'
+    app_url = 'http://10.0.0.1:80'
 else:
     chrome_driver = webdriver.Chrome()
     firefox_driver = webdriver.Firefox()
-    app_url = 'http://localhost:5000'
+    app_url = 'http://localhost:80'
 
 try:
     for driver in [chrome_driver, firefox_driver]:

@@ -8,7 +8,7 @@ if "%1"=="" (
 
 if "%env"=="dev" (
     vagrant box update --provider virtualbox
-    set port=5000
+    set port=80
 ) else (
     set port=80
 )
