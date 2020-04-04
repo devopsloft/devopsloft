@@ -1,6 +1,6 @@
-FROM python:3
+FROM python:3 as builder
 
-COPY . /
+COPY ./web_s2i/ /
 ARG WEB_HOST_PORT
 ARG WEB_HOST_SECURE_PORT
 ARG APP_HOST_PORT
@@ -13,8 +13,8 @@ RUN pip3 install --upgrade pip && \
 
 FROM nginx:stable
 
-COPY --from=0 /nginx.conf /etc/nginx/nginx.conf
-COPY *.pem /
+COPY --from=builder /nginx.conf /etc/nginx/nginx.conf
+COPY ./web_s2i/*.pem /
 
 
 ARG WEB_HOST_PORT

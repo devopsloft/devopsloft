@@ -1,21 +1,23 @@
 version: "3.7"
 services:
   db:
-    image: $APP/db
-    build: ./db_s2i
+    image: devopsloft/db
+    build: 
+      context: .
+      dockerfile: db_s2i/Dockerfile
     container_name: db
     environment:
       - MYSQL_DATABASE
       - MYSQL_ROOT_PASSWORD
       - MYSQL_ROOT_HOST
     ports:
-      - $MYSQL_PORT:$MYSQL_PORT
+      - 3306:3306
     restart: always
 
   app:
-    image: $APP/app
+    image: devopsloft/app
     build:
-      context: $HOMEPATH
+      context: .
       dockerfile: app_s2i/Dockerfile
       args:
         APP_GUEST_PORT: $APP_GUEST_PORT
@@ -31,7 +33,7 @@ services:
       - PYTHONPATH=$$PYTHONPATH:/modules
       - VAULT_ADDR=http://vault:$VAULT_GUEST_PORT
     ports:
-      - $APP_HOST_PORT:$APP_GUEST_PORT
+      - 3000:3000
     restart: always
 
   vault:
@@ -39,22 +41,23 @@ services:
     container_name: vault
 
     ports:
-      - $VAULT_HOST_PORT:$VAULT_GUEST_PORT
+      - 8200:8200
     cap_add:
       - IPC_LOCK
     command: server
     restart: always
 
   web:
-    image: $APP/web
+    image: devopsloft/web
     build:
-      context: ./web_s2i
+      context: .
+      dockerfile: web_s2i/Dockerfile
       args:
-        WEB_HOST_PORT: $WEB_HOST_PORT
-        WEB_HOST_SECURE_PORT: $WEB_HOST_SECURE_PORT
-        APP_HOST_PORT: $APP_HOST_PORT
+        WEB_HOST_PORT: 5000
+        WEB_HOST_SECURE_PORT: 8443
+        APP_HOST_PORT: 3000
     container_name: web
     ports:
-      - $WEB_HOST_PORT:$WEB_GUEST_PORT
-      - $WEB_HOST_SECURE_PORT:$WEB_GUEST_SECURE_PORT
+      - 5000:5000
+      - 8443:8443
     restart: always
