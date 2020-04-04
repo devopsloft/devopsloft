@@ -1,3 +1,3 @@
 FROM mysql:5
 
-COPY create_db.sql /docker-entrypoint-initdb.d/
+COPY ./db_s2i/create_db.sql /docker-entrypoint-initdb.d/
