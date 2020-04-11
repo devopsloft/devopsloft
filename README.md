@@ -55,13 +55,6 @@ pip install -r requirements.txt
 
 Also make sure you have Docker installed on the system where you plan to run the application.
 
-##### Run the app
-
-1.  In the root directory of the project run `docker build -t spinner .`
-2.  Run `docker run -t -d --name spincontainer -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock spinner`
-3.  Run `docker exec -it spincontainer bash`
-4.  Run `python spin-docker.py`
-
 ##### Run the app on Windows 10 Home
 
 1. Run `docker-machine env default`
@@ -72,11 +65,21 @@ Also make sure you have Docker installed on the system where you plan to run the
 6. Run `python spin-docker.py`
 7. Check the ip for your lochalhost - on the host machine run `docker-machine ip default`
 
-##### Cleanup Environment
+##### Spin DEV environment
 
-Run the following to cleanup your environment
+Execute the following:
 
-1. docker exec -it spincontainer bash
-2. python spin-docker.py --action destroy
-3. docker rm -f spincontainer
-4. docker rmi spinner
+`docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+
+##### Teardown DEV environment
+
+Execute the following:
+
+1. `docker run -td --name spinner -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+2. `docker exec -it spinner bash`
+3. `./spin-docker.py --action destroy`
+4. `exit`
+5. `docker rm -f spinner`
+6. `docker rmi devopsloft/spinner`
+   
+
