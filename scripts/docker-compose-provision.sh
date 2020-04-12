@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 export ENVIRONMENT=$1
 export BASE_FOLDER=$2
@@ -12,5 +12,6 @@ export HOMEPATH=$2
 
 cd $BASE_FOLDER
 
-docker-compose up -d --build --force-recreate
+docker-compose up -d --build
 docker cp $BASE_FOLDER/vault/config/config.hcl vault:/vault/config
+docker logs web

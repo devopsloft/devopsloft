@@ -65,13 +65,13 @@ Also make sure you have Docker installed on the system where you plan to run the
 6. Run `python spin-docker.py`
 7. Check the ip for your lochalhost - on the host machine run `docker-machine ip default`
 
-##### Spin DEV environment
+#### Spin DEV environment
 
 Execute the following:
 
-`docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+1. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
 
-##### Teardown DEV environment
+#### Teardown DEV environment
 
 Execute the following:
 

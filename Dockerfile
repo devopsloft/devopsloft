@@ -1,12 +1,17 @@
 FROM ubuntu:18.04
 
-COPY requirements-docker.txt /home/
-COPY .env spin-docker.py docker-compose.yml createPemFiles.py /home/
+COPY project/* /home/
+COPY .env docker-compose.yml createPemFiles.py /home/
 COPY web_s2i /home/web_s2i/
 COPY db_s2i  /home/db_s2i
 COPY app_s2i  /home/app_s2i
 COPY modules  /home/modules
 COPY vault /home/vault
+
+RUN apt-get update \
+  && apt-get install -y curl \
+  && curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
+  && chmod 777 /usr/local/bin/ecs-cli
 
 RUN apt-get update \
   && apt-get install -y python3-pip python3-dev \
@@ -15,11 +20,8 @@ RUN apt-get update \
   && pip3 install --upgrade pip \
   && apt-get install libssl-dev \
   && apt-get install -y locales\
-  && apt-get install -y curl \
-  && curl -o /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest \
-  && chmod 777 /usr/local/bin/ecs-cli \ 
   && locale-gen en_US.UTF-8 \ 
-  && pip install -r /home/requirements-docker.txt \
+  && pip3 install -r /home/requirements.txt \
   && mkdir -p /home/vault/config \
   && chmod 777 /home/vault \
   && curl -sSL https://get.docker.com/ | sh
