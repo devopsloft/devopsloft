@@ -83,5 +83,28 @@ Execute the following:
 4. `exit`
 5. `docker rm -f spinner`
 6. `docker rmi devopsloft/spinner`
-   
+
+
+#### Spin STAGE environment
+
+Execute the following:
+
+1. `export NAMESPACE=<dockerhub user>`
+2. `docker build -t ${NAMESPACE}/spinner .`
+3. `docker-compose build`
+4. `docker-compose push`
+5. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest -e stage`
+6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
+7. Browse <Public DNS>
+
+#### Teardown STAGE environment
+
+Execute the following:
+
+1. `docker run -td --name spinner -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest`
+2. `docker exec -it spinner bash`
+3. `./spin-docker.py --environment stage --action destroy`
+4. `exit`
+5. `docker rm -f spinner`
+6. `docker rmi -f ${NAMESPACE}/spinner`
 
