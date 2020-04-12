@@ -1,7 +1,7 @@
 version: "3"
 services:
   db:
-    image: devopsloft/db
+    image: ${NAMESPACE:-devopsloft}/db
     build: 
       context: .
       dockerfile: db_s2i/Dockerfile
@@ -16,7 +16,7 @@ services:
     restart: always
 
   app:
-    image: devopsloft/app
+    image: ${NAMESPACE:-devopsloft}/app
     build:
       context: .
       dockerfile: app_s2i/Dockerfile
@@ -41,7 +41,7 @@ services:
     restart: always
 
   vault:
-    image: devopsloft/vault
+    image: ${NAMESPACE:-devopsloft}/vault
     build:
       context: .
       dockerfile: vault/Dockerfile
@@ -56,7 +56,7 @@ services:
     restart: always
 
   web:
-    image: devopsloft/web
+    image: ${NAMESPACE:-devopsloft}/web
     build:
       context: .
       dockerfile: web_s2i/Dockerfile
