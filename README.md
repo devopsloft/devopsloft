@@ -69,7 +69,9 @@ Also make sure you have Docker installed on the system where you plan to run the
 
 Execute the following:
 
-1. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+1. `docker build -t devopsloft/spinner .`
+2. `docker-compose build`
+3. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
 
 #### Teardown DEV environment
 
