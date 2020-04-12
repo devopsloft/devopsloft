@@ -21,7 +21,9 @@ jobs:
         run: docker build -t devopsloft/spinner .
 
       - name: Build application images
-        run: docker-compose build
+        run: |
+          openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"
+          docker-compose build
         
       - name: Log into registry
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u lioramilbaum --password-stdin
