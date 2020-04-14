@@ -69,9 +69,10 @@ Also make sure you have Docker installed on the system where you plan to run the
 
 Execute the following:
 
-1. `docker build -t devopsloft/spinner .`
-2. `docker-compose build`
-3. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+1. `openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"`
+2. `docker build -t devopsloft/spinner .`
+3. `docker-compose build`
+4. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
 
 #### Teardown DEV environment
 
