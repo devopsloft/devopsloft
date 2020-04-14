@@ -7,8 +7,7 @@ HOME_DIR=$2
 apt-get update
 apt-get install -y mysql-client python3-pip docker-compose python3-setuptools
 
-ls $HOME_DIR/requirements.txt
-pip3 install -r $HOME_DIR/requirements.txt
+pip3 install -r $HOME_DIR/project/requirements.txt
 
 # shellcheck source=/vagrant/.env
 source $HOME_DIR/.env

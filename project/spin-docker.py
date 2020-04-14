@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import logging
 import os
 import subprocess
 from time import sleep
@@ -6,8 +7,6 @@ from time import sleep
 import boto3
 import click
 import dotenv
-
-from createPemFiles import IsCertExist, SelfSignedCertificate
 
 print_debug = 'No'
 
@@ -90,9 +89,20 @@ def PrepareEnvironmentVars(environmentName, action):
 
 
 def teardown(environment='dev', envVars=[]):
+    logging.info("Tearing down environment {0}".format(environment))
+
     if environment == 'dev':
         command = "docker-compose down -v --rmi all --remove-orphans"
-        subprocess.Popen(command, env=envVars, shell=True)
+        completed_response = subprocess.run(
+            command,
+            env=envVars,
+            shell=True,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+        print(completed_response.stdout)
     elif environment in ['stage', 'prod']:
         session = boto3.Session(profile_name='dev')
 
@@ -135,12 +145,10 @@ def main(environment, action, debug):
     machineName = environment
     envVars = machineName
     envVars = PrepareEnvironmentVars(envVars, action)
-    if not (IsCertExist()):
-        SelfSignedCertificate()
     if environment == 'dev' and action == "up":
         command = "docker-compose up -d"
         try:
-            subprocess.run(
+            completed_response = subprocess.run(
                 command,
                 env=envVars,
                 shell=True,
@@ -149,6 +157,7 @@ def main(environment, action, debug):
                 stderr=subprocess.PIPE,
                 universal_newlines=True
             )
+            print(completed_response.stdout)
         except subprocess.CalledProcessError as e:
             print('Error: {}.'.format(e.output))
     elif environment in ['stage', 'prod'] and action == "up":
