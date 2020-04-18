@@ -80,7 +80,7 @@ Execute the following:
 
 Execute the following:
 
-1. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock -a stdin -a stdout -a stderr devopsloft/spinner:latest ./spin-docker.py --action destroy`
+1. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest ./spin-docker.py --action destroy`
 2. `docker image prune -af`
 
 
