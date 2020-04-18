@@ -100,5 +100,5 @@ Execute the following:
 
 Execute the following:
 
-1. `docker run --rm -d -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock -a stdin -a stdout -a stderr ${NAMESPACE}/spinner:latest ./spin-docker.py --environment stage --action destroy`
+1. `docker run --rm -d -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment stage --action destroy`
 2. `docker image prune -af`
