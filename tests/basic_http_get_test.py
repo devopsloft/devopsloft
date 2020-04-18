@@ -62,7 +62,7 @@ if __name__ == '__main__':
         '/share'
     )
     test_config = {
-        'domain': 'http://127.0.0.1:80',
+        'domain': 'http://127.0.0.1:5000',
         'urls': urls,
         'allowed_failures': 6,
         'sleep_between_failures': 5,

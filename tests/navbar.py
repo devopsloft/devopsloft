@@ -31,11 +31,11 @@ if os.getenv('TRAVIS') in [None, False]:
       command_executor=SELENIUM_HUB,
       desired_capabilities=DesiredCapabilities.FIREFOX,
     )
-    app_url = 'http://10.0.0.1:80'
+    app_url = 'http://10.0.0.1:5000'
 else:
     chrome_driver = webdriver.Chrome()
     firefox_driver = webdriver.Firefox()
-    app_url = 'http://localhost:80'
+    app_url = 'http://localhost:5000'
 
 try:
     for driver in [chrome_driver, firefox_driver]:

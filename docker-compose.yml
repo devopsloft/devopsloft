@@ -61,14 +61,14 @@ services:
       context: .
       dockerfile: web_s2i/Dockerfile
       args:
-        WEB_HOST_PORT: 80
+        WEB_HOST_PORT: ${WEB_HOST_PORT}
         WEB_HOST_SECURE_PORT: 8443
         APP_HOST_PORT: 3000
     container_name: web
     environment:
       - SERVICE_NAME=web
     ports:
-      - 80:80
+      - ${WEB_HOST_PORT}:${WEB_HOST_PORT}
       - 8443:8443
     links:
       - app

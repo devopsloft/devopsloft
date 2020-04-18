@@ -9,7 +9,7 @@
 <details>
   <summary>Global Prerequisites</summary>
   <ul>
-    <li>python 3</li>
+    <li>docker</li>
     <li>Use `.env.local` file for configuration keys which overrides `.env`</li>
   </ul>
 </details>
@@ -34,6 +34,7 @@
 <details>
   <summary>Prerequisites</summary>
   <ul>
+    <li>Dockerhub account</li>
     <li>AWS account</li>
     <li><a href='https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html'>AWS ~/.aws or %UserProfile%\.aws folder</a></li>
     <li>keypair</li>
@@ -72,29 +73,26 @@ Execute the following:
 1. `openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"`
 2. `docker build -t devopsloft/spinner .`
 3. `docker-compose build`
-4. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+4. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+5. Browse: `http://localhost:5000/`
 
 #### Teardown DEV environment
 
 Execute the following:
 
-1. `docker run -td --name spinner -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
-2. `docker exec -it spinner bash`
-3. `./spin-docker.py --action destroy`
-4. `exit`
-5. `docker rm -f spinner`
-6. `docker rmi devopsloft/spinner`
+1. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock -a stdin -a stdout -a stderr devopsloft/spinner:latest ./spin-docker.py --action destroy`
+2. `docker image prune -af`
 
 
 #### Spin STAGE environment
 
 Execute the following:
 
-1. `export NAMESPACE=<dockerhub user>`
+1. `export NAMESPACE=<your dockerhub user>`
 2. `docker build -t ${NAMESPACE}/spinner .`
 3. `docker-compose build`
 4. `docker-compose push`
-5. `docker run --entrypoint ./spin-docker.py -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest -e stage`
+5. `docker run --rm -d -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest -e stage`
 6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
 7. Browse <Public DNS>
 
@@ -102,10 +100,5 @@ Execute the following:
 
 Execute the following:
 
-1. `docker run -td --name spinner -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest`
-2. `docker exec -it spinner bash`
-3. `./spin-docker.py --environment stage --action destroy`
-4. `exit`
-5. `docker rm -f spinner`
-6. `docker rmi -f ${NAMESPACE}/spinner`
-
+1. `docker run --rm -d -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock -a stdin -a stdout -a stderr ${NAMESPACE}/spinner:latest ./spin-docker.py --environment stage --action destroy`
+2. `docker image prune -af`
