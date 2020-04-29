@@ -1,5 +1,5 @@
 cffi==1.14.0
-Click==7.1.1
+Click==7.1.2
 pyOpenSSL==19.1.0
 python-dotenv==0.13.0
 j2cli==0.3.10
