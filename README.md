@@ -4,35 +4,89 @@
 
 <img src="http://www.devopsloft.io/static/logo.png" alt="drawing" width="250" hight="250"/>
 
-### Spinning [dev|stage] environment
+#### Detailed prerequisites and instructions for spinning dev and stage environment
 
-<details>
-  <summary>Global Prerequisites</summary>
-  <ul>
-    <li>docker</li>
-    <li>Use `.env.local` file for configuration keys which overrides `.env`</li>
-  </ul>
-</details>
 
-#### DEV environment
+### DEV environment
 
 <details>
   <summary>Prerequisites</summary>
+
+  Install Docker (version 19.03.xx or higher)
   <ul>
-    <li>Verify /vault directory exists and is writable</li>
-    <li>For Windoes 10 Home users</li>
-      <ul>
-        <li>Docker toolbox</li>
-        <li>docker-cli (`choco install docker-cli` - using prompt)</li>
-        <li>docker-compose (`choco install docker-compose` - using prompt)</li>
-      </ul>
+    <li>
+      <details>
+        <summary>Windows 64bit or higher</summary>
+        <p>Docker Desktop for Windows - <a href='https://docs.docker.com/docker-for-windows/install/'>link</a></p>
+      </details>
+    </li>
+  <li><details>
+    <summary>Windows 32bit or lower</summary>
+    <p>Docker Toolbox for Windows - <a href='https://docs.docker.com/toolbox/toolbox_install_windows/'>link</a></P>
+  </details></li>
+  <li><details>
+    <summary>Linux distros</summary>
+				<ul>
+					<li>Docker Engine - follow instructions by your distro <a href='https://docs.docker.com/engine/install/'>here</a></li>
+					<li>Docker Compose - follow instructions by your distro <a href='https://docs.docker.com/compose/install/'>here</a></li>
+				</ul>    
+  </details></li>
   </ul>
 </details>
 
-#### STAGE environment
+<details>
+  <summary>Spin DEV environment</summary>
+  <ul>
+  <li><details style="margin-left: 1em">
+  <summary>Windows</summary>
+  Execute the following commands <b>(run it from Git-Bash or similar and not from Command Prompt)</b>:
+	
+1. ```openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"``` **(this is one very long command line)**
+2. Start docker on your machine (if it doesn't running already; way to start is based on your installation)
+2. `docker build -t devopsloft/spinner .` **(don't forget the dot at the end)**
+3. `docker-compose build`
+4. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+5. Browse: `http://localhost:5000/`
+  </details></li>
+
+  <li><details style="margin-left: 1em">
+  <summary>Linux</summary>
+  Execute the following commands:
+
+1. ```openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"``` **(this is one very long command line)**
+2. `docker build -t devopsloft/spinner .` **(don't forget the dot at the end)**
+3. `docker-compose build`
+4. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
+5. Browse: `http://localhost:5000/`
+  </details></li>
+  </ul>
+</details>
 
 <details>
-  <summary>Prerequisites</summary>
+  <summary>Teardown DEV environment</summary>
+Execute the following commands:
+<ul>
+<li><details>
+  <summary>Windows</summary>
+
+1. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest ./spin-docker.py --action destroy`
+2. `docker image prune -af`
+</details></li>
+
+<li><details>
+  <summary>Linux</summary>
+
+1. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest ./spin-docker.py --action destroy`
+2. `docker image prune -af`
+</details></li>
+</ul>
+</details>
+
+---
+### STAGE environment
+
+<details>
+  <summary>Prerequisites for Stage</summary>
   <ul>
     <li>Dockerhub account</li>
     <li>AWS account</li>
@@ -44,47 +98,8 @@
   </ul>
 </details>
 
-##### Installation Requirements
-
-On Linux, run the following commands
-
-```
-python -m venv ~/devopsloft_venv
-source ~/devopsloft_venv/bin/active
-pip install -r requirements.txt
-```
-
-Also make sure you have Docker installed on the system where you plan to run the application.
-
-##### Run the app on Windows 10 Home
-
-1. Run `docker-machine env default`
-2. Run `eval $(docker-machine env default --shell linux)`
-3. In the root directory of the project run `docker build -t spinner .`
-4. Run `docker run -t -d --name spincontainer -v %UserProfile%\.aws:/root/.aws -v //var/run/docker.sock:/var/run/docker.sock spinner`
-5. Run `winpty docker exec -it spincontainer bash`
-6. Run `python spin-docker.py`
-7. Check the ip for your lochalhost - on the host machine run `docker-machine ip default`
-
-#### Spin DEV environment
-
-Execute the following:
-
-1. `openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"`
-2. `docker build -t devopsloft/spinner .`
-3. `docker-compose build`
-4. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest`
-5. Browse: `http://localhost:5000/`
-
-#### Teardown DEV environment
-
-Execute the following:
-
-1. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest ./spin-docker.py --action destroy`
-2. `docker image prune -af`
-
-
-#### Spin STAGE environment
+<details>
+  <summary>Spin STAGE environment</summary>
 
 Execute the following:
 
@@ -95,10 +110,14 @@ Execute the following:
 5. `docker run --rm -d -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest -e stage`
 6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
 7. Browse <Public DNS>
+</details>
 
-#### Teardown STAGE environment
+<details>
+<summary>Teardown STAGE environment</summary>
 
 Execute the following:
 
 1. `docker run --rm -d -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment stage --action destroy`
 2. `docker image prune -af`
+
+</details>
