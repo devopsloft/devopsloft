@@ -28,7 +28,7 @@ def spin(environment, action, envVars):
         universal_newlines=True
     )
     try:
-        command = 'ecs-cli up --keypair id_rsa --capability-iam --size 1 --instance-type t3.medium --security-group sg-02536f15a178e209f --subnets subnet-45d7e30d,subnet-ab6d49cd,subnet-d1bcda8b --vpc vpc-72fb100b --aws-profile dev --force' # noqa
+        command = 'ecs-cli up --keypair id_rsa --capability-iam --size 1 --instance-type t3.medium --security-group sg-02536f15a178e209f --subnets subnet-45d7e30d,subnet-ab6d49cd,subnet-d1bcda8b --vpc vpc-72fb100b --aws-profile stage --force' # noqa
         subprocess.run(
             command,
             shell=True,
