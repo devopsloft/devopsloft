@@ -1,7 +1,10 @@
 FROM ubuntu:20.04
 
+ARG ENVIRONMENT
+
 COPY project/* /home/
-COPY .env docker-compose.yml /home/
+COPY .env.$ENVIRONMENT /home/.env
+COPY docker-compose.yml /home/
 COPY web_s2i /home/web_s2i/
 COPY db_s2i  /home/db_s2i
 COPY app_s2i  /home/app_s2i

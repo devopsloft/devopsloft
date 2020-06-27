@@ -2,10 +2,12 @@
 
 import os
 import sys
+
 from dotenv import load_dotenv
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../modules')
 import loft_hvac  # noqa: E402
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../modules')
 
 # This script must be run as root!
 if not os.geteuid() == 0:
@@ -42,14 +44,14 @@ elif ENVIRONMENT == 'stage':
     MEETUP_REDIRECT_URI = os.getenv('STAGE_MEETUP_REDIRECT_URI')
     SLACK_APIKEY = os.getenv('STAGE_SLACK_APIKEY')
     provider = 'aws'
-    AWS_S3_BUCKET = os.getenv('STAGE_AWS_S3_BUCKET')
+    AWS_S3_BUCKET = os.getenv('AWS_S3_BUCKET')
 elif ENVIRONMENT == 'prod':
     MEETUP_KEY = os.getenv('PROD_MEETUP_KEY')
     MEETUP_SECRET = os.getenv('PROD_MEETUP_SECRET')
     MEETUP_REDIRECT_URI = os.getenv('PROD_MEETUP_REDIRECT_URI')
     SLACK_APIKEY = os.getenv('PROD_SLACK_APIKEY')
     provider = 'aws'
-    AWS_S3_BUCKET = os.getenv('PROD_AWS_S3_BUCKET')
+    AWS_S3_BUCKET = os.getenv('AWS_S3_BUCKET')
 
 loft_hvac.initialize(provider=provider, bucket=AWS_S3_BUCKET)
 loft_hvac.enable_secrets_engine()
