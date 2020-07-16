@@ -18,12 +18,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build spinner image
-        run: docker build -t devopsloft/spinner .
-
+        run: docker build --build-arg ENVIRONMENT=ci -t devopsloft/spinner .
+  
       - name: Build application images
         run: |
           openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"
-          docker-compose build
+          docker-compose --env-file .env.ci build
         
       - name: Log into registry
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u lioramilbaum --password-stdin
@@ -31,4 +31,4 @@ jobs:
       - name: Push images
         run: |
           docker push devopsloft/spinner
-          docker-compose push
+          docker-compose --env-file .env.ci push

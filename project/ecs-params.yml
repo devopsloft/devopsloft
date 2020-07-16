@@ -1,0 +1,14 @@
+version: 1
+task_definition:
+  task_size:
+    cpu_limit: 896
+    mem_limit: 776
+  services:
+    db:
+      mem_reservation: 256M
+    app:
+      mem_reservation: 128M
+    valut:
+      mem_reservation: 128M
+    web:
+      mem_reservation: 128M

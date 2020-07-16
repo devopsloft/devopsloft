@@ -21,7 +21,8 @@ services:
       context: .
       dockerfile: app_s2i/Dockerfile
       args:
-        APP_GUEST_PORT: $APP_GUEST_PORT
+        - ENVIRONMENT
+        - APP_GUEST_PORT
     container_name: app
     environment:
       - SERVICE_NAME=app

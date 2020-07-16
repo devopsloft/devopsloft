@@ -1,5 +1,7 @@
-import requests
 import os
+
+import requests
+
 import loft_hvac
 
 client_id = None
@@ -17,10 +19,10 @@ def auth():
         bucket = None
     elif os.getenv('ENVIRONMENT') == 'stage':
         provider = 'aws'
-        bucket = os.getenv('STAGE_AWS_S3_BUCKET')
+        bucket = os.getenv('AWS_S3_BUCKET')
     elif os.getenv('ENVIRONMENT') == 'prod':
         provider = 'aws'
-        bucket = os.getenv('PROD_AWS_S3_BUCKET')
+        bucket = os.getenv('AWS_S3_BUCKET')
 
     if client_id is None:
         client_id = loft_hvac.read_secret(
@@ -61,10 +63,10 @@ def get_token(code=None):
         bucket = None
     elif os.getenv('ENVIRONMENT') == 'stage':
         provider = 'aws'
-        bucket = os.getenv('STAGE_AWS_S3_BUCKET')
+        bucket = os.getenv('AWS_S3_BUCKET')
     elif os.getenv('ENVIRONMENT') == 'prod':
         provider = 'aws'
-        bucket = os.getenv('PROD_AWS_S3_BUCKET')
+        bucket = os.getenv('AWS_S3_BUCKET')
 
     if client_id is None:
         client_id = loft_hvac.read_secret(
