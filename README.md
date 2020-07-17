@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/devopsloft/devopsloft.svg?branch=master)](https://travis-ci.org/devopsloft/devopsloft)
 
-<img src="http://www.devopsloft.io/static/logo.png" alt="drawing" width="250" hight="250"/>
+<img src="http://www.devopsloft.io/logo.png" alt="drawing" width="250" hight="250"/>
 
 #### Detailed prerequisites and instructions for spinning dev and stage environment
 
