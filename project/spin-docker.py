@@ -60,7 +60,21 @@ def bootstrap(environment, action, envVars):
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
-        print(completed_response.stdout)
+        if os.getenv('ALLOCATION_ID'):
+            session = boto3.Session(profile_name=os.getenv('AWS_PROFILE'))
+            client = session.client('ec2')
+            response = client.describe_instances(
+                Filters=[
+                    {
+                        'Name': 'instance-state-name',
+                        'Values': ['running']
+                    }
+                ]
+            )
+            response = client.associate_address(
+                AllocationId=os.getenv('ALLOCATION_ID'),
+                InstanceId=response['Reservations'][0]['Instances'][0]['InstanceId'] # noqa
+            )
         command = 'ecs-cli compose up --aws-profile {0}'.format(
             os.getenv('AWS_PROFILE')
         )
