@@ -106,7 +106,7 @@ Execute the following commands:
     <li>keypair</li>
     <li>subnet ID</li>
     <li>Security Group with inbound ports for SSH (22), HTTP (80), HTTPS (443), and 8200</li>
-    <li> AWS S3 Bucket</li>
+    <li>AWS S3 Bucket</li>
     <li>Create an envfile '.env.stage' from the template '.env.stage.template'</li>
   </ul>
 </details>
@@ -120,7 +120,7 @@ Execute the following:
 2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
 3. `docker-compose --env-file .env.$ENVIRONMENT build` 
 4. `docker-compose --env-file .env.$ENVIRONMENT push` 
-5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment stage` 
+5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
 6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
 7.  Browse <Public DNS>
 
@@ -131,7 +131,50 @@ Execute the following:
 
 Execute the following:
 
-1. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment stage --action destroy` 
+1. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
+2. `docker image prune -af` 
+
+</details>
+
+---
+
+### PROD environment
+
+<details>
+  <summary>Prerequisites</summary>
+  <ul>
+    <li>Dockerhub account</li>
+    <li>AWS account</li>
+    <li><a href='https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html'>AWS ~/.aws or %UserProfile%\.aws folder</a></li>
+    <li>keypair</li>
+    <li>subnet ID</li>
+    <li>Security Group with inbound ports for SSH (22), HTTP (80), HTTPS (443), and 8200</li>
+    <li>AWS S3 Bucket</li>
+    <li>Elastic IP Address (EIP)</li>
+    <li>Create an envfile '.env.prod' from the template '.env.prod.template'</li>
+  </ul>
+</details>
+
+<details>
+  <summary>Spin PROD environment</summary>
+
+Execute the following:
+
+1. `source .env.prod` 
+2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
+3. `docker-compose --env-file .env.$ENVIRONMENT build` 
+4. `docker-compose --env-file .env.$ENVIRONMENT push` 
+5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
+6.  Browse www.devopsloft.io
+
+</details>
+
+<details>
+<summary>Teardown PROD environment</summary>
+
+Execute the following:
+
+1. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
 2. `docker image prune -af` 
 
 </details>
