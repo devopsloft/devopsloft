@@ -1,7 +1,8 @@
-import os
 import json
-import hvac
+import os
+
 import boto3
+import hvac
 
 client = None
 root_token = None
@@ -10,7 +11,7 @@ keys = None
 
 def get_key(index):
     global keys
-    vault_var = os.environ["BASE_FOLDER"]+"/vault"
+    vault_var = "/vault"
     if keys is None:
         with open(vault_var+'/keys.json') as keysfile:
             keys = json.load(keysfile)
@@ -19,7 +20,7 @@ def get_key(index):
 
 def get_root_token():
     global root_token
-    vault_var = os.environ["BASE_FOLDER"]+"/vault"
+    vault_var = "/vault"
     if root_token is None:
         with open(vault_var+'/root_token.txt') as tokenfile:
             root_token = tokenfile.read()
@@ -31,7 +32,7 @@ def initialize(provider='virtualbox', bucket=None):
     global client
     global root_token
     global keys
-    vault_var = os.environ["BASE_FOLDER"]+"/vault"
+    vault_var = "/vault"
 
     if client is None:
         VAULT_ADDR = os.environ["VAULT_ADDR"]

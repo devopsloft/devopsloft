@@ -2,24 +2,34 @@
 
 import logging
 import os
-import re
 from pathlib import Path
 
 import yaml
 from dotenv import load_dotenv
-
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-env_path = Path('..') / '.env'
+env_path = Path('..') / '.env.ci'
 load_dotenv()
 
 # load statcounter variables for current environment
 STATCODES = yaml.load(os.getenv('STATCODES'), Loader=yaml.FullLoader)
 project = STATCODES[os.getenv('ENVIRONMENT')]['project']
 
-if os.getenv('TRAVIS') in [None, False]:
+if os.getenv('CI'):
+
+    chrome_options = webdriver.chrome.options.Options()
+    chrome_options.headless = True
+    chrome_driver = webdriver.Chrome(options=chrome_options)
+
+    firefox_options = webdriver.firefox.options.Options()
+    firefox_options.headless = True
+    firefox_driver = webdriver.Firefox(options=firefox_options)
+    app_url = 'http://localhost:5000'
+
+else:
+
     SELENIUM_HUB = 'http://localhost:4444/wd/hub'
 
     chrome_driver = webdriver.Remote(
@@ -32,10 +42,6 @@ if os.getenv('TRAVIS') in [None, False]:
       desired_capabilities=DesiredCapabilities.FIREFOX,
     )
     app_url = 'http://10.0.0.1:5000'
-else:
-    chrome_driver = webdriver.Chrome()
-    firefox_driver = webdriver.Firefox()
-    app_url = 'http://localhost:5000'
 
 try:
     for driver in [chrome_driver, firefox_driver]:
@@ -72,11 +78,9 @@ try:
         assert driver.current_url == app_url + "/signup"
 
         print("Checking statcounter...")
-        stats_url = "https://statcounter.com/p" + str(project) + "/summary/"
+        url = "https://statcounter.com/p" + str(project) + "/summary/"
         driver.find_element_by_partial_link_text('Stats').click()
-        pattern = r'(?P<url>https?://[^\s]+/)'
-        parsed_url = re.search(pattern, driver.current_url).group("url")
-        assert parsed_url == stats_url
+        assert url in driver.current_url
 
     print("Tests Passed Successfully")
 except AssertionError as error:
