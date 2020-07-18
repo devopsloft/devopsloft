@@ -1,10 +1,12 @@
 # <a href="http://www.devopsloft.io">DevOps Loft</a>
 
-![](https://github.com/devopsloft/devopsloft/workflows/CI/badge.svg)
+<a href="https://github.com/devopsloft/devopsloft/actions?query=workflow%3Aci">
+  <img alt="ci status" src="https://github.com/devopsloft/devopsloft/workflows/ci/badge.svg">
+</a>
 
 <img src="http://www.devopsloft.io/logo.png" alt="drawing" width="250" hight="250"/>
 
-#### Detailed prerequisites and instructions for spinning dev and stage environment
+#### Detailed prerequisites and instructions for spinning DEV/STAGE/PROD environments
 
 ### DEV environment
 
