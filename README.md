@@ -1,8 +1,6 @@
 # <a href="http://www.devopsloft.io">DevOps Loft</a>
 
-<a href="https://github.com/devopsloft/devopsloft/actions?query=workflow%3Aci">
-  <img alt="ci status" src="https://github.com/devopsloft/devopsloft/workflows/ci/badge.svg">
-</a>
+[![ci](https://github.com/devopsloft/devopsloft/workflows/ci/badge.svg)](https://github.com/devopsloft/devopsloft/actions?query=workflow%3Aci)
 
 <img src="http://www.devopsloft.io/logo.png" alt="drawing" width="250" hight="250"/>
 
