@@ -26,15 +26,7 @@ services:
     container_name: app
     environment:
       - SERVICE_NAME=app
-      - STATCODES
-      - ENVIRONMENT
-      - MYSQL_HOST
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_DATABASE
-      - APP_GUEST_PORT
       - PYTHONPATH=$$PYTHONPATH:/modules
-      - VAULT_ADDR=http://vault:$VAULT_GUEST_PORT
     ports:
       - 3000:3000
     links:

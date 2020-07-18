@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 
 
-from flask import Flask, flash, render_template, redirect, url_for
-from flask import request, make_response, send_from_directory
-from flask_mysqldb import MySQL
-from wtforms import Form, StringField, PasswordField, validators
-from passlib.hash import sha256_crypt
-from dotenv import load_dotenv
 import os
+
 import yaml
-import loft_meetup
+from dotenv import load_dotenv
+
 import events
+import loft_meetup
 from apiUtil import apigetter
+from flask import (Flask, flash, make_response, redirect, render_template,
+                   request, send_from_directory, url_for)
+from flask_mysqldb import MySQL
+from passlib.hash import sha256_crypt
+from wtforms import Form, PasswordField, StringField, validators
 
 load_dotenv(
     dotenv_path='.env',
