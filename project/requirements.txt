@@ -4,4 +4,4 @@ pyOpenSSL==19.1.0
 python-dotenv==0.14.0
 j2cli==0.3.10
 docker-compose==1.26.2
-boto3==1.14.22
+boto3==1.14.24
