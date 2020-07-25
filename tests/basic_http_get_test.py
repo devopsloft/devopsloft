@@ -59,7 +59,8 @@ if __name__ == '__main__':
         '/docslist',
         '/contact',
         '/signup',
-        '/share'
+        '/share',
+        '/bakery'
     )
     test_config = {
         'domain': 'http://127.0.0.1:5000',

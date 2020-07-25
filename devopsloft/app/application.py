@@ -159,6 +159,11 @@ def share():
         return render_template('share.html')
 
 
+@application.route('/bakery')
+def bakery():
+    return render_template('bakery.html')
+
+
 if __name__ == '__main__':
     APP_GUEST_PORT = os.getenv('APP_GUEST_PORT')
     application.secret_key = 'secret123'

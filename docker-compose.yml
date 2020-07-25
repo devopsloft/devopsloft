@@ -19,7 +19,7 @@ services:
     image: ${NAMESPACE:-devopsloft}/app
     build:
       context: .
-      dockerfile: app_s2i/Dockerfile
+      dockerfile: devopsloft/app/Dockerfile
       args:
         - ENVIRONMENT
         - APP_GUEST_PORT
