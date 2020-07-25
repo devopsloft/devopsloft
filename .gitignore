@@ -2,7 +2,6 @@
 !/*.template
 !/.gitattributes
 !/.gitignore
-!/.travis.yml
 venv
 AUTHORS
 build/*
