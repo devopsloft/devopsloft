@@ -86,8 +86,9 @@ Execute the following commands:
 <li><details>
   <summary>Linux</summary>
 
-1. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
-2. `docker image prune -af` 
+1. `source .env.dev` 
+2. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
+3. `docker image prune -af` 
 
 </details></li>
 </ul>
@@ -131,8 +132,9 @@ Execute the following:
 
 Execute the following:
 
-1. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
-2. `docker image prune -af` 
+1. `source .env.stage` 
+2. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
+3. `docker image prune -af` 
 
 </details>
 
@@ -162,10 +164,11 @@ Execute the following:
 
 1. `source .env.prod` 
 2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
-3. `docker-compose --env-file .env.$ENVIRONMENT build` 
-4. `docker-compose --env-file .env.$ENVIRONMENT push` 
-5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
-6.  Browse www.devopsloft.io
+3. `docker push ${NAMESPACE}/spinner` 
+4. `docker-compose --env-file .env.$ENVIRONMENT build` 
+5. `docker-compose --env-file .env.$ENVIRONMENT push` 
+6. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
+7.  Browse www.devopsloft.io
 
 </details>
 
@@ -174,7 +177,8 @@ Execute the following:
 
 Execute the following:
 
-1. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
-2. `docker image prune -af` 
+1. `source .env.prod`
+2. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
+3. `docker image prune -af` 
 
 </details>
