@@ -22,7 +22,6 @@ services:
       dockerfile: devopsloft/app/Dockerfile
       args:
         - ENVIRONMENT
-        - APP_GUEST_PORT
     container_name: app
     environment:
       - SERVICE_NAME=app
@@ -52,17 +51,17 @@ services:
     image: ${NAMESPACE:-devopsloft}/web
     build:
       context: .
-      dockerfile: web_s2i/Dockerfile
+      dockerfile: devopsloft/web/Dockerfile
       args:
-        WEB_HOST_PORT: ${WEB_HOST_PORT}
-        WEB_HOST_SECURE_PORT: 8443
-        APP_HOST_PORT: 3000
+        WEB_PORT: ${WEB_PORT}
+        WEB_SECURE_PORT: ${WEB_SECURE_PORT}
+        APP_PORT: ${APP_PORT}
     container_name: web
     environment:
       - SERVICE_NAME=web
     ports:
-      - ${WEB_HOST_PORT}:${WEB_HOST_PORT}
-      - 8443:8443
+      - ${WEB_PORT}:${WEB_PORT}
+      - ${WEB_SECURE_PORT}:${WEB_SECURE_PORT}
     links:
       - app
     restart: always

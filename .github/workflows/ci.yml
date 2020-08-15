@@ -10,21 +10,17 @@ jobs:
     env:
       ENVIRONMENT: ci
       NAMESPACE: ci
-      WEB_GUEST_PORT: 5000
-      WEB_HOST_PORT: 5000
-      WEB_GUEST_SECURE_PORT: 8443
-      WEB_HOST_SECURE_PORT: 8443
+      WEB_PORT: 5000
+      WEB_SECURE_PORT: 8443
       MYSQL_ROOT_PASSWORD: 12345
       MYSQL_HOST: db
       MYSQL_USER: root
       MYSQL_PASSWORD: 12345
       MYSQL_DATABASE: devopsloft
       MYSQL_ROOT_HOST: "%"
-      VAULT_GUEST_PORT: 8200
-      VAULT_HOST_PORT: 8200
+      VAULT_PORT: 8200
       STATCODES: "{'dev':{'project':11982518,'security':'4a57586a'},'prod':{'project':11982438,'security':'03b2cd4a'},'stage':{'project':11982511,'security':'e75b27f8'},'ci':{'project':11982909,'security':'f028aa60'}}"
-      APP_GUEST_PORT: 3000
-      APP_HOST_PORT: 3000
+      APP_PORT: 3000
       APP: devopsloft
       DOCKERHUB_DB: mysql
       MYSQL_PORT: 3306
@@ -35,7 +31,7 @@ jobs:
 
     - name: Spin Environment
       run: |
-        openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devopsloft/web/localhost.key -out devopsloft/web/localhost.crt -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU='dev'/CN='devopsloft'"
         env > .env.ci
         docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .
         docker-compose --env-file .env.$ENVIRONMENT build

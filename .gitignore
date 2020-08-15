@@ -2,7 +2,6 @@
 !/*.template
 !/.gitattributes
 !/.gitignore
-venv
 AUTHORS
 build/*
 ChangeLog
@@ -11,7 +10,8 @@ dist/
 playbooks/*.retry
 *local
 devopsloft_workspace.code-workspace
-*.pem
+*.key
+*.crt
 *~
 *.log
 mod_auth

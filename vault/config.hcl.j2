@@ -1,7 +1,7 @@
 ui = true
 
 listener "tcp" {
-  address     = "0.0.0.0:{{ VAULT_GUEST_PORT }}"
+  address     = "0.0.0.0:{{ VAULT_PORT }}"
   tls_disable = 1
 }
 
@@ -16,4 +16,4 @@ storage "s3" {
 }
 {% endif %}
 
-api_addr = "http://127.0.0.1:{{ VAULT_GUEST_PORT }}"
+api_addr = "http://127.0.0.1:{{ VAULT_PORT }}"
