@@ -5,7 +5,6 @@ ARG ENVIRONMENT
 COPY project/* /home/
 COPY .env.$ENVIRONMENT /home/.env
 COPY docker-compose.yml /home/
-COPY web_s2i /home/web_s2i/
 COPY db_s2i  /home/db_s2i
 COPY modules  /home/modules
 COPY vault /home/vault

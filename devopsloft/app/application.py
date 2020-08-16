@@ -165,6 +165,6 @@ def bakery():
 
 
 if __name__ == '__main__':
-    APP_GUEST_PORT = os.getenv('APP_GUEST_PORT')
+    APP_PORT = os.getenv('APP_PORT')
     application.secret_key = 'secret123'
-    application.run(debug=True, host='0.0.0.0', port=APP_GUEST_PORT)
+    application.run(debug=True, host='0.0.0.0', port=APP_PORT)

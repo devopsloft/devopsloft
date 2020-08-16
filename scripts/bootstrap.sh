@@ -17,7 +17,7 @@ if [[ -f $HOME_DIR/.env.local ]]; then
 fi
 
 
-export VAULT_GUEST_PORT=$VAULT_GUEST_PORT
+export VAULT_PORT=$VAULT_PORT
 export ENVIRONMENT=$ENVIRONMENT
 if [[ $ENVIRONMENT == "stage" ]]; then
   AWS_S3_BUCKET=$AWS_S3_BUCKET

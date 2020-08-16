@@ -1,0 +1,21 @@
+events {}
+
+http {
+  server {
+    listen {{ WEB_SECURE_PORT }} ssl;
+    server_name localhost;
+    ssl_certificate /etc/ssl/certs/localhost.crt;
+    ssl_certificate_key /etc/ssl/private/localhost.key;
+    location / {
+      proxy_pass http://app:{{ APP_PORT }}/;
+    }
+  }
+
+  server {
+    listen {{ WEB_PORT }};
+    server_name localhost;
+    location / {
+      proxy_pass http://app:{{ APP_PORT }}/;
+    }
+  }
+}

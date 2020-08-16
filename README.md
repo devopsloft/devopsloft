@@ -36,6 +36,7 @@
     </li>
     </ul>
     Create an envfile '.env.dev' from the template '.env.dev.template'
+    Chrome - Allows requests to localhost over HTTPS even when an invalid certificate is presented. `chrome://flags/#allow-insecure-localhost`
 </details>
 
 <details>
@@ -47,12 +48,12 @@
 
 	
 
-1. `openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"` **(this is one very long command line)**
+1. `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devopsloft/web/localhost.key -out devopsloft/web/localhost.crt -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU='dev'/CN='devopsloft'"`
 2. Start docker on your machine (if it doesn't running already; way to start is based on your installation)
-3. `docker build -t devopsloft/spinner .` **(don't forget the dot at the end)**
+3. `docker build -t devopsloft/spinner .`
 4. `docker-compose build` 
 5. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest` 
-6. Browse: `http://localhost:5000/` 
+6. Browse: `https://localhost:8443` or `http://localhost:5000/` 
 
   </details></li>
 
@@ -61,11 +62,12 @@
   Execute the following commands:
 
 1. `source .env.dev` 
-2. `openssl req -x509 -newkey rsa:4096 -nodes -out web_s2i/cert.pem -keyout web_s2i/key.pem -days 365 -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU=''/CN=''"` 
+2. `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devopsloft/web/localhost.key -out devopsloft/web/localhost.crt -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU='dev'/CN='devopsloft'"` 
 3. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
 4. `docker-compose --env-file .env.$ENVIRONMENT build` 
 5. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
-6. Browse: `http://localhost:5000/` 
+6. Browse: `https://localhost:8443` or `http://localhost:5000/` 
+
 
   </details></li>
   </ul>
