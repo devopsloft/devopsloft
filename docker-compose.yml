@@ -62,6 +62,20 @@ services:
     ports:
       - ${WEB_PORT}:${WEB_PORT}
       - ${WEB_SECURE_PORT}:${WEB_SECURE_PORT}
+    volumes:
+      - certs:/certs
     links:
       - app
     restart: always
+
+  certs:
+    image: ${NAMESPACE:-devopsloft}/certs
+    build:
+      context: .
+      dockerfile: devopsloft/certs/Dockerfile
+    container_name: certs
+    volumes:
+      - certs:/certs
+
+volumes:
+  certs:

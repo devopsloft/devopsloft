@@ -48,12 +48,11 @@
 
 	
 
-1. `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devopsloft/web/localhost.key -out devopsloft/web/localhost.crt -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU='dev'/CN='devopsloft'"`
-2. Start docker on your machine (if it doesn't running already; way to start is based on your installation)
-3. `docker build -t devopsloft/spinner .`
-4. `docker-compose build` 
-5. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest` 
-6. Browse: `https://localhost:8443` or `http://localhost:5000/` 
+1. Start docker on your machine (if it doesn't running already; way to start is based on your installation)
+2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner  -f devopsloft/spinner/Dockerfile .`
+3. `docker-compose build` 
+4. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest` 
+5. Browse: `https://localhost:8443` or `http://localhost:5000/` 
 
   </details></li>
 
@@ -62,11 +61,10 @@
   Execute the following commands:
 
 1. `source .env.dev` 
-2. `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devopsloft/web/localhost.key -out devopsloft/web/localhost.crt -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU='dev'/CN='devopsloft'"` 
-3. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
-4. `docker-compose --env-file .env.$ENVIRONMENT build` 
-5. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
-6. Browse: `https://localhost:8443` or `http://localhost:5000/` 
+2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner -f devopsloft/spinner/Dockerfile .` 
+3. `docker-compose --env-file .env.$ENVIRONMENT build` 
+4. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
+5. Browse: `https://localhost:8443` or `http://localhost:5000/` 
 
 
   </details></li>
@@ -90,7 +88,8 @@ Execute the following commands:
 
 1. `source .env.dev` 
 2. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
-3. `docker image prune -af` 
+3. `docker image prune -af`
+4. `docker volume prune -f`
 
 </details></li>
 </ul>
@@ -120,7 +119,7 @@ Execute the following commands:
 Execute the following:
 
 1. `source .env.stage` 
-2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
+2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner -f devopsloft/spinner/Dockerfile .` 
 3. `docker-compose --env-file .env.$ENVIRONMENT build` 
 4. `docker-compose --env-file .env.$ENVIRONMENT push` 
 5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
