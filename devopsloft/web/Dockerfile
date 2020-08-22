@@ -14,8 +14,6 @@ RUN pip3 install --upgrade pip && \
 FROM nginx:stable
 
 COPY --from=builder /nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder /localhost.crt /etc/ssl/certs/localhost.crt
-COPY --from=builder /localhost.key /etc/ssl/private/localhost.key
 
 ARG WEB_PORT
 ARG WEB_SECURE_PORT

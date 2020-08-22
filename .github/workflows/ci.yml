@@ -31,9 +31,8 @@ jobs:
 
     - name: Spin Environment
       run: |
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout devopsloft/web/localhost.key -out devopsloft/web/localhost.crt -subj "/C=IL/ST=Gush-Dan/L=Tel-Aviv/O=DevOps Loft/OU='dev'/CN='devopsloft'"
         env > .env.ci
-        docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .
+        docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner -f devopsloft/spinner/Dockerfile .
         docker-compose --env-file .env.$ENVIRONMENT build
         docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest
   

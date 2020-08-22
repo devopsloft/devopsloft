@@ -2,7 +2,10 @@ FROM ubuntu:20.04
 
 ARG ENVIRONMENT
 
-COPY project/* /home/
+COPY --from=library/docker:latest /usr/local/bin/docker /usr/bin/docker
+COPY --from=docker/compose:latest /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+COPY devopsloft/spinner/* /home/
 COPY .env.$ENVIRONMENT /home/.env
 COPY docker-compose.yml /home/
 COPY db_s2i  /home/db_s2i
@@ -19,8 +22,7 @@ RUN apt-get update \
   && locale-gen en_US.UTF-8 \ 
   && pip3 install -r /home/requirements.txt \
   && mkdir -p /home/vault/config \
-  && chmod 777 /home/vault \
-  && curl -sSL https://get.docker.com/ | sh
+  && chmod 777 /home/vault
 
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8

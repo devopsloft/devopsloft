@@ -1,22 +1,17 @@
-from OpenSSL import crypto
+#!/usr/bin/env python3
+
 from socket import gethostname
-import os
 
-CERT_FILE = "web_s2i/cert.pem"
-KEY_FILE = "web_s2i/key.pem"
+from OpenSSL import crypto
 
-
-def IsCertExist():
-    if os.path.exists(CERT_FILE) and os.path.exists(KEY_FILE):
-        return True
-    else:
-        return False
+CERT_FILE = "/certs/localhost.crt"
+KEY_FILE = "/certs/localhost.key"
 
 
 def SelfSignedCertificate():
     # create a key pair
     k = crypto.PKey()
-    k.generate_key(crypto.TYPE_RSA, 1024)
+    k.generate_key(crypto.TYPE_RSA, 2048)
 
     # create a self-signed cert
     cert = crypto.X509()
@@ -36,3 +31,7 @@ def SelfSignedCertificate():
         cert_f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
     with open(KEY_FILE, "wb") as key_f:
         key_f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
+
+
+if __name__ == '__main__':
+    SelfSignedCertificate()  # pylint: disable=no-value-for-parameter
