@@ -183,6 +183,20 @@ def main(environment, action, debug):
             print(completed_response.stdout)
         except subprocess.CalledProcessError as e:
             print('Error: {}.'.format(e.output))
+        # command = "docker-compose run --rm --entrypoint \"./init-letsencrypt.sh\" certbot" # noqa
+        # try:
+        #     completed_response = subprocess.run(
+        #         command,
+        #         env=envVars,
+        #         shell=True,
+        #         check=True,
+        #         stdout=subprocess.PIPE,
+        #         stderr=subprocess.PIPE,
+        #         universal_newlines=True
+        #     )
+        #     print(completed_response.stdout)
+        # except subprocess.CalledProcessError as e:
+        #     print('Error: {}.'.format(e.output))
     elif environment in ['stage', 'prod'] and action == "up":
         bootstrap(environment, action, envVars)
     elif action == 'destroy':

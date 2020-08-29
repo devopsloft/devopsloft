@@ -64,6 +64,7 @@ services:
       - ${WEB_SECURE_PORT}:${WEB_SECURE_PORT}
     volumes:
       - certs:/etc/letsencrypt
+      - www:/var/www/certbot
     links:
       - app
     restart: always
@@ -76,6 +77,8 @@ services:
     container_name: certbot
     volumes:
       - certs:/etc/letsencrypt
+      - www:/var/www/certbot
 
 volumes:
   certs:
+  www:

@@ -14,6 +14,9 @@ http {
   server {
     listen {{ WEB_PORT }};
     server_name localhost;
+    location /.well-known/acme-challenge/ {
+      root /var/www/certbot;
+    }
     location / {
       proxy_pass http://app:{{ APP_PORT }}/;
     }

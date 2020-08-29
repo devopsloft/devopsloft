@@ -1,6 +1,6 @@
 FROM certbot/certbot
 
 COPY ./devopsloft/certbot/generateCerts.py .
+COPY ./devopsloft/certbot/init-letsencrypt.sh .
 
-ENTRYPOINT ["python3"]
-CMD ["./generateCerts.py"]
+ENTRYPOINT ["./generateCerts.py"]
