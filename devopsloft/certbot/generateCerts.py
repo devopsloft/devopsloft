@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import os
 from socket import gethostname
 
 from OpenSSL import crypto
 
-CERT_FILE = "/certs/localhost.crt"
-KEY_FILE = "/certs/localhost.key"
+CERT_FILE = "/etc/letsencrypt/live/www.devopsloft.io/localhost.crt"
+KEY_FILE = "/etc/letsencrypt/live/www.devopsloft.io/localhost.key"
 
 
 def SelfSignedCertificate():
@@ -34,4 +35,5 @@ def SelfSignedCertificate():
 
 
 if __name__ == '__main__':
+    os.makedirs('/etc/letsencrypt/live/www.devopsloft.io', exist_ok=True)
     SelfSignedCertificate()  # pylint: disable=no-value-for-parameter
