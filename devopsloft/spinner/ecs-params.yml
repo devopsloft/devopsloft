@@ -12,10 +12,13 @@ task_definition:
       mem_reservation: 128M
     web:
       mem_reservation: 128M
-    certs:
+    certbot:
       essential: false
       mem_reservation: 128M
   docker_volumes:
     - name: certs
+      scope: task
+      driver: local
+    - name: www
       scope: task
       driver: local

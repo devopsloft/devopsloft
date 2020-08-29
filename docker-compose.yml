@@ -63,19 +63,22 @@ services:
       - ${WEB_PORT}:${WEB_PORT}
       - ${WEB_SECURE_PORT}:${WEB_SECURE_PORT}
     volumes:
-      - certs:/certs
+      - certs:/etc/letsencrypt
+      - www:/var/www/certbot
     links:
       - app
     restart: always
 
-  certs:
-    image: ${NAMESPACE:-devopsloft}/certs
+  certbot:
+    image: ${NAMESPACE:-devopsloft}/certbot
     build:
       context: .
-      dockerfile: devopsloft/certs/Dockerfile
-    container_name: certs
+      dockerfile: devopsloft/certbot/Dockerfile
+    container_name: certbot
     volumes:
-      - certs:/certs
+      - certs:/etc/letsencrypt
+      - www:/var/www/certbot
 
 volumes:
   certs:
+  www:
