@@ -1,5 +1,5 @@
 .*
-!/*.template
+!/*.example
 !/.gitattributes
 !/.gitignore
 AUTHORS
