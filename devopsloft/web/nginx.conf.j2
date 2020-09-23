@@ -1,24 +1,29 @@
-events {}
+server {
+  listen {{ WEB_PORT }};
+  server_name {{ SERVER_NAME }};
+  server_tokens off;
 
-http {
-  server {
-    listen {{ WEB_SECURE_PORT }} ssl;
-    server_name localhost;
-    ssl_certificate /etc/letsencrypt/live/www.devopsloft.io/localhost.crt;
-    ssl_certificate_key /etc/letsencrypt/live/www.devopsloft.io/localhost.key;
-    location / {
-      proxy_pass http://app:{{ APP_PORT }}/;
-    }
+  location /.well-known/acme-challenge/ {
+    allow all;
+    root /var/www/certbot;
   }
 
-  server {
-    listen {{ WEB_PORT }};
-    server_name localhost;
-    location /.well-known/acme-challenge/ {
-      root /var/www/certbot;
-    }
-    location / {
-      proxy_pass http://app:{{ APP_PORT }}/;
-    }
+  location / {
+    return 301 https://$host$request_uri;
   }
 }
+server {
+  listen {{ WEB_SECURE_PORT }} ssl;
+  server_name {{ SERVER_NAME }};
+  server_tokens off;
+
+  ssl_certificate /etc/letsencrypt/live/{{ SERVER_NAME }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ SERVER_NAME }}/privkey.pem;
+  include /options-ssl-nginx.conf;
+  ssl_dhparam /ssl-dhparams.pem;
+
+  location / {
+    proxy_pass http://app:{{ APP_PORT }};
+  }
+}
+

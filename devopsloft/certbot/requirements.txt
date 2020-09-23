@@ -1,0 +1,2 @@
+Click==7.1.2
+python-dotenv==0.14.0
