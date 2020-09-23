@@ -35,7 +35,7 @@
       </details>
     </li>
     </ul>
-    Create an envfile '.env.dev' from the template '.env.dev.template'
+    Create an envfile '.env.dev' from the example '.env.dev.example'
     Chrome - Allows requests to localhost over HTTPS even when an invalid certificate is presented. `chrome://flags/#allow-insecure-localhost`
 </details>
 
@@ -109,7 +109,7 @@ Execute the following commands:
     <li>subnet ID</li>
     <li>Security Group with inbound ports for SSH (22), HTTP (80), HTTPS (443), and 8200</li>
     <li>AWS S3 Bucket</li>
-    <li>Create an envfile '.env.stage' from the template '.env.stage.template'</li>
+    <li>Create an envfile '.env.stage' from the example '.env.stage.example'</li>
   </ul>
 </details>
 
@@ -154,7 +154,7 @@ Execute the following:
     <li>Security Group with inbound ports for SSH (22), HTTP (80), HTTPS (443), and 8200</li>
     <li>AWS S3 Bucket</li>
     <li>Elastic IP Address (EIP)</li>
-    <li>Create an envfile '.env.prod' from the template '.env.prod.template'</li>
+    <li>Create an envfile '.env.prod' from the example '.env.prod.example'</li>
   </ul>
 </details>
 
