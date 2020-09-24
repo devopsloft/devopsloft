@@ -3,7 +3,6 @@
 !/.gitattributes
 !/.gitignore
 AUTHORS
-build/*
 ChangeLog
 doc/build/*
 dist/

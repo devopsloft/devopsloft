@@ -33,11 +33,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Build Images
+      run: |
+        env > .env.ci
+        ./build/build.sh ci
+
     - name: Spin Environment
       run: |
         env > .env.ci
-        docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner -f devopsloft/spinner/Dockerfile .
-        docker-compose --env-file .env.$ENVIRONMENT build
         docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest
   
     - name: Set up Python 3.8
