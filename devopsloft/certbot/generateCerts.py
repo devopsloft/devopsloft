@@ -3,16 +3,20 @@
 import os
 from socket import gethostname
 
+import click
 from OpenSSL import crypto
 
-CERT_FILE = "/etc/letsencrypt/live/www.devopsloft.io/localhost.crt"
-KEY_FILE = "/etc/letsencrypt/live/www.devopsloft.io/localhost.key"
 
+@ click.command()
+@ click.option("-s", "--server_name", required=False, default="localhost")
+def SelfSignedCertificate(server_name):
+    CERT_FILE = "/etc/letsencrypt/live/{0}/fullchain.pem".format(server_name)
+    KEY_FILE = "/etc/letsencrypt/live/{0}/privkey.pem".format(server_name)
+    os.makedirs("/etc/letsencrypt/live/{0}".format(server_name), exist_ok=True)
 
-def SelfSignedCertificate():
     # create a key pair
     k = crypto.PKey()
-    k.generate_key(crypto.TYPE_RSA, 2048)
+    k.generate_key(crypto.TYPE_RSA, 4096)
 
     # create a self-signed cert
     cert = crypto.X509()
@@ -35,5 +39,4 @@ def SelfSignedCertificate():
 
 
 if __name__ == '__main__':
-    os.makedirs('/etc/letsencrypt/live/www.devopsloft.io', exist_ok=True)
     SelfSignedCertificate()  # pylint: disable=no-value-for-parameter

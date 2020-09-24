@@ -2,23 +2,21 @@ version: 1
 task_definition:
   task_size:
     cpu_limit: 896
-    mem_limit: 776
   services:
     db:
-      mem_reservation: 256M
+      mem_limit: 256M
     app:
-      mem_reservation: 128M
-    valut:
-      mem_reservation: 128M
+      mem_limit: 128M
+    vault:
+      mem_limit: 256M
     web:
-      mem_reservation: 128M
-    certbot:
-      essential: false
-      mem_reservation: 128M
+      mem_limit: 128M
   docker_volumes:
     - name: certs
-      scope: task
+      autoprovision: false
+      scope: shared
       driver: local
     - name: www
-      scope: task
+      autoprovision: false
+      scope: shared
       driver: local

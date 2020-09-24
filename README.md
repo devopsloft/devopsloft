@@ -60,11 +60,10 @@
   <summary>Linux</summary>
   Execute the following commands:
 
-1. `source .env.dev` 
-2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner -f devopsloft/spinner/Dockerfile .` 
-3. `docker-compose --env-file .env.$ENVIRONMENT build` 
-4. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
-5. Browse: `https://localhost:8443` or `http://localhost:5000/` 
+1. `./build/build.sh dev`
+2. `source .env.dev`
+3. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
+4. Browse: `https://localhost:8443`
 
 
   </details></li>
@@ -86,10 +85,11 @@ Execute the following commands:
 <li><details>
   <summary>Linux</summary>
 
-1. `source .env.dev` 
-2. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
-3. `docker image prune -af`
-4. `docker volume prune -f`
+1. `./build/build.sh dev`
+2. `source .env.dev`
+3. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
+4. `docker image prune -af`
+5. `docker volume prune -f`
 
 </details></li>
 </ul>
@@ -118,13 +118,11 @@ Execute the following commands:
 
 Execute the following:
 
-1. `source .env.stage` 
-2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner -f devopsloft/spinner/Dockerfile .` 
-3. `docker-compose --env-file .env.$ENVIRONMENT build` 
-4. `docker-compose --env-file .env.$ENVIRONMENT push` 
-5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
-6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
-7.  Browse <Public DNS>
+1. `./build/build.sh stage`
+2. `source .env.stage`
+3. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
+4. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
+5.  Browse <Public DNS>
 
 </details>
 
@@ -133,7 +131,7 @@ Execute the following:
 
 Execute the following:
 
-1. `source .env.stage` 
+1. `./build/build.sh stage`
 2. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
 3. `docker image prune -af` 
 
@@ -159,27 +157,24 @@ Execute the following:
 </details>
 
 <details>
+<summary>Teardown PROD environment</summary>
+
+Execute the following:
+
+1. `./build/build.sh prod`
+2. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
+3. `docker image prune -af` 
+
+</details>
+
+<details>
   <summary>Spin PROD environment</summary>
 
 Execute the following:
 
-1. `source .env.prod` 
-2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner .` 
-3. `docker push ${NAMESPACE}/spinner` 
-4. `docker-compose --env-file .env.$ENVIRONMENT build` 
-5. `docker-compose --env-file .env.$ENVIRONMENT push` 
+1. `./build/build.sh prod`
 6. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
 7.  Browse www.devopsloft.io
 
 </details>
 
-<details>
-<summary>Teardown PROD environment</summary>
-
-Execute the following:
-
-1. `source .env.prod`
-2. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
-3. `docker image prune -af` 
-
-</details>

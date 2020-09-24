@@ -63,15 +63,6 @@ if __name__ == '__main__':
         '/bakery'
     )
     test_config = {
-        'domain': 'http://127.0.0.1:5000',
-        'urls': urls,
-        'allowed_failures': 6,
-        'sleep_between_failures': 5,
-        'page_expected_content': '<title>DevOps Loft</title>'
-    }
-    if not test(**test_config):
-        exit(1)
-    test_config = {
         'domain': 'https://127.0.0.1:8443',
         'urls': urls,
         'allowed_failures': 6,

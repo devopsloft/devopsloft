@@ -8,9 +8,7 @@ COPY --from=docker/compose:latest /usr/local/bin/docker-compose /usr/bin/docker-
 COPY devopsloft/spinner/* /home/
 COPY .env.$ENVIRONMENT /home/.env
 COPY docker-compose.yml /home/
-COPY db_s2i  /home/db_s2i
 COPY modules  /home/modules
-COPY vault /home/vault
 
 RUN apt-get update \
   && apt-get install -y curl python3-pip python3-dev libssl-dev locales \
@@ -22,7 +20,8 @@ RUN apt-get update \
   && locale-gen en_US.UTF-8 \ 
   && pip3 install -r /home/requirements.txt \
   && mkdir -p /home/vault/config \
-  && chmod 777 /home/vault
+  && chmod 777 /home/vault \
+  && if [ "$ENVIRONMENT" != "dev" ] && [ "$ENVIRONMENT" != "ci" ]; then sed -i "/external:/d" /home/docker-compose.yml; fi
 
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8
