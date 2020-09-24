@@ -13,6 +13,7 @@ jobs:
     env:
       ENVIRONMENT: ci
       NAMESPACE: ci
+      SERVER_NAME: localhost
       WEB_PORT: 5000
       WEB_SECURE_PORT: 8443
       MYSQL_ROOT_PASSWORD: 12345
