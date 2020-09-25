@@ -1,7 +1,0 @@
-requests
-mysql-connector-python
-selenium==3.141.0
-PyYAML>=5.1
-boto3
-hvac
-python-dotenv==0.14.0
