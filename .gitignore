@@ -2,6 +2,7 @@
 !/*.example
 !/.gitattributes
 !/.gitignore
+!/.github/
 AUTHORS
 ChangeLog
 doc/build/*
