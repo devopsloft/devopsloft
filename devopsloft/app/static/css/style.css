@@ -73,28 +73,6 @@ body {
   border-top-right-radius: 0;
 }
 
-.fa-facebook, .fa-facebook-square {
-  color: #3b5998
-}
-
-.fa-meetup, .fa-meetup-square {
-  color: #e0393e
-}
-
-.fa-youtube, .fa-youtube-square {
-  color: #c4302b
-}
-
-.fa-slack {
-  color: #611F69
-    /*; #4a154b
-    background-color: #7C3085 */
-}
-
-.fa-github, .fa-github-square {
-  color: #333
-}
-
 /* temporarily deactivate unused link*/
 .inactiveLink {
   pointer-events: none;
@@ -107,4 +85,50 @@ body {
 }
 .lead {
 	font-size: 1.5rem;
+}
+
+.icon-bar {
+  position: fixed;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.icon-bar a {
+  display: block;
+  text-align: center;
+  padding: 16px;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 20px;
+}
+
+.icon-bar a:hover {
+  background-color: #000;
+}
+
+.facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.github {
+  background: #333;
+  color: white;
+}
+
+.slack {
+  background: #611F69;
+  color: white;
+}
+
+.youtube {
+  background: #bb0000;
+  color: white;
+}
+
+.content {
+  margin-left: 75px;
+  font-size: 30px;
 }

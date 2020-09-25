@@ -16,7 +16,7 @@ def http_get(uri):
     return None
 
 
-def test(
+def validate_url(
         domain=None,
         urls=('/'),
         allowed_failures=6,
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         'sleep_between_failures': 5,
         'page_expected_content': '<title>DevOps Loft</title>'
     }
-    if not test(**test_config):
+    if not validate_url(**test_config):
         exit(1)
     test_config = {
         'domain': 'http://127.0.0.1:8200',
@@ -77,5 +77,5 @@ if __name__ == '__main__':
         'sleep_between_failures': 5,
         'page_expected_content': '<title>Vault</title>'
     }
-    if not test(**test_config):
+    if not validate_url(**test_config):
         exit(1)

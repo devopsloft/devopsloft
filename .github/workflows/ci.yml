@@ -50,19 +50,20 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install -r tests/requirements-test.txt
+        pip3 install -r tests/test-requirements.txt
         wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
         mkdir geckodriver
         tar -xzf geckodriver-v0.26.0-linux64.tar.gz -C geckodriver
     
-    - name: Tests
+    - name: Test with pytest
+      run: |
+        pytest
+    
+    - name: Test without pytest
       run: |
         tests/basic_http_get_test.py
-        tests/wait_mysql_up.sh
+        tests/wait_mysql_up.sh	
         tests/is_table_empty.py
-    
-    - name: Run selenium tests
-      run: |
         tests/navbar.py
 
     - name: Lint with flake8
