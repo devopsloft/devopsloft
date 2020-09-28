@@ -12,7 +12,7 @@ storage "file" {
 {% else %}
 storage "s3" {
   bucket = "{{ AWS_S3_BUCKET }}"
-  region = "eu-west-1"
+  region = "{{ AWS_DEFAULT_REGION}}"
 }
 {% endif %}
 

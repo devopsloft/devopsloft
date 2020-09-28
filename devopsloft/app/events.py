@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-
 import json
+import sys
+
+import loft_hvac
 import meetup.api
 from slacker import Slacker
-import loft_hvac
-import sys
 
 
 def getEvents(token=None, status='upcoming'):

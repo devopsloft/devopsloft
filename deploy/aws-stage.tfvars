@@ -1,0 +1,7 @@
+PROFILE    = "stage"
+REGION     = "eu-west-1"
+KEY_NAME   = "id_rsa"
+PUBLIC_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9/MxlrorVgWTiKyXkIkorx62jAwJx+u7XcI00XWF80sC9cjPUw24/B6eaVJRL7LKuCY/zOYczTY8Qg4Pz13FwK2JfjSHBYmeFm7+3uL5/RILgHdsqRDyVdPLAOWwz+cf2FWNOYtq+N5b1GIdrkRtdfQ6lixyIPxCnwVxHpcTFoNVwaoz22YJCYIAkkB/Mmytzc1eSFlqX1m6UXkcVzlEGtil/8pf3K7vtOV3+lw3WFIdUFdmF+S9aLGEso2UO0ebQSb26rpGHdF/KAor7TW8SaWWPsPIKEYi3GMyKrl0EfEpgS5oLtPzkF6oNtNWpAwf0T4U23DBubqSIXa91e7/x"
+SG_NAME    = "devopsloft"
+VPC_ID     = "vpc-ed02c194"
+BUCKET     = "devopsloft-stage"
