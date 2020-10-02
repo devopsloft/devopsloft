@@ -22,6 +22,7 @@ def exec(command, envVars):
         )
     except subprocess.CalledProcessError as e:
         print('Error: {}.'.format(e.output))
+        raise
 
 
 def certbot_task(command=""):
@@ -31,6 +32,7 @@ def certbot_task(command=""):
     print("ECS register sidecar task")
     client.register_task_definition(
         family=taskDefinition,
+        taskRoleArn="AmazonECSTaskS3BucketRole",
         containerDefinitions=[
             {
                 "name": "certbot",
@@ -75,16 +77,21 @@ def certbot_task(command=""):
         ]
     )
     print("ECS run sidecar task")
-    client.start_task(
+
+    containerInstances = client.list_container_instances(
         cluster="devopsloft",
-        containerInstances=[
-            client.list_container_instances(
-                cluster="devopsloft",
-                status="ACTIVE"
-            )["containerInstanceArns"][0],
-        ],
-        taskDefinition=taskDefinition
+        status="ACTIVE"
     )
+    if containerInstances["containerInstanceArns"]:
+        client.start_task(
+            cluster="devopsloft",
+            containerInstances=[
+                containerInstances["containerInstanceArns"][0],
+            ],
+            taskDefinition=taskDefinition
+        )
+    else:
+        raise Exception("Container Instance was not found")
     print("ECS wait untill sidecar task is stopped")
     waiter = client.get_waiter('tasks_stopped')
     tasksList = client.list_tasks(
@@ -119,7 +126,7 @@ def bootstrap(environment, envVars):
             "ecs-cli configure --cluster devopsloft "
             "--default-launch-type EC2 --config-name default "
             "--region {0}".format(
-                os.getenv("REGION")
+                os.getenv("AWS_DEFAULT_REGION")
             ),
             envVars
         )
@@ -150,7 +157,7 @@ def bootstrap(environment, envVars):
             "ecs-cli compose --project-name devopsloft "
             "--ecs-params ecs-params.yml create --region {0} "
             "--aws-profile {1} --cluster devopsloft --launch-type EC2".format(
-                os.getenv("REGION"),
+                os.getenv("AWS_DEFAULT_REGION"),
                 os.getenv("AWS_PROFILE")
             ),
             envVars

@@ -104,8 +104,10 @@ Execute the following commands:
   <ul>
     <li>Dockerhub account</li>
     <li>AWS account</li>
+    <li>Terraform</li>
+    <li>Docker</li>
+    <li>Docker Compose</li>
     <li><a href='https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html'>AWS ~/.aws or %UserProfile%\.aws folder</a></li>
-    <li>keypair</li>
     <li>subnet ID</li>
     <li>Security Group with inbound ports for SSH (22), HTTP (80), HTTPS (443), and 8200</li>
     <li>AWS S3 Bucket</li>
@@ -120,9 +122,11 @@ Execute the following:
 
 1. `./build/build.sh stage`
 2. `source .env.stage`
-3. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
-4. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
-5.  Browse <Public DNS>
+3. `terraform init deply`
+4. `terraform apply --var-file=deploy/aws-stage.tfvars deploy`
+5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
+6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
+7.  Browse <Public DNS>
 
 </details>
 
@@ -162,8 +166,11 @@ Execute the following:
 Execute the following:
 
 1. `./build/build.sh prod`
-2. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
-3. `docker image prune -af` 
+2. `source .env.prod`
+3. `terraform init deply`
+4. `terraform apply --var-file=deploy/aws-prod.tfvars deploy`
+5. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
+6. `docker image prune -af` 
 
 </details>
 
