@@ -9,9 +9,9 @@ import click
 import dotenv
 
 
-def exec(command, envVars):
+def exec(command, envVars) -> str:
     try:
-        subprocess.run(
+        CompletedProcess = subprocess.run(
             command,
             env=envVars,
             shell=True,
@@ -20,6 +20,7 @@ def exec(command, envVars):
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
+        return CompletedProcess.stdout.rstrip()
     except subprocess.CalledProcessError as e:
         print('Error: {}.'.format(e.output))
         raise
@@ -32,7 +33,7 @@ def certbot_task(command=""):
     print("ECS register sidecar task")
     client.register_task_definition(
         family=taskDefinition,
-        taskRoleArn="AmazonECSTaskS3BucketRole",
+        taskRoleArn="AmazonECSTaskRole",
         containerDefinitions=[
             {
                 "name": "certbot",
@@ -119,6 +120,18 @@ def bootstrap(environment, envVars):
             ),
             envVars
         )
+        if environment == "dev":
+            envVars['AWS_ACCESS_KEY_ID'] = exec(
+                "aws configure get aws_access_key_id --profile dev",
+                envVars
+            )
+            envVars['AWS_SECRET_ACCESS_KEY'] = exec(
+                "aws configure get aws_secret_access_key --profile dev",
+                envVars
+            )
+        else:
+            envVars['AWS_ACCESS_KEY_ID'] = 'dummy'
+            envVars['AWS_SECRET_ACCESS_KEY'] = 'dummy'
         exec("docker-compose up -d", envVars)
     else:
         print("ECS cluster configuration")
@@ -155,8 +168,9 @@ def bootstrap(environment, envVars):
         print("ECS create task from compose")
         exec(
             "ecs-cli compose --project-name devopsloft "
-            "--ecs-params ecs-params.yml create --region {0} "
-            "--aws-profile {1} --cluster devopsloft --launch-type EC2".format(
+            "--task-role-arn AmazonECSTaskRole --ecs-params ecs-params.yml "
+            "create --region {0} --aws-profile {1} --cluster devopsloft "
+            "--launch-type EC2".format(
                 os.getenv("AWS_DEFAULT_REGION"),
                 os.getenv("AWS_PROFILE")
             ),
@@ -181,8 +195,8 @@ def bootstrap(environment, envVars):
             )
         print("ECS run compose task")
         exec(
-            "ecs-cli compose --project-name devopsloft up  "
-            "--aws-profile {0}".format(
+            "ecs-cli compose --project-name devopsloft "
+            "--task-role-arn AmazonECSTaskRole up --aws-profile {0}".format(
                 os.getenv("AWS_PROFILE")
             ),
             envVars
@@ -222,10 +236,10 @@ def bootstrap(environment, envVars):
 
 def getEnvVars():
     dotenv.load_dotenv()
-    envArray = os.environ.copy()
-    envArray["RUN_BY_PYTHON"] = "yes"
-    envArray["HOMEPATH"] = "/home"
-    return envArray
+    envVars = os.environ.copy()
+    envVars["RUN_BY_PYTHON"] = "yes"
+    envVars["HOMEPATH"] = "/home"
+    return envVars
 
 
 def teardown(environment="dev", envVars=[]):

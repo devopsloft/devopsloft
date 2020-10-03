@@ -10,89 +10,37 @@
 
 <details>
   <summary>Prerequisites</summary>
-    Install Docker (version 19.03.xx or higher)</br>
-    Install Docker Compose (version 1.25.5 or higher)
-    <ul>
-    <li>
-      <details>
-        <summary>Windows 64bit or higher</summary>
-        <p>Docker Desktop for Windows - <a href='https://docs.docker.com/docker-for-windows/install/'>link</a></p>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>Windows 32bit or lower</summary>
-        <p>Docker Toolbox for Windows - <a href='https://docs.docker.com/toolbox/toolbox_install_windows/'>link</a></P>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>Linux distros</summary>
-        <ul>
-          <li>Docker Engine - follow instructions by your distro <a href='https://docs.docker.com/engine/install/'>here</a></li>
-          <li>Docker Compose - follow instructions by your distro <a href='https://docs.docker.com/compose/install/'>here</a></li>
-        </ul>    
-      </details>
-    </li>
-    </ul>
-    Create an envfile '.env.dev' from the example '.env.dev.example'
-    Chrome - Allows requests to localhost over HTTPS even when an invalid certificate is presented. `chrome://flags/#allow-insecure-localhost`
+  <ul>
+    <li>Install Docker (version 19.03.xx or higher)</li>
+    <li>Install Docker Compose (version 1.25.5 or higher)</li>
+    <li>AWS account</li>
+    <li>AWS Profile</li>
+    <li>Create an envfile '.env.dev' from the example '.env.dev.example'</li>
+    <li>Chrome - Allows requests to localhost over HTTPS even when an invalid certificate is presented. `chrome://flags/#allow-insecure-localhost`</li>
+  </ul>
 </details>
 
 <details>
   <summary>Spin DEV environment</summary>
-  <ul>
-  <li><details style="margin-left: 1em">
-  <summary>Windows</summary>
-  Execute the following commands <b>(run it from Git-Bash or similar and not from Command Prompt)</b>:
-
-	
-
-1. Start docker on your machine (if it doesn't running already; way to start is based on your installation)
-2. `docker build --build-arg ENVIRONMENT=$ENVIRONMENT -t ${NAMESPACE}/spinner  -f devopsloft/spinner/Dockerfile .`
-3. `docker-compose build` 
-4. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock devopsloft/spinner:latest` 
-5. Browse: `https://localhost:8443` or `http://localhost:5000/` 
-
-  </details></li>
-
-  <li><details style="margin-left: 1em">
-  <summary>Linux</summary>
   Execute the following commands:
 
 1. `./build/build.sh dev`
 2. `source .env.dev`
-3. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
+3. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
 4. Browse: `https://localhost:8443`
 
-
-  </details></li>
-  </ul>
 </details>
 
 <details>
   <summary>Teardown DEV environment</summary>
 Execute the following commands:
-<ul>
-<li><details>
-  <summary>Windows</summary>
-
-1. `docker run --rm -d -v //var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
-2. `docker image prune -af` 
-
-</details></li>
-
-<li><details>
-  <summary>Linux</summary>
 
 1. `./build/build.sh dev`
 2. `source .env.dev`
-3. `docker run --rm -d -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
+3. `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --action destroy` 
 4. `docker image prune -af`
 5. `docker volume prune -f`
 
-</details></li>
-</ul>
 </details>
 
 ---
@@ -104,6 +52,7 @@ Execute the following commands:
   <ul>
     <li>Dockerhub account</li>
     <li>AWS account</li>
+    <li>AWS Profile</li>
     <li>Terraform</li>
     <li>Docker</li>
     <li>Docker Compose</li>
@@ -150,6 +99,7 @@ Execute the following:
   <ul>
     <li>Dockerhub account</li>
     <li>AWS account</li>
+    <li>AWS Profile</li>
     <li><a href='https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html'>AWS ~/.aws or %UserProfile%\.aws folder</a></li>
     <li>keypair</li>
     <li>subnet ID</li>

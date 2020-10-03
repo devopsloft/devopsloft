@@ -53,10 +53,6 @@ def main():
             driver.find_element_by_link_text('Statistics').click()
             assert driver.current_url == app_url + "/statistics"
 
-            print("Checking Contact Us...")
-            driver.find_element_by_link_text('Contact Us').click()
-            assert driver.current_url == app_url + "/contact"
-
             print("Checking Sign Up...")
             driver.find_element_by_link_text('Sign Up').click()
             assert driver.current_url == app_url + "/signup"

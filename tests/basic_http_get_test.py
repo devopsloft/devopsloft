@@ -57,10 +57,10 @@ if __name__ == '__main__':
         '/home',
         '/resources',
         '/docslist',
-        '/contact',
         '/signup',
         '/share',
-        '/bakery'
+        '/bakery',
+        '/contact_us'
     )
     test_config = {
         'domain': 'https://127.0.0.1:8443',

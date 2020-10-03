@@ -25,7 +25,9 @@ services:
     container_name: app
     environment:
       - SERVICE_NAME=app
-      - PYTHONPATH=$$PYTHONPATH:/modules
+      - PYTHONPATH=$$PYTHONPATH:/home/modules
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
     ports:
       - 3000:3000
     links:
@@ -75,4 +77,3 @@ volumes:
     external: true
   www:
     external: true
-
