@@ -41,7 +41,7 @@ jobs:
     - name: Spin Environment
       run: |
         env > .env.ci
-        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest
+        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT
   
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
@@ -50,7 +50,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install -r tests/test-requirements.txt
+        pip3 install -r tests/requirements.txt
         wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
         mkdir geckodriver
         tar -xzf geckodriver-v0.26.0-linux64.tar.gz -C geckodriver
@@ -60,7 +60,7 @@ jobs:
     
     - name: Test with pytest
       run: |
-        pytest
+        pytest -v -n=2
     
     - name: Test without pytest
       run: |

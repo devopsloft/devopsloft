@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+
 import os
 
+import boto3
 import loft_meetup
 import yaml
 from dotenv import load_dotenv
@@ -10,7 +12,6 @@ from flask_mysqldb import MySQL
 from passlib.hash import sha256_crypt
 from wtforms import Form, PasswordField, StringField, validators
 
-import events
 from apiUtil import apigetter
 
 load_dotenv(
@@ -21,7 +22,7 @@ load_dotenv(
     override=True
 )
 
-application = Flask(__name__, static_folder='/static', static_url_path='')
+application = Flask(__name__, static_folder='/home/static', static_url_path='')
 
 # Config MySQL
 application.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
@@ -53,15 +54,8 @@ def get_url_image(document, page, width=350, square=1):
 def home():
     getter = apigetter()
     url = get_url_image('50f3a681-24ff-4c98-815c-94922e07b701', '0_0')
-    imagepath = 'static/images/diagram.png'
+    imagepath = f"{application.static_folder}/images/diagram.png"
     getter.save_image(url, imagepath)
-    code = request.args.get("code")
-    if code is not None:
-        events.share(
-            token=loft_meetup.get_token(
-                code=code
-            )
-        )
     return render_template('home.html')
 
 
@@ -111,6 +105,25 @@ class SignupForm(Form):
     confirm = PasswordField('Confirm Password')
 
 
+class ContactForm(Form):
+    name = StringField('Name', [
+        validators.Regexp(r'[A-Za-z\s]+',
+                          message="Name may only contain alphanumeric \
+                          characters and spaces"),
+        validators.Length(min=1, max=50)
+    ])
+    email = StringField('Email', [
+        validators.Email(),
+        validators.Length(min=6, max=50)
+    ])
+    subject = StringField('Subject', [
+        validators.Length(min=6, max=50)
+    ])
+    message = StringField('Message', [
+        validators.Length(min=6, max=500)
+    ])
+
+
 @application.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm(request.form)
@@ -144,9 +157,50 @@ def signup():
     return render_template('signup.html', form=form)
 
 
-@application.route('/contact')
-def contact():
-    return render_template('contact.html')
+@application.route('/contact_us', methods=['GET', 'POST'])
+def contact_us():
+    form = ContactForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        if 'AWS_PROFILE' in os.environ:
+            del os.environ['AWS_PROFILE']
+        try:
+            session = boto3.Session(
+                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+                region_name=os.getenv('AWS_DEFAULT_REGION')
+            )
+            client = session.client('ses')
+            client.send_email(
+                Source=os.getenv('EMAIL'),
+                Destination={
+                    'ToAddresses': [
+                        os.getenv('EMAIL'),
+                    ]
+                },
+                Message={
+                    'Subject': {
+                        'Data': "DevOps Loft/Contact Us",
+                        'Charset': 'UTF-8'
+                    },
+                    'Body': {
+                        'Text': {
+                            'Data': f"Name: {form.name.data}\nEmail: {form.email.data}\nSubject: {form.subject.data}\nMessage: {form.message.data}",  # noqa
+                            'Charset': 'UTF-8'
+                        },
+                        'Html': {
+                            'Data': f"Name: {form.name.data}<br>Email: {form.email.data}<br>Subject: {form.subject.data}<br>Message: {form.message.data}",  # noqa
+                            'Charset': 'UTF-8'
+                        }
+                    }
+                },
+                ReturnPath='liora@devopsloft.io',
+            )
+            return(redirect(url_for('home')))
+        except Exception:
+            raise
+
+    return render_template('contact_us.html', form=form)
 
 
 @application.route('/share', methods=['GET', 'POST'])

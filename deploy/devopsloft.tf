@@ -32,6 +32,14 @@ variable "BUCKET" {
   description = "AWS Bucket"
 }
 
+variable "DOMAIN_1" {
+  description = "SES Domain"
+}
+
+variable "DOMAIN_2" {
+  description = "SES Domain"
+}
+
 provider "aws" {
   profile = var.PROFILE
   region  = var.REGION
@@ -97,11 +105,24 @@ data "aws_iam_policy_document" "task-assume-role-policy" {
 }
 
 resource "aws_iam_role" "iam_role" {
-  name = "AmazonECSTaskS3BucketRole"
+  name = "AmazonECSTaskRole"
   assume_role_policy =  data.aws_iam_policy_document.task-assume-role-policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "role-attach" {
+resource "aws_iam_role_policy_attachment" "S3-attach" {
   role       = aws_iam_role.iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "ses-attach" {
+  role       = aws_iam_role.iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+}
+
+resource "aws_ses_domain_identity" "devopsloft" {
+  domain = var.DOMAIN_1
+}
+
+resource "aws_ses_domain_identity" "lmb" {
+  domain = var.DOMAIN_2
 }

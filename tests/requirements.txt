@@ -6,3 +6,5 @@ boto3==1.15.16
 hvac==0.10.5
 python-dotenv==0.14.0
 pytest==6.1.1
+pytest-xdist==2.1.0
+

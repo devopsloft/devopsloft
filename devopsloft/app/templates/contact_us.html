@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<!--Section: Contact v.2-->
+<section class="mb-4">
+
+    <!--Section heading-->
+    <h2 class="h1-responsive font-weight-bold text-center my-4">Talk to Us</h2>
+    <!--Section description-->
+    <p class="text-center w-responsive mx-auto mb-5">Reach out to us with any questions, we’re here to help you get the info you need.</p>
+
+    <div class="row">
+
+        <!--Grid column-->
+        <div class="col-md-9 mb-md-0 mb-5">
+            {% from "includes/_formhelpers.html" import render_field %}
+            <form method="POST" action="/contact_us">
+
+                <!--Grid row-->
+                <div class="row">
+
+                    <!--Grid column-->
+                    <div class="col-md-6">
+                        <div class="md-form mb-0">
+                            {{ render_field(form.name, class_="form-control") }}
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-md-6">
+                        <div class="md-form mb-0">    
+                            {{ render_field(form.email, class_="form-control") }}
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                </div>
+                <!--Grid row-->
+
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form mb-0">
+                            {{ render_field(form.subject, class_="form-control") }}
+                        </div>
+                    </div>
+                </div>
+                <!--Grid row-->
+
+                <!--Grid row-->
+                <div class="row">
+
+                    <!--Grid column-->
+                    <div class="col-md-12">
+
+                        <div class="md-form">
+                            {{ render_field(form.message, class_="form-control") }}
+                        </div>
+
+                    </div>
+                </div>
+                <!--Grid row-->
+
+                <div class="text-center text-md-left">
+                    <input type="submit" class="btn btn-primary" value="Send">
+                </div>
+            </form>
+            <div class="status"></div>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-3 text-center">
+            <ul class="list-unstyled mb-0">
+                <li><i class="fas fa-map-marker-alt fa-2x"></i>
+                    <p>Tel Aviv, Israel</p>
+                </li>
+
+                <li><i class="fas fa-envelope mt-4 fa-2x"></i>
+                    <p>devopsloft.io@gmail.com</p>
+                </li>
+            </ul>
+        </div>
+        <!--Grid column-->
+
+    </div>
+
+</section>
+<!--Section: Contact v.2-->  
+{% endblock %}
