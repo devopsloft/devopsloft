@@ -5,3 +5,5 @@ PUBLIC_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9/MxlrorVgWTiKyXkIkorx62jAw
 SG_NAME    = "devopsloft"
 VPC_ID     = "vpc-79e62400"
 BUCKET     = "devopsloft-prod"
+DOMAIN_1   = "devopsloft.io"
+DOMAIN_2   = "lmb.co.il"
