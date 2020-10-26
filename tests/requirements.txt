@@ -1,5 +1,5 @@
 requests==2.24.0
-mysql-connector-python==8.0.21
+mysql-connector-python==8.0.22
 selenium==3.141.0
 PyYAML==5.3.1
 boto3==1.15.18
