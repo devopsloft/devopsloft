@@ -5,10 +5,4 @@ updates:
   schedule:
     interval: daily
   allow:
-  - dependency-type: 
-- package-ecosystem: docker
-  directory: /devopsloft
-  schedule:
-    interval: daily
-  allow:
   - dependency-type: all

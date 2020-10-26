@@ -117,10 +117,8 @@ Execute the following:
 
 1. `./build/build.sh prod`
 2. `source .env.prod`
-3. `terraform init deply`
-4. `terraform apply --var-file=deploy/aws-prod.tfvars deploy`
-5. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
-6. `docker image prune -af` 
+3. `docker run --rm -v ~/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT --action destroy` 
+4. `docker image prune -af` 
 
 </details>
 
@@ -130,8 +128,10 @@ Execute the following:
 Execute the following:
 
 1. `./build/build.sh prod`
-6. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
-7.  Browse www.devopsloft.io
+2. `terraform init deply`
+3. `terraform apply --var-file=deploy/aws-prod.tfvars deploy`
+4. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
+5.  Browse www.devopsloft.io
 
 </details>
 
