@@ -2,8 +2,7 @@ name: ci
 
 on:
   pull_request:
-    branches:
-    - master
+    branches: [main]
 
 jobs:
 
@@ -68,15 +67,8 @@ jobs:
         tests/wait_mysql_up.sh	
         tests/is_table_empty.py
         tests/navbar.py
-
-    - name: Lint with flake8
-      run: |
-        pip install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --max-complexity=10 --max-line-length=127 --statistics
-    
+   
     - name: Validate with terraform
       run: |
         terraform init deploy
-        terraform validate deploy
+        terraform validate deploy --var-file=deploy/aws-stage.tfvars
