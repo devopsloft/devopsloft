@@ -3,9 +3,8 @@
 import os
 import sys
 
-from dotenv import load_dotenv
-
 import loft_hvac  # noqa: E402
+from dotenv import load_dotenv
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../modules')
 

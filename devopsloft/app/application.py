@@ -5,14 +5,13 @@ import os
 import boto3
 import loft_meetup
 import yaml
+from apiUtil import apigetter
 from dotenv import load_dotenv
 from flask import (Flask, flash, make_response, redirect, render_template,
                    request, send_from_directory, url_for)
 from flask_mysqldb import MySQL
 from passlib.hash import sha256_crypt
 from wtforms import Form, PasswordField, StringField, validators
-
-from apiUtil import apigetter
 
 load_dotenv(
     dotenv_path='.env',

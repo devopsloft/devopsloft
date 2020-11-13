@@ -1,8 +1,7 @@
 import os
 
-import requests
-
 import loft_hvac
+import requests
 
 client_id = None
 client_secret = None
