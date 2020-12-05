@@ -1,0 +1,20 @@
+<nav class="site-header sticky-top bg-white border-bottom box-shadow ">
+  <div class="container">
+    <div class="d-flex align-items-center">
+      <div class="mr-auto">
+        <a class="mr-md-auto font-weight-normal" href="{{ url_for('home') }}">
+          <img src="{{ url_for('static', filename='logo.png') }}" width="80" height="80" class="d-inline-block align-top" alt="">
+        </a>
+      </div>
+      <div class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="{{ url_for('home') }}">Home</a>
+        <a class="p-2 text-dark" href="{{ url_for('resources') }}">Resources</a>
+        <a class="p-2 text-dark" href="{{ url_for('docslist') }}">Documents</a>
+        <a class="p-2 text-dark" href="{{ url_for('signup') }}">Sign Up</a>
+        <a class="p-2 text-dark" href="{{ url_for('statistics') }}">Statistics</a>
+        <a class="p-2 text-dark" href="{{ url_for('bakery') }}">Bakery</a>
+        <a class="p-2 text-dark" href="{{ url_for('contact_us') }}">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</nav>

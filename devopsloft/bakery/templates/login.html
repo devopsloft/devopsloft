@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% from "includes/_formhelpers.html" import render_field %}
+
+      <form class="form-signin " method="POST" action="/login" >
+        <!-- <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+        
+        <h1 class="h3 mb-3 font-weight-normal text-center">Sign in to your account</h1>
+        {{ loginForm.hidden_tag() }}
+        <label for="first_name" class="sr-only">Username</label>
+        {{ render_field(loginForm.username, class_="form-control", placeholder="Username")}}
+        
+        <label for="last_name"class="sr-only" >Password</label>
+        {{ render_field(loginForm.password, class_="form-control", placeholder="Password")}}
+
+        <div class="form-check">
+        {{ render_field(loginForm.remember, class_="form-check-input ", placeholder="Remember")}}
+        <label class="form-check-label " for="email" class="sr-only">Remember</label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block mt-3" type="submit" >Sign in</button>
+       
+    </form>
+
+{% endblock %}
