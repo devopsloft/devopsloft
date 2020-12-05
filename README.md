@@ -4,6 +4,20 @@
 
 <img src="http://www.devopsloft.io/logo.png" alt="drawing" width="250" hight="250"/>
 
+<script type="text/javascript">
+function myFunction() {
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); 
+  document.execCommand("copy");
+  alert("Copied the text: " + copyText.value);
+}
+</script>
+
+<script type="text/javascript">
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+</script>
+
 #### Detailed prerequisites and instructions for spinning DEV/STAGE/PROD environments
 
 ### DEV environment
@@ -11,20 +25,20 @@
 <details>
   <summary>Prerequisites</summary>
   <ul>
-    <li>Install Docker (version 19.03.xx or higher)</li>
-    <li>Install Docker Compose (version 1.25.5 or higher)</li>
+    <li>Install Docker</li>
+    <li>Install Docker Compose</li>
     <li>AWS account</li>
     <li>AWS Profile</li>
     <li>Create an envfile '.env.dev' from the example '.env.dev.example'</li>
     <li>Chrome - Allows requests to localhost over HTTPS even when an invalid certificate is presented. `chrome://flags/#allow-insecure-localhost`</li>
-  </ul>
+  </ul>ß
 </details>
 
 <details>
   <summary>Spin DEV environment</summary>
   Execute the following commands:
 
-1. `./build/build.sh dev`
+1. `./build/build.sh dev` <button onclick="myFunction()">Copy text</button>
 2. `source .env.dev`
 3. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
 4. Browse: `https://localhost:8443`
