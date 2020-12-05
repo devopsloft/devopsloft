@@ -4,6 +4,7 @@ COPY ./devopsloft/web/ /
 ARG WEB_PORT
 ARG WEB_SECURE_PORT
 ARG APP_PORT
+ARG BAKERY_PORT
 ARG SERVER_NAME
 RUN pip3 install --upgrade pip && \
     pip install -r /requirements.txt && \

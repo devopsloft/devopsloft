@@ -22,6 +22,7 @@ services:
       dockerfile: devopsloft/app/Dockerfile
       args:
         - ENVIRONMENT
+        - APP_PORT
     container_name: app
     environment:
       - SERVICE_NAME=app
@@ -30,6 +31,26 @@ services:
       - AWS_SECRET_ACCESS_KEY
     ports:
       - 3000:3000
+    links:
+      - db
+    restart: always
+
+  bakery:
+    image: ${NAMESPACE:-devopsloft}/bakery
+    build:
+      context: .
+      dockerfile: devopsloft/bakery/Dockerfile
+      args:
+        - ENVIRONMENT
+        - BAKERY_PORT
+    container_name: bakery
+    environment:
+      - SERVICE_NAME=bakery
+      - PYTHONPATH=$$PYTHONPATH:/home/modules
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+    ports:
+      - 3001:3001
     links:
       - db
     restart: always
@@ -58,6 +79,7 @@ services:
         WEB_PORT: ${WEB_PORT}
         WEB_SECURE_PORT: ${WEB_SECURE_PORT}
         APP_PORT: ${APP_PORT}
+        BAKERY_PORT: ${BAKERY_PORT}
         SERVER_NAME: ${SERVER_NAME}
     container_name: web
     environment:
