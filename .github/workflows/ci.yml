@@ -33,20 +33,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build Images
-      run: |
-        env > .env.ci
-        ./build/build.sh ci
-
-    - name: Spin Environment
-      run: |
-        env > .env.ci
-        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT
-  
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+
+    - name: Set env file
+      run: |
+        env > .env.ci
 
     - name: Install dependencies
       run: |
@@ -58,9 +52,9 @@ jobs:
         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
         sudo apt-get update && sudo apt-get install terraform
     
-    - name: Test with pytest
+    - name: Functional tests
       run: |
-        pytest -v -n=2
+        make functional-tests
     
     - name: Test without pytest
       run: |

@@ -3,5 +3,5 @@ Click==7.1.2
 python-dotenv==0.14.0
 j2cli==0.3.10
 docker-compose==1.26.2
-boto3==1.15.6
-awscli==1.18.157
+boto3==1.16.30
+awscli==1.18.190
