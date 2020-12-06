@@ -30,4 +30,3 @@ updates:
     interval: weekly
   allow:
   - dependency-type: all
-  
