@@ -3,12 +3,31 @@ updates:
 - package-ecosystem: pip
   directory: /
   schedule:
-    interval: daily
-  allow:
-  - dependency-type: 
-- package-ecosystem: docker
-  directory: /devopsloft
-  schedule:
-    interval: daily
+    interval: weekly
   allow:
   - dependency-type: all
+- package-ecosystem: pip
+  directory: /devopsloft/app
+  schedule:
+    interval: weekly
+  allow:
+  - dependency-type: all
+- package-ecosystem: pip
+  directory: /devopsloft/bakery
+  schedule:
+    interval: weekly
+  allow:
+  - dependency-type: all
+- package-ecosystem: pip
+  directory: /devopsloft/certbot
+  schedule:
+    interval: weekly
+  allow:
+  - dependency-type: all
+- package-ecosystem: pip
+  directory: /devopsloft/spinner
+  schedule:
+    interval: weekly
+  allow:
+  - dependency-type: all
+  

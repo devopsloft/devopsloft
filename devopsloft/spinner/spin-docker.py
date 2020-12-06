@@ -15,14 +15,13 @@ def exec(command, envVars) -> str:
             command,
             env=envVars,
             shell=True,
-            check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True
         )
         return CompletedProcess.stdout.rstrip()
     except subprocess.CalledProcessError as e:
-        print('Error: {}.'.format(e.output))
+        print(f"Error: {e.stderr}")
         raise
 
 
