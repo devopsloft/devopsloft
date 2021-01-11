@@ -8,4 +8,4 @@ python-dotenv==0.15.0
 git+https://github.com/lioramilbaum/meetup-api.git@access_token
 slacker==0.14.0
 hvac==0.10.6
-boto3==1.16.47
+boto3==1.16.51
