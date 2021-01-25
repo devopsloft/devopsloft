@@ -2,6 +2,6 @@ cffi==1.14.4
 Click==7.1.2
 python-dotenv==0.15.0
 j2cli==0.3.10
-docker-compose==1.27.4
+docker-compose==1.28.0
 boto3==1.16.59
 awscli==1.18.216
