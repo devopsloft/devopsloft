@@ -19,3 +19,8 @@ functional-tests: /usr/local/bin/chromedriver
 	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock $$NAMESPACE/spinner:latest ./spin-docker.py --environment $$ENVIRONMENT
 	pytest -v -n=2 tests/functional
 	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock $$NAMESPACE/spinner:latest ./spin-docker.py --environment $$ENVIRONMENT --action destroy
+
+up:
+	./build/build.sh $$ENVIRONMENT
+	docker build --build-arg ENVIRONMENT=$$ENVIRONMENT -t ${NAMESPACE}/spinner \
+		-f devopsloft/spinner/Dockerfile .

@@ -1,8 +1,8 @@
-# <a href="http://www.devopsloft.io">DevOps Loft</a>
+# <a href="http://www.devopsloft.org">DevOps Loft</a>
 
 [![ci](https://github.com/devopsloft/devopsloft/workflows/ci/badge.svg)](https://github.com/devopsloft/devopsloft/actions?query=workflow%3Aci)
 
-<img src="http://www.devopsloft.io/logo.png" alt="drawing" width="250" hight="250"/>
+<img src="http://www.devopsloft.org/logo.png" alt="drawing" width="250" hight="250"/>
 
 #### Detailed prerequisites and instructions for spinning DEV/STAGE/PROD environments
 
@@ -24,7 +24,7 @@
   <summary>Spin DEV environment</summary>
   Execute the following commands:
 
-1. `./build/build.sh dev`
+1. `make up`
 2. `source .env.dev`
 3. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
 4. Browse: `https://localhost:8443`
@@ -72,7 +72,7 @@ Execute the following:
 1. `./build/build.sh stage`
 2. `source .env.stage`
 3. `terraform -chdir=deploy init`
-4. `terraform apply --var-file=deploy/aws-stage.tfvars deploy`
+4. `terraform -chdir=deploy apply --var-file=aws-stage.tfvars`
 5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
 6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
 7.  Browse <Public DNS>
@@ -128,10 +128,10 @@ Execute the following:
 Execute the following:
 
 1. `./build/build.sh prod`
-2. `terraform init deply`
-3. `terraform apply --var-file=deploy/aws-prod.tfvars deploy`
+2. `terraform -chdir=deploy init`
+3. `terraform apply -chdir=deploy --var-file=aws-prod.tfvars`
 4. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
-5.  Browse www.devopsloft.io
+5.  Browse www.devopsloft.org
 
 </details>
 
