@@ -71,7 +71,7 @@ Execute the following:
 
 1. `./build/build.sh stage`
 2. `source .env.stage`
-3. `terraform init deply`
+3. `terraform -chdir=deploy init`
 4. `terraform apply --var-file=deploy/aws-stage.tfvars deploy`
 5. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest ./spin-docker.py --environment $ENVIRONMENT` 
 6. Locate the EC2 instance Public DNS: AWS Consule->EC2->Insance->Public DNS (IPv4)
