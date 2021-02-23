@@ -2,7 +2,7 @@ terraform {
   required_providers {
     mycloud = {
       source  = "hashicorp/aws"
-      version = "~> 3.8.0"
+      version = "~> 3.26.0"
     }
   }
 }
@@ -19,23 +19,18 @@ variable "KEY_NAME" {
 variable "PUBLIC_KEY" {
   description = "AWS public key"
 }
-
 variable "SG_NAME" {
   description = "AWS Security Group name"
 }
-
 variable "VPC_ID" {
   description = "AWS VPC id"
 }
-
 variable "BUCKET" {
   description = "AWS Bucket"
 }
-
 variable "DOMAIN_1" {
   description = "SES Domain"
 }
-
 variable "DOMAIN_2" {
   description = "SES Domain"
 }
