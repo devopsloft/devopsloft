@@ -1,4 +1,4 @@
-cffi==1.14.4
+cffi==1.14.5
 Click==7.1.2
 python-dotenv==0.15.0
 j2cli==0.3.10
