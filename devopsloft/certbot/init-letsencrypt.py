@@ -68,7 +68,7 @@ def main(server_name):
             command = "certbot certonly -n --webroot -w /var/www/certbot " \
                 "{0} --email {1} -d {2} --rsa-key-size 4096 " \
                 "--agree-tos".format(
-                    "--staging" if server_name != "www.devopsloft.io" else "",
+                    "--staging" if server_name != "www.devopsloft.org" else "",
                     os.getenv("EMAIL"),
                     server_name
                 )

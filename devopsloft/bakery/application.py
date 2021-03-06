@@ -193,7 +193,7 @@ def contact_us():
                         }
                     }
                 },
-                ReturnPath='liora@devopsloft.io',
+                ReturnPath='liora@devopsloft.org',
             )
             return(redirect(url_for('home')))
         except Exception:
