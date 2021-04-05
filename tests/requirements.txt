@@ -3,7 +3,7 @@ mysql-connector-python==8.0.23
 selenium==3.141.0
 PyYAML==5.4.1
 boto3==1.17.39
-hvac==0.10.8
+hvac==0.10.9
 python-dotenv==0.16.0
 pytest==6.2.2
 pytest-xdist==2.2.1
