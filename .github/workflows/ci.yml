@@ -65,5 +65,5 @@ jobs:
    
     - name: Validate with terraform
       run: |
-        terraform init deploy
-        terraform validate deploy --var-file=deploy/aws-stage.tfvars
+        terraform -chdir=deploy init
+        terraform -chdir=deploy validate
