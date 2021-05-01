@@ -1,6 +1,6 @@
 # <a href="http://www.devopsloft.org">DevOps Loft</a>
 
-[![release](https://github.com/devopsloft/devopsloft/workflows/release/badge.svg)](https://github.com/devopsloft/devopsloft/actions?query=workflow%3Arelease)
+[![Release](https://github.com/devopsloft/devopsloft/actions/workflows/release.yml/badge.svg)](https://github.com/devopsloft/devopsloft/actions/workflows/release.yml)
 
 <img src="http://www.devopsloft.org/logo.png" alt="drawing" width="250" hight="250"/>
 
