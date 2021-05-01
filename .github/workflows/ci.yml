@@ -44,7 +44,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install -r tests/requirements.txt
         wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
         mkdir geckodriver
         tar -xzf geckodriver-v0.26.0-linux64.tar.gz -C geckodriver
@@ -54,7 +53,7 @@ jobs:
     
     - name: Functional tests
       run: |
-        make functional-tests
+        make functional
     
     - name: Test without pytest
       run: |
