@@ -25,9 +25,7 @@
   Execute the following commands:
 
 1. `make up`
-2. `source .env.dev`
-3. `docker run --rm -v $HOME/.aws:/root/.aws -v /var/run/docker.sock:/var/run/docker.sock ${NAMESPACE}/spinner:latest` 
-4. Browse: `https://localhost:8443`
+2. Browse: `https://localhost:8443`
 
 </details>
 
