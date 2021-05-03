@@ -2,7 +2,7 @@ requests==2.25.1
 mysql-connector-python==8.0.23
 selenium==3.141.0
 PyYAML==5.4.1
-boto3==1.17.53
+boto3==1.17.62
 hvac==0.10.10
 python-dotenv==0.17.0
 pytest==6.2.3
