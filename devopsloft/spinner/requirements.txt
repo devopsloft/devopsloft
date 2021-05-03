@@ -4,4 +4,4 @@ python-dotenv==0.17.0
 j2cli==0.3.10
 docker-compose==1.29.1
 boto3==1.17.53
-awscli==1.19.53
+awscli==1.19.62
