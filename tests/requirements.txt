@@ -5,5 +5,5 @@ PyYAML==5.4.1
 boto3==1.17.62
 hvac==0.10.11
 python-dotenv==0.17.1
-pytest==6.2.3
+pytest==6.2.4
 pytest-xdist==2.2.1
