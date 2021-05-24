@@ -1,5 +1,5 @@
 cffi==1.14.5
-Click==8.0.0
+Click==8.0.1
 python-dotenv==0.17.1
 j2cli==0.3.10
 docker-compose==1.29.2
