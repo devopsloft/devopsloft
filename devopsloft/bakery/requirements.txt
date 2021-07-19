@@ -7,5 +7,5 @@ PyYAML==5.4.1
 python-dotenv==0.18.0
 git+https://github.com/lioramilbaum/meetup-api.git@access_token
 slacker==0.14.0
-hvac==0.10.14
+hvac==0.11.0
 boto3==1.17.105
