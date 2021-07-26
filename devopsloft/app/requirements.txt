@@ -4,7 +4,7 @@ email-validator==1.1.3
 flask-mysqldb==0.2.0
 passlib==1.7.4
 PyYAML==5.4.1
-python-dotenv==0.18.0
+python-dotenv==0.19.0
 git+https://github.com/lioramilbaum/meetup-api.git@access_token
 slacker==0.14.0
 hvac==0.10.14
