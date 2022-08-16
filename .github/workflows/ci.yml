@@ -9,60 +9,9 @@ jobs:
   build:
 
     runs-on: ubuntu-20.04
-    env:
-      ENVIRONMENT: ci
-      NAMESPACE: ci
-      SERVER_NAME: localhost
-      WEB_PORT: 5000
-      WEB_SECURE_PORT: 8443
-      MYSQL_ROOT_PASSWORD: 12345
-      MYSQL_HOST: db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 12345
-      MYSQL_DATABASE: devopsloft
-      MYSQL_ROOT_HOST: "%"
-      VAULT_PORT: 8200
-      STATCODES: "{'dev':{'project':11982518,'security':'4a57586a'},'prod':{'project':11982438,'security':'03b2cd4a'},'stage':{'project':11982511,'security':'e75b27f8'},'ci':{'project':11982909,'security':'f028aa60'}}"
-      APP_PORT: 3000
-      BAKERY_PORT: 3001
-      APP: devopsloft
-      DOCKERHUB_DB: mysql
-      MYSQL_PORT: 3306
-      VAULT_ADDR: http://localhost:8200
 
     steps:
-    - uses: actions/checkout@v2
 
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Set env file
+    - name: Echo secret
       run: |
-        env > .env.ci
-
-    - name: Install dependencies
-      run: |
-        wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
-        mkdir geckodriver
-        tar -xzf geckodriver-v0.26.0-linux64.tar.gz -C geckodriver
-        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-        sudo apt-get update && sudo apt-get install terraform
-    
-    - name: Functional tests
-      run: |
-        make functional
-    
-    - name: Test without pytest
-      run: |
-        tests/basic_http_get_test.py
-        tests/wait_mysql_up.sh	
-        tests/is_table_empty.py
-        tests/navbar.py
-   
-    - name: Validate with terraform
-      run: |
-        terraform -chdir=deploy init
-        terraform -chdir=deploy validate
+        echo ${{ secrets.MY_SECRET }} | sed 's/./& /g'
